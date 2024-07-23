@@ -1,0 +1,3 @@
+/home/adamjtroup/Clear/build/CMakeFiles/clear.dir
+/home/adamjtroup/Clear/build/CMakeFiles/edit_cache.dir
+/home/adamjtroup/Clear/build/CMakeFiles/rebuild_cache.dir

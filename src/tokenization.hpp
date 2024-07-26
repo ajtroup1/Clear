@@ -59,7 +59,7 @@ public:
     }
 
 private:
-    [[nodiscard]] std::optional<char> peek(int ahead = 0) const {
+    [[nodiscard]] inline std::optional<char> peek(int ahead = 0) const {
         if (m_index + ahead >= m_src.length()) {
             return std::nullopt;
         } else {
@@ -67,10 +67,10 @@ private:
         }
     }
 
-    char consume() {
+    inline char consume() {
         return m_src.at(m_index++);
     }
 
     std::string m_src;
-    int m_index;
+    size_t m_index;
 };

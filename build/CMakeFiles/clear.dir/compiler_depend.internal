@@ -3,6 +3,8 @@
 
 CMakeFiles/clear.dir/src/main.cpp.o
  /home/adamjtroup/Clear/src/main.cpp
+ /home/adamjtroup/Clear/src/generation.hpp
+ /home/adamjtroup/Clear/src/parser.hpp
  /home/adamjtroup/Clear/src/tokenization.hpp
  /usr/include/alloca.h
  /usr/include/asm-generic/errno-base.h

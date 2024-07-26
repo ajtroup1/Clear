@@ -8,7 +8,12 @@
 enum class TokenType {
     _exit,
     int_lit,
-    semi
+    semi,
+    open_paren,
+    close_paren,
+    ident,
+    let,
+    eq
 };
 
 struct Token {
@@ -33,9 +38,14 @@ public:
                 }
                 if (buf == "exit") {
                     tokens.push_back({TokenType::_exit, {}});
+                } else if (buf == "let") {
+                    tokens.push_back({.type = TokenType::let});
+                    buf.clear();
+                    continue;
                 } else {
-                    std::cerr << "Invalid keyword: " << buf << std::endl;
-                    exit(EXIT_FAILURE);
+                    tokens.push_back({.type = TokenType::ident, .value = buf});
+                    buf.clear();
+                    continue;
                 }
                 buf.clear();
             } else if (std::isdigit(current)) {
@@ -45,9 +55,22 @@ public:
                 }
                 tokens.push_back({TokenType::int_lit, buf});
                 buf.clear();
-            } else if (current == ';') {
+            } else if (current == '=') {
+                consume();
+                tokens.push_back({TokenType::eq, {}});
+                continue;
+            }else if (current == ';') {
                 consume();
                 tokens.push_back({TokenType::semi, {}});
+                continue;
+            } else if (current == '(') {
+                consume();
+                tokens.push_back({TokenType::open_paren, {}});
+                continue;
+            } else if (current == ')') {
+                consume();
+                tokens.push_back({TokenType::close_paren, {}});
+                continue;
             } else if (std::isspace(current)) {
                 consume();
             } else {
@@ -59,11 +82,11 @@ public:
     }
 
 private:
-    [[nodiscard]] inline std::optional<char> peek(int ahead = 0) const {
-        if (m_index + ahead >= m_src.length()) {
+    [[nodiscard]] inline std::optional<char> peek(int offset = 0) const {
+        if (m_index + offset >= m_src.length()) {
             return std::nullopt;
         } else {
-            return m_src.at(m_index + ahead);
+            return m_src.at(m_index + offset);
         }
     }
 

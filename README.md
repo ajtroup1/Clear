@@ -5,6 +5,6 @@
 $$
 \begin{align}
 [\text{exit}] &\to exit([\text{expr}]) \\
-[\text{expr}] &\to \text{int\_lit}
+[\text{expr}] &\to \text{int\textunderscore lit}
 \end{align}
 $$

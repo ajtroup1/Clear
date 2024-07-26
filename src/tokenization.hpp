@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <string>
 #include <optional>
 #include <vector>
@@ -17,57 +18,52 @@ struct Token {
 
 class Tokenizer {
 public:
-    inline Tokenizer(const std::string& src)
-        : m_src(std::move(src)) {}
+    inline explicit Tokenizer(const std::string& src)
+        : m_src(std::move(src)), m_index(0) {}
 
-    std::vector<Token> tokenize() { // ****START REWRITING HERE @14:30
+    std::vector<Token> tokenize() {
         std::vector<Token> tokens;
         std::string buf;
-        for (int i = 0; i < str.length(); i++) {
-            char c = str.at(i);
-            if (std::isalpha(c)) {
-                buf.push_back(c);
-                i++;
-                while (std::isalnum(str.at(i))) {
-                    buf.push_back(str.at(i));
-                    i++;
+        while (peek().has_value()) {
+            char current = peek().value();
+            if (std::isalpha(current)) {
+                buf.push_back(consume());
+                while (peek().has_value() && std::isalnum(peek().value())) {
+                    buf.push_back(consume());
                 }
-                i--;
-
                 if (buf == "exit") {
-                    tokens.push_back({.type = TokenType::_exit});
-                    buf.clear();
-                    continue;
+                    tokens.push_back({TokenType::_exit, {}});
                 } else {
-                    std::cerr << "Invalid input" << std::endl;
+                    std::cerr << "Invalid keyword: " << buf << std::endl;
                     exit(EXIT_FAILURE);
                 }
-            } else if (std::isspace(c)) {
-                continue;
-            } else if (std::isdigit(c)) {
-                buf.push_back(c);
-                while (i + 1 < str.length() && std::isdigit(str.at(i + 1))) {
-                    buf.push_back(str.at(++i));
-                }
-                tokens.push_back({.type = TokenType::int_lit, .value = buf});
                 buf.clear();
-            }   else if(c == ';') {
-                tokens.push_back({.type = TokenType::semi});
+            } else if (std::isdigit(current)) {
+                buf.push_back(consume());
+                while (peek().has_value() && std::isdigit(peek().value())) {
+                    buf.push_back(consume());
+                }
+                tokens.push_back({TokenType::int_lit, buf});
+                buf.clear();
+            } else if (current == ';') {
+                consume();
+                tokens.push_back({TokenType::semi, {}});
+            } else if (std::isspace(current)) {
+                consume();
             } else {
-                    std::cerr << "Invalid input" << std::endl;
-                    exit(EXIT_FAILURE);
+                std::cerr << "Unexpected character: " << current << std::endl;
+                exit(EXIT_FAILURE);
             }
         }
-
         return tokens;
     }
 
 private:
-    [[nodiscard]] std::optional<char> peak(int ahead = 1) const {
+    [[nodiscard]] std::optional<char> peek(int ahead = 0) const {
         if (m_index + ahead >= m_src.length()) {
-            return {};
+            return std::nullopt;
         } else {
-            return m_src.at(m_index);
+            return m_src.at(m_index + ahead);
         }
     }
 
@@ -75,6 +71,6 @@ private:
         return m_src.at(m_index++);
     }
 
-    const std::string m_src;
+    std::string m_src;
     int m_index;
 };

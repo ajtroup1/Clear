@@ -1,5 +1,5 @@
 # Clear
-> "There are two kinds of programmers: those who have written compilers and those who haven't" - Terry A. Davis
+> <span style="font-size: 1.5em;">"<span style="font-style: italic;">There are two kinds of programmers: those who have written compilers and those who haven't<span>" - Terry A. Davis</span>
 
 ## Grammar
 $$

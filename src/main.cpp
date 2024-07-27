@@ -31,14 +31,14 @@ int main(int argc, char* argv[]) {
     std::vector<Token> tokens = tokenizer.tokenize();
 
     Parser parser(std::move(tokens));
-    std::optional<NodeExit> tree = parser.parse();
+    std::optional<NodeProg> prog = parser.parse_prog();
 
-    if (!tree.has_value()) {
-        std::cerr << "No exit statement" << std::endl;
+    if (!prog.has_value()) {
+        std::cerr << "Invalid program" << std::endl;
         exit(EXIT_FAILURE);
     }
     
-    Generator generator(tree.value());
+    Generator generator(prog.value());
 
     {
         std::ofstream file("out.asm");
@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
             std::cerr << "Failed to open output file: out.asm" << std::endl;
             return EXIT_FAILURE;
         }
-        file << generator.generate();
+        file << generator.gen_prog();
     }
 
     system("nasm -felf64 out.asm");

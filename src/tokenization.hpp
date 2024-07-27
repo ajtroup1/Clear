@@ -26,29 +26,32 @@ public:
     inline explicit Tokenizer(const std::string& src)
         : m_src(std::move(src)), m_index(0) {}
 
-    std::vector<Token> tokenize() {
+    std::vector<Token> tokenize() { // convert source code into a string of tokens
         std::vector<Token> tokens;
-        std::string buf;
+        std::string buf; // tracks multi-char values
         while (peek().has_value()) {
             char current = peek().value();
-            if (std::isalpha(current)) {
+            if (std::isalpha(current)) { // check for multi-char keywords / identifiers // must start as alpha and continue as alphanumeric
                 buf.push_back(consume());
-                while (peek().has_value() && std::isalnum(peek().value())) {
+                while (peek().has_value() && std::isalnum(peek().value())) { // while the identifier string continues
                     buf.push_back(consume());
                 }
+                // is the string a keyword?
                 if (buf == "exit") {
                     tokens.push_back({TokenType::_exit, {}});
                 } else if (buf == "let") {
                     tokens.push_back({.type = TokenType::let});
                     buf.clear();
                     continue;
-                } else {
+                } 
+                // the string isn't a keyword, it's an identifier
+                else {
                     tokens.push_back({.type = TokenType::ident, .value = buf});
                     buf.clear();
                     continue;
                 }
                 buf.clear();
-            } else if (std::isdigit(current)) {
+            } else if (std::isdigit(current)) { // check for int lit
                 buf.push_back(consume());
                 while (peek().has_value() && std::isdigit(peek().value())) {
                     buf.push_back(consume());

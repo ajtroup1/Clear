@@ -1,6 +1,6 @@
 global _start
 _start:
-    mov rax, 7
+    mov rax, 12
     push rax
     push QWORD [rsp + 0]
 

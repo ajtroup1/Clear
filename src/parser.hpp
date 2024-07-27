@@ -4,6 +4,8 @@
 #include <vector>
 #include <utility>
 #include <iostream>
+
+#include "arena.hpp"
 #include "tokenization.hpp"
 
 struct NodeExprIntLit {
@@ -14,21 +16,35 @@ struct NodeExprIdent {
     Token ident;
 };
 
+struct BinExpr {
+    std::variant<BinExprAdd*, BinExprMulti*> var;
+};
+
 struct NodeExpr {
-    std::variant<NodeExprIntLit, NodeExprIdent> var;
+    std::variant<NodeExprIntLit*, NodeExprIdent*, BinExpr*> var;
 };
 
 struct NodeStmtExit {
-    NodeExpr expr;
+    NodeExpr* expr;
 };
 
 struct NodeStmtLet {
     Token ident;
-    NodeExpr expr;
+    NodeExpr* expr;
 };
 
 struct NodeStmt {
-    std::variant<NodeStmtExit, NodeStmtLet> var;
+    std::variant<NodeStmtExit*, NodeStmtLet*> var;
+};
+
+struct BinExprAdd {
+    NodeExpr lfs; // left side of equation
+    NodeExpr lfs; // right side of equation
+};
+
+struct BinExprMulti {
+    NodeExpr lfs;
+    NodeExpr lfs;
 };
 
 struct NodeProg {
@@ -38,12 +54,20 @@ struct NodeProg {
 class Parser {
 public:
     explicit Parser(std::vector<Token> tokens)
-        : m_tokens(std::move(tokens)), m_index(0) {}
+        : m_tokens(std::move(tokens)), m_index(0), m_allocator(1024 *1024 * 4) // 4MB
+        {
+        }
 
-    std::optional<NodeExpr> parse_expr() {
+
+    std::optional<NodeExpr*> parse_expr() {
         if (peek().has_value() && peek().value().type == TokenType::int_lit) {
-            return NodeExpr{.var = NodeExprIntLit {.int_lit = consume()} };
+            auto expr_int_lit = m_allocator.alloc<NodeExprIntLit>();
+            expr_int_lit->int_lit = consume();
+            auto expr = m_allocator.alloc<NodeExpr>();
+            expr->var = expr_int_lit;
+            return expr;
         } else if (peek().has_value() && peek().value().type == TokenType::ident) {
+            // *******RESUME HERE @29:15
             return NodeExpr {.var = NodeExprIdent {.ident = consume()} };
         }else {
             return {};
@@ -51,66 +75,66 @@ public:
     }
 
     std::optional<NodeStmt> parse_stmt() {
-    if (!peek().has_value()) {
+        if (!peek().has_value()) {
+            return {};
+        }
+        
+        // Handle "exit" statement
+        if (peek().value().type == TokenType::_exit && peek(1).has_value() && peek(1).value().type == TokenType::open_paren) {
+            consume(); // consume 'exit'
+            consume(); // consume '('
+            
+            NodeStmtExit stmt_exit;
+            if (auto node_expr = parse_expr()) {
+                stmt_exit = {.expr = node_expr.value()};
+                
+                if (peek().has_value() && peek().value().type == TokenType::close_paren) {
+                    consume(); // consume ')'
+                } else {
+                    std::cerr << "Error: Expected closing parenthesis after expression." << std::endl;
+                    return {};
+                }
+                
+                if (peek().has_value() && peek().value().type == TokenType::semi) {
+                    consume(); // consume ';'
+                    return NodeStmt{.var = stmt_exit};
+                } else {
+                    std::cerr << "Error: Expected semicolon after 'exit' statement." << std::endl;
+                    return {};
+                }
+            } else {
+                std::cerr << "Error: Unable to parse expression in 'exit' statement." << std::endl;
+                return {};
+            }
+        }
+        
+        // Handle "let" statements
+        if (peek().has_value() && peek().value().type == TokenType::let && peek(1).has_value() && peek(1).value().type == TokenType::ident && peek(2).has_value() && peek(2).value().type == TokenType::eq) {
+            consume(); // consume 'let'
+            auto stmt_let = NodeStmtLet {.ident = consume()}; // consume identifier
+            
+            consume(); // consume '='
+            
+            if (auto expr = parse_expr()) { 
+                stmt_let.expr = expr.value(); // let x = [expr] // set the expression that it's equal to here
+                
+                if (peek().has_value() && peek().value().type == TokenType::semi) {
+                    consume(); // consume ';'
+                    return NodeStmt {.var = stmt_let};
+                } else {
+                    std::cerr << "Error: Expected semicolon after 'let' statement." << std::endl;
+                    return {};
+                }
+            } else {
+                std::cerr << "Error: Unable to parse expression in 'let' statement." << std::endl;
+                return {};
+            }
+        }
+        
+        // If we reach here, it's an unknown or invalid statement
+        std::cerr << "Error: Invalid statement encountered." << std::endl;
         return {};
     }
-    
-    // Handle "exit" statements
-    if (peek().value().type == TokenType::_exit && peek(1).has_value() && peek(1).value().type == TokenType::open_paren) {
-        consume(); // consume 'exit'
-        consume(); // consume '('
-        
-        NodeStmtExit stmt_exit;
-        if (auto node_expr = parse_expr()) {
-            stmt_exit = {.expr = node_expr.value()};
-            
-            if (peek().has_value() && peek().value().type == TokenType::close_paren) {
-                consume(); // consume ')'
-            } else {
-                std::cerr << "Error: Expected closing parenthesis after expression." << std::endl;
-                return {};
-            }
-            
-            if (peek().has_value() && peek().value().type == TokenType::semi) {
-                consume(); // consume ';'
-                return NodeStmt{.var = stmt_exit};
-            } else {
-                std::cerr << "Error: Expected semicolon after 'exit' statement." << std::endl;
-                return {};
-            }
-        } else {
-            std::cerr << "Error: Unable to parse expression in 'exit' statement." << std::endl;
-            return {};
-        }
-    }
-    
-    // Handle "let" statements
-    if (peek().has_value() && peek().value().type == TokenType::let && peek(1).has_value() && peek(1).value().type == TokenType::ident && peek(2).has_value() && peek(2).value().type == TokenType::eq) {
-        consume(); // consume 'let'
-        auto stmt_let = NodeStmtLet {.ident = consume()}; // consume identifier
-        
-        consume(); // consume '='
-        
-        if (auto expr = parse_expr()) {
-            stmt_let.expr = expr.value();
-            
-            if (peek().has_value() && peek().value().type == TokenType::semi) {
-                consume(); // consume ';'
-                return NodeStmt {.var = stmt_let};
-            } else {
-                std::cerr << "Error: Expected semicolon after 'let' statement." << std::endl;
-                return {};
-            }
-        } else {
-            std::cerr << "Error: Unable to parse expression in 'let' statement." << std::endl;
-            return {};
-        }
-    }
-    
-    // If we reach here, it's an unknown or invalid statement
-    std::cerr << "Error: Invalid statement encountered." << std::endl;
-    return {};
-}
 
 
     std::optional<NodeProg> parse_prog() {
@@ -141,4 +165,5 @@ private:
 
     const std::vector<Token> m_tokens;
     size_t m_index;
+    ArenaAllocator m_allocator;
 };

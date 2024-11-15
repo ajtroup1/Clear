@@ -3,6 +3,7 @@
 #include "common.h"
 #include "vm.h"
 #include "debug.h"
+#include "compiler.h"
 
 VM vm;
 
@@ -11,7 +12,7 @@ void initVM()
   resetStack();
 }
 
-static void resetStack()
+void resetStack()
 {
   vm.stackTop = vm.stack;
 }
@@ -29,6 +30,13 @@ static InterpretResult run()
 #define READ_BYTE() (*vm.ip++)
 // Reads the next byte from the bytecode, treats the resulting number as an index, and looks up the corresponding Value in the chunk’s constant table.
 #define READ_CONSTANT() (vm.chunk->constants.values[READ_BYTE()])
+#define BINARY_OP(op) \
+  do                  \
+  {                   \
+    double b = pop(); \
+    double a = pop(); \
+    push(a op b);     \
+  } while (false)
 
   for (;;)
   {
@@ -41,6 +49,22 @@ static InterpretResult run()
       push(constant);
       break;
     }
+    case OP_ADD:
+      BINARY_OP(+);
+      break;
+    case OP_SUBTRACT:
+      BINARY_OP(-);
+      break;
+    case OP_MULTIPLY:
+      BINARY_OP(*);
+      break;
+    case OP_DIVIDE:
+      BINARY_OP(/);
+      break;
+    case OP_NEGATE:
+      // Pop the top value on the stack, negate it, then push it back to the top
+      push(-pop());
+      break;
     case OP_RETURN:
     {
       printValue(pop());
@@ -65,13 +89,13 @@ static InterpretResult run()
 
 #undef READ_BYTE
 #undef READ_CONSTANT
+#undef BINARY_OP
 }
 
-InterpretResult interpret(Chunk *chunk)
+InterpretResult interpret(const char *source)
 {
-  vm.chunk = chunk;
-  vm.ip = vm.chunk->code;
-  return run();
+  compile(source);
+  return INTERPRET_OK;
 }
 
 void push(Value value)

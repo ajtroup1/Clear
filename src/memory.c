@@ -11,9 +11,9 @@
 
   Memory allocation will occur differently based on the new and old size:
     ___________________________________________________________________
-    | oldSize	   | newSize	            | Operation                   |
+    | oldSize    | newSize              | Operation                   |
     | 0	         | Non‑zero             | Allocate new block.         |
-    | Non‑zero	 | 0	                  | Free allocation.            |
+    | Non‑zero	 | 0                    | Free allocation.            |
     | Non‑zero	 | Smaller than oldSize	| Shrink existing allocation. |
     | Non‑zero	 | Larger than oldSize	| Grow existing allocation.   |
     |________________________________________________________________ |

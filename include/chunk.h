@@ -22,12 +22,13 @@ typedef struct
   int capacity;
   uint8_t *code; // Pointer to a dynamically-allocated array of bytecode instructions
   ValueArray constants; // Stuct containing a dynamic array acting as a pool of constants for the program
+  int *lines;
 } Chunk;
 
 // Basic dynamic array functionality
 void initChunk(Chunk *chunk);
 void freeChunk(Chunk *chunk);
-void writeChunk(Chunk *chunk, uint8_t byte);
+void writeChunk(Chunk *chunk, uint8_t byte, int line);
 
 // Writes a value to a given chunk's constants array
 int addConstant(Chunk *chunk, Value value);

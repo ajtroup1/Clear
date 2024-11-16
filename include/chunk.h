@@ -35,6 +35,8 @@ void initChunk(Chunk *chunk);
 void freeChunk(Chunk *chunk);
 void writeChunk(Chunk *chunk, uint8_t byte, int line);
 
+char *readFile(const char *path);
+
 // Writes a value to a given chunk's constants array
 int addConstant(Chunk *chunk, Value value);
 

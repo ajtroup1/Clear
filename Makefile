@@ -1,31 +1,24 @@
-# Compiler and flags
-CC = gcc
-CFLAGS = -Wall -Wextra -Iinclude -g
+# Variables
+BIN := bin/clear
 
-# Directories
-SRC_DIR = src
-OBJ_DIR = obj
-BIN_DIR = bin
+# Targets
+.PHONY: all build run test clean fresh
 
-# Output executable
-TARGET = $(BIN_DIR)/clear
+build:
+	@go build -o ${BIN} ./src/cmd/main.go
 
-# Source and object files
-SRCS = $(wildcard $(SRC_DIR)/*.c)
-OBJS = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+run: build
+	@./${BIN}
 
-# Rules
-all: $(TARGET)
-
-$(TARGET): $(OBJS)
-	mkdir -p $(BIN_DIR)
-	$(CC) $(CFLAGS) -o $@ $^
-
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	mkdir -p $(OBJ_DIR)
-	$(CC) $(CFLAGS) -c -o $@ $<
+test:
+	@go test -v ./...
+	
+fmt:
+	@go fmt ./...
 
 clean:
-	rm -rf $(OBJ_DIR) $(BIN_DIR)
+	@go clean
+	@rm -f ${BIN}
 
-.PHONY: all clean
+# A combined target to clean, build, and run the application
+fresh: clean build run

@@ -1,3 +1,7 @@
+/*
+	Read, Evaluate, Print, Loop
+	Type inputs to the terminal and have them evaluated
+*/
 package repl
 
 import (

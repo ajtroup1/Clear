@@ -1,11 +1,12 @@
 # Variables
 BIN := bin/clear
+MAIN := ./src/cmd/main.go
 
 # Targets
 .PHONY: all build run test clean fresh
 
 build:
-	@go build -o ${BIN} ./src/cmd/main.go
+	@go build -o ${BIN} ${MAIN}
 
 run: build
 	@./${BIN}

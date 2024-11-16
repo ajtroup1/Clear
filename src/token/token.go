@@ -1,5 +1,10 @@
+/*
+	Contains data for tokens used in the Clear language
+*/
+
 package token
 
+// Essential declarations for the low-level fundemental building blocks of Clear
 type TokenType string
 type Token struct {
 	Type    TokenType

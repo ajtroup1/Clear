@@ -111,6 +111,7 @@ func (rs *ReturnStatement) String() string {
 	return out.String()
 }
 
+// Wraps an expression within a statement wrapper in order to envelope it in Program's Statements slice
 type ExpressionStatement struct {
 	Token      token.Token // the first token of the expression
 	Expression Expression
@@ -134,6 +135,8 @@ func (il *IntegerLiteral) expressionNode()      {}
 func (il *IntegerLiteral) TokenLiteral() string { return il.Token.Literal }
 func (il *IntegerLiteral) String() string       { return il.Token.Literal }
 
+// Prefix expressions are simple ome-sided expressions such as
+	// Not (!), Negate (-), ....
 type PrefixExpression struct {
 	Token    token.Token // The prefix token, e.g. !
 	Operator string
@@ -147,6 +150,31 @@ func (pe *PrefixExpression) String() string {
 	out.WriteString("(")
 	out.WriteString(pe.Operator)
 	out.WriteString(pe.Right.String())
+	out.WriteString(")")
+	return out.String()
+}
+
+// Infix expressions contain a left and right value with their operand, unlike prefix expressions
+	// 1 + 2, 3 * (7 - 2), 8 + 8 + 8, ....
+// Infix Expressions can be "infinitely" large since since it encapsulates 2 expressions, not values
+	// Since "5" is an expression, you can have "5 + 5"
+	// Since "5 + 5" is also an expression, you can also have "5 + 5 * 2"
+		// Here, "5 * 2" would be the right side of the expression (due to precedence), and "5" is the left side
+type InfixExpression struct {
+	Token    token.Token // The operator token, e.g. +
+	Left     Expression
+	Operator string
+	Right    Expression
+}
+
+func (oe *InfixExpression) expressionNode()      {}
+func (oe *InfixExpression) TokenLiteral() string { return oe.Token.Literal }
+func (oe *InfixExpression) String() string {
+	var out bytes.Buffer
+	out.WriteString("(")
+	out.WriteString(oe.Left.String())
+	out.WriteString(" " + oe.Operator + " ")
+	out.WriteString(oe.Right.String())
 	out.WriteString(")")
 	return out.String()
 }

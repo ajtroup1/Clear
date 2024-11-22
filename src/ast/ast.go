@@ -135,8 +135,17 @@ func (il *IntegerLiteral) expressionNode()      {}
 func (il *IntegerLiteral) TokenLiteral() string { return il.Token.Literal }
 func (il *IntegerLiteral) String() string       { return il.Token.Literal }
 
+type Boolean struct {
+	Token token.Token
+	Value bool
+}
+
+func (b *Boolean) expressionNode()      {}
+func (b *Boolean) TokenLiteral() string { return b.Token.Literal }
+func (b *Boolean) String() string       { return b.Token.Literal }
+
 // Prefix expressions are simple ome-sided expressions such as
-	// Not (!), Negate (-), ....
+// Not (!), Negate (-), ....
 type PrefixExpression struct {
 	Token    token.Token // The prefix token, e.g. !
 	Operator string
@@ -155,11 +164,11 @@ func (pe *PrefixExpression) String() string {
 }
 
 // Infix expressions contain a left and right value with their operand, unlike prefix expressions
-	// 1 + 2, 3 * (7 - 2), 8 + 8 + 8, ....
+// 1 + 2, 3 * (7 - 2), 8 + 8 + 8, ....
 // Infix Expressions can be "infinitely" large since since it encapsulates 2 expressions, not values
-	// Since "5" is an expression, you can have "5 + 5"
-	// Since "5 + 5" is also an expression, you can also have "5 + 5 * 2"
-		// Here, "5 * 2" would be the right side of the expression (due to precedence), and "5" is the left side
+// Since "5" is an expression, you can have "5 + 5"
+// Since "5 + 5" is also an expression, you can also have "5 + 5 * 2"
+// Here, "5 * 2" would be the right side of the expression (due to precedence), and "5" is the left side
 type InfixExpression struct {
 	Token    token.Token // The operator token, e.g. +
 	Left     Expression
@@ -176,5 +185,42 @@ func (oe *InfixExpression) String() string {
 	out.WriteString(" " + oe.Operator + " ")
 	out.WriteString(oe.Right.String())
 	out.WriteString(")")
+	return out.String()
+}
+
+type IfExpression struct {
+	Token       token.Token // The 'if' token
+	Condition   Expression
+	Consequence *BlockStatement
+	Alternative *BlockStatement
+}
+
+func (ie *IfExpression) expressionNode()      {}
+func (ie *IfExpression) TokenLiteral() string { return ie.Token.Literal }
+func (ie *IfExpression) String() string {
+	var out bytes.Buffer
+	out.WriteString("if")
+	out.WriteString(ie.Condition.String())
+	out.WriteString(" ")
+	out.WriteString(ie.Consequence.String())
+	if ie.Alternative != nil {
+		out.WriteString("else ")
+		out.WriteString(ie.Alternative.String())
+	}
+	return out.String()
+}
+
+type BlockStatement struct {
+	Token      token.Token // the { token
+	Statements []Statement
+}
+
+func (bs *BlockStatement) statementNode()       {}
+func (bs *BlockStatement) TokenLiteral() string { return bs.Token.Literal }
+func (bs *BlockStatement) String() string {
+	var out bytes.Buffer
+	for _, s := range bs.Statements {
+		out.WriteString(s.String())
+	}
 	return out.String()
 }

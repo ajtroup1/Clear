@@ -8,7 +8,7 @@ MAIN := ./src/cmd/main.go
 build:
 	@go build -o ${BIN} ${MAIN}
 
-run: build
+repl: build
 	@./${BIN}
 
 test:

@@ -61,8 +61,9 @@ public class JClear {
 
   // Execute a literal string of source code
   private static void run(String source) {
-    Scanner scanner = new Scanner(source);
-    List<Token> tokens = scanner.scanTokens();
+    // Instantiate a scanner to tokenize the source string
+    com.jclear.Scanner scanner = new com.jclear.Scanner(source);
+    List<Token> tokens = scanner.scanTokens(); // Store the tokens into a list returned from scanTokens()
 
     // For now, just print the tokens.
     for (Token token : tokens) {
@@ -71,7 +72,7 @@ public class JClear {
   }
 
   // Reports an error message given line and context information
-  static void error(int line, String message) {
+  public static void error(int line, String message) {
     report(line, "", message);
   }
 

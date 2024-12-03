@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "GenerateAST",
+      "request": "launch",
+      "mainClass": "com.tool.GenerateAST",
+      "projectName": "jclear"
+    },
+    {
+      "type": "java",
       "name": "Current File",
       "request": "launch",
       "mainClass": "${file}"
@@ -17,7 +24,6 @@
       "mainClass": "com.jclear.JClear",
       "projectName": "jclear",
       "args": "./jclear/src/test/java/test.jc"
-      // "args": ""
     }
   ]
 }

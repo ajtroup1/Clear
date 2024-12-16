@@ -1,12 +1,14 @@
 # Clear
 
-Follows the classic Crafting Interpreters
-
-One repo contains a Java implementation and the other a C implementation
-
 ---
 
+## GoClear
+
+Follows Tyler Laceby's parsing series with the Pikachu on the thumbnails
+
 ## JClear
+
+Follows the classic Crafting Interpreters
 
 The Java implementation and also my first Java project ever
 

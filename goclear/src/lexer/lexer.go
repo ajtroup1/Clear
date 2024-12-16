@@ -15,15 +15,20 @@ type regexPattern struct {
 	handler regexHandler
 }
 
+// Overall lexer class to manage information and state
 type Lexer struct {
-	Patterns []regexPattern
-	Tokens   []Token
-	src      string
-	current  int
-	line     int
-	col      int
+	Patterns []regexPattern // List of regex patterns and their corresponding handlers
+	Tokens   []Token        // List of tokens generated from lexing
+	src      string         // Input source code passed as a string
+	current  int            // Current lexer position in the source code
+
+	// Error handling
+	line int // Current line number
+	col  int // Current column number
 }
 
+// Lexer constructor
+// Takes in an entire source as a string casted from a byte array
 func NewLexer(src string) *Lexer {
 	return &Lexer{
 		src:     src,
@@ -72,6 +77,8 @@ func NewLexer(src string) *Lexer {
 	}
 }
 
+// This handler can handle most simple patterns in Clear
+// Returns a simple function that advances the length of the token and pushes a new token to the Lexer.Token slice
 func defaultHandler(t TokenType, lit string) regexHandler {
 	return func(lex *Lexer, regex *regexp.Regexp) {
 		lex.consumeN(len(lit))
@@ -79,6 +86,7 @@ func defaultHandler(t TokenType, lit string) regexHandler {
 	}
 }
 
+// Special regex handlers
 func numberHandler(l *Lexer, regex *regexp.Regexp) {
 	match := regex.FindString(l.peekRemainder())
 	l.push(NewToken(NUMBER, match))
@@ -87,10 +95,10 @@ func numberHandler(l *Lexer, regex *regexp.Regexp) {
 
 func stringHandler(l *Lexer, regex *regexp.Regexp) {
 	match := regex.FindStringIndex(l.peekRemainder())
-	stringLit := l.peekRemainder()[match[0]+1:match[1]-1]
+	stringLit := l.peekRemainder()[match[0]+1 : match[1]-1]
 
 	l.push(NewToken(STRING, stringLit))
-	l.consumeN(len(stringLit)+2)
+	l.consumeN(len(stringLit) + 2)
 }
 
 func symbolHandler(l *Lexer, regex *regexp.Regexp) {
@@ -109,6 +117,8 @@ func whitespaceHandler(l *Lexer, regex *regexp.Regexp) {
 	match := regex.FindStringIndex(l.peekRemainder())
 	l.consumeN(match[1])
 }
+
+// Lexer state helpers
 
 func (l *Lexer) peek() byte {
 	return l.src[l.current]
@@ -138,14 +148,19 @@ func (l *Lexer) push(t Token) {
 	l.Tokens = append(l.Tokens, t)
 }
 
+// Core lexer function
+// Advances through the entire source and creates according tokens in a stream
 func Tokenize(src string) []Token {
+	// Instantiate a new lexer with the given source code
 	lex := NewLexer(src)
 
+	// Until the lexer reaches the end of the file, create tokens and append them to the stream
 	for !lex.atEOF() {
-		matched := false
+		matched := false // Used later to check if a token is unrecognized and print an error
 		for _, pattern := range lex.Patterns {
 			loc := pattern.regex.FindStringIndex(lex.peekRemainder())
 
+			// The location must be found (!nil) AND have matched at the current position (ex. not 5 positions ahead)
 			if loc != nil && loc[0] == 0 {
 				pattern.handler(lex, pattern.regex)
 				matched = true
@@ -169,6 +184,7 @@ func Tokenize(src string) []Token {
 	return lex.Tokens
 }
 
+// Returns the entire line given the source and line number to print
 func getLineContent(src string, line int) string {
 	lines := strings.Split(src, "\n")
 	if line-1 < len(lines) {

@@ -5,6 +5,7 @@ import (
 	"strings"
 )
 
+// Define an enum for handling TokenTypes
 type TokenType int
 
 const (
@@ -84,6 +85,8 @@ const (
 	IN
 )
 
+// Map of keywords to corresponding TokenTypes
+// Used in Tokenize() to differentiate from identifiers and reserved keywords
 var keyword_lookup map[string]TokenType = map[string]TokenType{
 	"true":    TRUE,
 	"false":   FALSE,
@@ -105,11 +108,14 @@ var keyword_lookup map[string]TokenType = map[string]TokenType{
 	"in":      IN,
 }
 
+// Basic Token wrapper storing its TokenType and optionally a literal value
 type Token struct {
 	Type    TokenType
 	Literal string
 }
 
+// Helper function to check whether a token is one of many types passed
+// Usage: matched := isOneOfMany(NUMBER, STRING); if matched { print("The token IS either a number or a string") }
 func (t Token) isOneOfMany(expectedTokens ...TokenType) bool {
 	for _, expected := range expectedTokens {
 		if expected == t.Type {
@@ -120,7 +126,10 @@ func (t Token) isOneOfMany(expectedTokens ...TokenType) bool {
 	return false
 }
 
+// Print for any token instance, used for debugging
+// Renders with or without a literal value
 func (t Token) Debug() {
+	// Only identifiers, numbers, and strings need to store a literal value
 	if t.isOneOfMany(IDENT, NUMBER, STRING) {
 		fmt.Printf("%s (%s)\n", strings.ToUpper(TokenTypeString(t.Type)), t.Literal)
 	} else {
@@ -128,6 +137,7 @@ func (t Token) Debug() {
 	}
 }
 
+// Abstract creating new tokens
 func NewToken(t TokenType, lit string) Token {
 	return Token{
 		Type:    t,
@@ -135,6 +145,8 @@ func NewToken(t TokenType, lit string) Token {
 	}
 }
 
+// Returns the token type as its corresponding string value
+// In the code, each TokenType is really just an int, so this kinda works as a map
 func TokenTypeString(t TokenType) string {
 	switch t {
 	case EOF:

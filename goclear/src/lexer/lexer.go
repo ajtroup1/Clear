@@ -8,7 +8,7 @@ import (
 	"github.com/ajtroup1/goclear/src/util"
 )
 
-type regexHandler func(lex *Lexer, regex *regexp.Regexp)
+type regexHandler func(lex *lexer, regex *regexp.Regexp)
 
 type regexPattern struct {
 	regex   *regexp.Regexp
@@ -16,7 +16,7 @@ type regexPattern struct {
 }
 
 // Overall lexer class to manage information and state
-type Lexer struct {
+type lexer struct {
 	Patterns []regexPattern // List of regex patterns and their corresponding handlers
 	Tokens   []Token        // List of tokens generated from lexing
 	src      string         // Input source code passed as a string
@@ -27,10 +27,10 @@ type Lexer struct {
 	col  int // Current column number
 }
 
-// Lexer constructor
+// lexer constructor
 // Takes in an entire source as a string casted from a byte array
-func NewLexer(src string) *Lexer {
-	return &Lexer{
+func newLexer(src string) *lexer {
+	return &lexer{
 		src:     src,
 		current: 0,
 		line:    1,
@@ -78,22 +78,22 @@ func NewLexer(src string) *Lexer {
 }
 
 // This handler can handle most simple patterns in Clear
-// Returns a simple function that advances the length of the token and pushes a new token to the Lexer.Token slice
+// Returns a simple function that advances the length of the token and pushes a new token to the lexer.Token slice
 func defaultHandler(t TokenType, lit string) regexHandler {
-	return func(lex *Lexer, regex *regexp.Regexp) {
+	return func(lex *lexer, regex *regexp.Regexp) {
 		lex.consumeN(len(lit))
 		lex.push(NewToken(t, lit))
 	}
 }
 
 // Special regex handlers
-func numberHandler(l *Lexer, regex *regexp.Regexp) {
+func numberHandler(l *lexer, regex *regexp.Regexp) {
 	match := regex.FindString(l.peekRemainder())
 	l.push(NewToken(NUMBER, match))
 	l.consumeN(len(match))
 }
 
-func stringHandler(l *Lexer, regex *regexp.Regexp) {
+func stringHandler(l *lexer, regex *regexp.Regexp) {
 	match := regex.FindStringIndex(l.peekRemainder())
 	stringLit := l.peekRemainder()[match[0]+1 : match[1]-1]
 
@@ -101,7 +101,7 @@ func stringHandler(l *Lexer, regex *regexp.Regexp) {
 	l.consumeN(len(stringLit) + 2)
 }
 
-func symbolHandler(l *Lexer, regex *regexp.Regexp) {
+func symbolHandler(l *lexer, regex *regexp.Regexp) {
 	val := regex.FindString(l.peekRemainder())
 
 	if t, exists := keyword_lookup[val]; exists {
@@ -113,22 +113,22 @@ func symbolHandler(l *Lexer, regex *regexp.Regexp) {
 	l.consumeN(len(val))
 }
 
-func whitespaceHandler(l *Lexer, regex *regexp.Regexp) {
+func whitespaceHandler(l *lexer, regex *regexp.Regexp) {
 	match := regex.FindStringIndex(l.peekRemainder())
 	l.consumeN(match[1])
 }
 
-// Lexer state helpers
+// lexer state helpers
 
-func (l *Lexer) peek() byte {
+func (l *lexer) peek() byte {
 	return l.src[l.current]
 }
 
-func (l *Lexer) peekRemainder() string {
+func (l *lexer) peekRemainder() string {
 	return l.src[l.current:]
 }
 
-func (l *Lexer) consumeN(n int) {
+func (l *lexer) consumeN(n int) {
 	for i := 0; i < n; i++ {
 		if l.src[l.current] == '\n' {
 			l.line++
@@ -140,11 +140,11 @@ func (l *Lexer) consumeN(n int) {
 	}
 }
 
-func (l *Lexer) atEOF() bool {
+func (l *lexer) atEOF() bool {
 	return l.current >= len(l.src)
 }
 
-func (l *Lexer) push(t Token) {
+func (l *lexer) push(t Token) {
 	l.Tokens = append(l.Tokens, t)
 }
 
@@ -152,7 +152,7 @@ func (l *Lexer) push(t Token) {
 // Advances through the entire source and creates according tokens in a stream
 func Tokenize(src string) []Token {
 	// Instantiate a new lexer with the given source code
-	lex := NewLexer(src)
+	lex := newLexer(src)
 
 	// Until the lexer reaches the end of the file, create tokens and append them to the stream
 	for !lex.atEOF() {
@@ -171,7 +171,7 @@ func Tokenize(src string) []Token {
 		if !matched {
 			lineContent := getLineContent(lex.src, lex.line)
 			util.PrintErrorPanic(
-				"Lexer",
+				"lexer",
 				fmt.Sprintf(
 					"unrecognized token '%s' on line %d, col %d\n%s\n%s^",
 					lex.peekRemainder()[0:1], lex.line, lex.col, lineContent, strings.Repeat(" ", lex.col-1),

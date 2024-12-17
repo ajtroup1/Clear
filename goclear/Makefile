@@ -16,7 +16,7 @@ clean:
 	del $(OUTPUT)
 
 fmt:
-	$(GO) fmt $(GO_FILES)
+	$(GO) fmt ./...
 
 lint:
 	golangci-lint run

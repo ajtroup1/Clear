@@ -1,194 +1,169 @@
 package lexer
 
-import (
-	"fmt"
-	"regexp"
-	"strings"
+import "github.com/ajtroup1/goclear/src/token"
 
-	"github.com/ajtroup1/goclear/src/util"
-)
-
-type regexHandler func(lex *lexer, regex *regexp.Regexp)
-
-type regexPattern struct {
-	regex   *regexp.Regexp
-	handler regexHandler
+type Lexer struct {
+	input        string
+	position     int      // current position in input (points to current char)
+	readPosition int      // current reading position in input (after current char)
+	ch           byte     // current char under examination
+	line         int      // current line number
+	column       int      // current column number
+	lines        []string // stores all input lines
+	currentLine  []byte   // stores current line content being read
 }
 
-// Overall lexer class to manage information and state
-type lexer struct {
-	Patterns []regexPattern // List of regex patterns and their corresponding handlers
-	Tokens   []Token        // List of tokens generated from lexing
-	src      string         // Input source code passed as a string
-	current  int            // Current lexer position in the source code
-
-	// Error handling
-	line int // Current line number
-	col  int // Current column number
+func New(input string) *Lexer {
+	l := &Lexer{input: input, line: 1, column: 0}
+	l.lines = append(l.lines, "") 
+	l.readChar()
+	return l
 }
 
-// lexer constructor
-// Takes in an entire source as a string casted from a byte array
-func newLexer(src string) *lexer {
-	return &lexer{
-		src:     src,
-		current: 0,
-		line:    1,
-		col:     1,
-		Tokens:  make([]Token, 0),
-		Patterns: []regexPattern{
-			{regexp.MustCompile(`\s+`), whitespaceHandler},
-			{regexp.MustCompile(`\/\/.*`), whitespaceHandler},
-			{regexp.MustCompile(`"[^"]*"`), stringHandler},
-			{regexp.MustCompile(`[0-9]+(\.[0-9]+)?`), numberHandler},
-			{regexp.MustCompile(`[a-zA-Z_][a-zA-Z0-9_]*`), symbolHandler},
-			{regexp.MustCompile(`\[`), defaultHandler(OPEN_BRACKET, "[")},
-			{regexp.MustCompile(`\]`), defaultHandler(CLOSE_BRACKET, "]")},
-			{regexp.MustCompile(`\{`), defaultHandler(OPEN_BRACE, "{")},
-			{regexp.MustCompile(`\}`), defaultHandler(CLOSE_BRACE, "}")},
-			{regexp.MustCompile(`\(`), defaultHandler(OPEN_PAREN, "(")},
-			{regexp.MustCompile(`\)`), defaultHandler(CLOSE_PAREN, ")")},
-			{regexp.MustCompile(`==`), defaultHandler(COMPARISON, "==")},
-			{regexp.MustCompile(`!=`), defaultHandler(NOT_EQUAL, "!=")},
-			{regexp.MustCompile(`=`), defaultHandler(ASSIGNMENT, "=")},
-			{regexp.MustCompile(`!`), defaultHandler(BANG, "!")},
-			{regexp.MustCompile(`<=`), defaultHandler(LESS_EQUAL, "<=")},
-			{regexp.MustCompile(`<`), defaultHandler(LESS, "<")},
-			{regexp.MustCompile(`>=`), defaultHandler(GREATER_EQUAL, ">=")},
-			{regexp.MustCompile(`>`), defaultHandler(GREATER, ">")},
-			{regexp.MustCompile(`\|\|`), defaultHandler(OR, "||")},
-			{regexp.MustCompile(`&&`), defaultHandler(AND, "&&")},
-			{regexp.MustCompile(`\.\.`), defaultHandler(DOT_DOT, "..")},
-			{regexp.MustCompile(`\.`), defaultHandler(DOT, ".")},
-			{regexp.MustCompile(`;`), defaultHandler(SEMI, ";")},
-			{regexp.MustCompile(`:`), defaultHandler(COLON, ":")},
-			{regexp.MustCompile(`\?`), defaultHandler(QUESTION, "?")},
-			{regexp.MustCompile(`,`), defaultHandler(COMMA, ",")},
-			{regexp.MustCompile(`\+\+`), defaultHandler(PLUS_PLUS, "++")},
-			{regexp.MustCompile(`--`), defaultHandler(MINUS_MINUS, "--")},
-			{regexp.MustCompile(`\+=`), defaultHandler(PLUS_EQUAL, "+=")},
-			{regexp.MustCompile(`-=`), defaultHandler(MINUS_EQUAL, "-=")},
-			{regexp.MustCompile(`\+`), defaultHandler(PLUS, "+")},
-			{regexp.MustCompile(`-`), defaultHandler(MINUS, "-")},
-			{regexp.MustCompile(`/`), defaultHandler(SLASH, "/")},
-			{regexp.MustCompile(`\*`), defaultHandler(STAR, "*")},
-			{regexp.MustCompile(`%`), defaultHandler(PERCENT, "%")},
-		},
-	}
-}
+func (l *Lexer) NextToken() token.Token {
+	var tok token.Token
 
-// This handler can handle most simple patterns in Clear
-// Returns a simple function that advances the length of the token and pushes a new token to the lexer.Token slice
-func defaultHandler(t TokenType, lit string) regexHandler {
-	return func(lex *lexer, regex *regexp.Regexp) {
-		lex.consumeN(len(lit))
-		lex.push(NewToken(t, lit))
-	}
-}
+	l.skipWhitespace()
 
-// Special regex handlers
-func numberHandler(l *lexer, regex *regexp.Regexp) {
-	match := regex.FindString(l.peekRemainder())
-	l.push(NewToken(NUMBER, match))
-	l.consumeN(len(match))
-}
+	tok.Line = l.line
+	tok.Column = l.column
 
-func stringHandler(l *lexer, regex *regexp.Regexp) {
-	match := regex.FindStringIndex(l.peekRemainder())
-	stringLit := l.peekRemainder()[match[0]+1 : match[1]-1]
-
-	l.push(NewToken(STRING, stringLit))
-	l.consumeN(len(stringLit) + 2)
-}
-
-func symbolHandler(l *lexer, regex *regexp.Regexp) {
-	val := regex.FindString(l.peekRemainder())
-
-	if t, exists := keyword_lookup[val]; exists {
-		l.push(NewToken(t, val))
-	} else {
-		l.push(NewToken(IDENT, val))
-	}
-
-	l.consumeN(len(val))
-}
-
-func whitespaceHandler(l *lexer, regex *regexp.Regexp) {
-	match := regex.FindStringIndex(l.peekRemainder())
-	l.consumeN(match[1])
-}
-
-// lexer state helpers
-
-func (l *lexer) peek() byte {
-	return l.src[l.current]
-}
-
-func (l *lexer) peekRemainder() string {
-	return l.src[l.current:]
-}
-
-func (l *lexer) consumeN(n int) {
-	for i := 0; i < n; i++ {
-		if l.src[l.current] == '\n' {
-			l.line++
-			l.col = 1
+	switch l.ch {
+	case '=':
+		if l.peekChar() == '=' {
+			ch := l.ch
+			l.readChar()
+			literal := string(ch) + string(l.ch)
+			tok = token.Token{Type: token.EQ, Literal: literal, Line: l.line, Column: l.column}
 		} else {
-			l.col++
+			tok = newToken(l, token.ASSIGN, l.ch)
 		}
-		l.current++
+	case '+':
+		tok = newToken(l, token.PLUS, l.ch)
+	case '-':
+		tok = newToken(l, token.MINUS, l.ch)
+	case '!':
+		if l.peekChar() == '=' {
+			ch := l.ch
+			l.readChar()
+			literal := string(ch) + string(l.ch)
+			tok = token.Token{Type: token.NOT_EQ, Literal: literal, Line: l.line, Column: l.column}
+		} else {
+			tok = newToken(l, token.BANG, l.ch)
+		}
+	case '/':
+		tok = newToken(l, token.SLASH, l.ch)
+	case '*':
+		tok = newToken(l, token.ASTERISK, l.ch)
+	case '<':
+		tok = newToken(l, token.LT, l.ch)
+	case '>':
+		tok = newToken(l, token.GT, l.ch)
+	case ';':
+		tok = newToken(l, token.SEMICOLON, l.ch)
+	case ',':
+		tok = newToken(l, token.COMMA, l.ch)
+	case '{':
+		tok = newToken(l, token.LBRACE, l.ch)
+	case '}':
+		tok = newToken(l, token.RBRACE, l.ch)
+	case '(':
+		tok = newToken(l, token.LPAREN, l.ch)
+	case ')':
+		tok = newToken(l, token.RPAREN, l.ch)
+	case 0:
+		tok.Literal = ""
+		tok.Type = token.EOF
+	default:
+		if isLetter(l.ch) {
+			tok.Literal = l.readIdentifier()
+			tok.Type = token.LookupIdent(tok.Literal)
+			return tok
+		} else if isDigit(l.ch) {
+			tok.Type = token.INT
+			tok.Literal = l.readNumber()
+			return tok
+		} else {
+			tok = newToken(l, token.ILLEGAL, l.ch)
+		}
+	}
+
+	l.readChar()
+	return tok
+}
+
+func (l *Lexer) skipWhitespace() {
+	for l.ch == ' ' || l.ch == '\t' || l.ch == '\n' || l.ch == '\r' {
+		l.readChar()
 	}
 }
 
-func (l *lexer) atEOF() bool {
-	return l.current >= len(l.src)
-}
-
-func (l *lexer) push(t Token) {
-	l.Tokens = append(l.Tokens, t)
-}
-
-// Core lexer function
-// Advances through the entire source and creates according tokens in a stream
-func Tokenize(src string) []Token {
-	// Instantiate a new lexer with the given source code
-	lex := newLexer(src)
-
-	// Until the lexer reaches the end of the file, create tokens and append them to the stream
-	for !lex.atEOF() {
-		matched := false // Used later to check if a token is unrecognized and print an error
-		for _, pattern := range lex.Patterns {
-			loc := pattern.regex.FindStringIndex(lex.peekRemainder())
-
-			// The location must be found (!nil) AND have matched at the current position (ex. not 5 positions ahead)
-			if loc != nil && loc[0] == 0 {
-				pattern.handler(lex, pattern.regex)
-				matched = true
-				break
-			}
-		}
-
-		if !matched {
-			lineContent := getLineContent(lex.src, lex.line)
-			util.PrintErrorPanic(
-				"lexer",
-				fmt.Sprintf(
-					"unrecognized token '%s' on line %d, col %d\n%s\n%s^",
-					lex.peekRemainder()[0:1], lex.line, lex.col, lineContent, strings.Repeat(" ", lex.col-1),
-				),
-			)
-		}
+func (l *Lexer) readChar() {
+	if l.readPosition >= len(l.input) {
+		l.ch = 0
+	} else {
+		l.ch = l.input[l.readPosition]
 	}
 
-	lex.push(NewToken(EOF, "EOF"))
-	return lex.Tokens
+	if l.ch == '\n' {
+		l.lines = append(l.lines, string(l.currentLine))
+		l.currentLine = []byte{} 
+		l.line++
+		l.column = 0
+	} else {
+		l.currentLine = append(l.currentLine, l.ch) 
+	}
+
+	l.column++
+	l.position = l.readPosition
+	l.readPosition += 1
 }
 
-// Returns the entire line given the source and line number to print
-func getLineContent(src string, line int) string {
-	lines := strings.Split(src, "\n")
-	if line-1 < len(lines) {
-		return lines[line-1]
+
+func (l *Lexer) peekChar() byte {
+	if l.readPosition >= len(l.input) {
+		return 0
+	} else {
+		return l.input[l.readPosition]
+	}
+}
+
+func (l *Lexer) readIdentifier() string {
+	position := l.position
+	for isLetter(l.ch) {
+		l.readChar()
+	}
+	return l.input[position:l.position]
+}
+
+func (l *Lexer) readNumber() string {
+	position := l.position
+	for isDigit(l.ch) {
+		l.readChar()
+	}
+	return l.input[position:l.position]
+}
+
+func isLetter(ch byte) bool {
+	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
+}
+
+func isDigit(ch byte) bool {
+	return '0' <= ch && ch <= '9'
+}
+
+func (l *Lexer) LineContent(lineNumber int) string {
+	if lineNumber >= 1 && lineNumber <= len(l.lines) {
+		return l.lines[lineNumber-1]
 	}
 	return ""
+}
+
+func newToken(l *Lexer, tokenType token.TokenType, ch byte) token.Token {
+	return token.Token{
+		Type:    tokenType,
+		Literal: string(ch),
+		Line:    l.line,
+		Column:  l.column,
+	}
 }

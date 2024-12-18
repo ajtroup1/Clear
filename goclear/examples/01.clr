@@ -26,7 +26,7 @@ class DirectoryReader {
     }
   }
 
-  fn isFileRecent(creationTime: Time): bool {
+  fn isFileRecent(creationTime: Time): boolean {
     let twentyFourHoursAgo: Time = time.now() - time.hours(24);
     creationTime > twentyFourHoursAgo;
   }

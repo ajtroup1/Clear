@@ -22,7 +22,7 @@ lint:
 	golangci-lint run
 
 test:
-	$(GO) test ./...
+	$(GO) test -v ./...
 
 install:
 	$(GO) mod tidy

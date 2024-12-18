@@ -1,7 +1,13 @@
 package util
 
-import "fmt"
+import (
+	"fmt"
 
-func PrintErrorPanic(step string, msg string) {
-	panic(fmt.Sprintf("\033[31m%s::Error -> %s\n\033[0m", step, msg))
+	"github.com/ajtroup1/goclear/src/types"
+)
+
+func PrintParserError(e types.ParserError) {
+	fmt.Printf("Parser::Error --> (line %d, col %d): %s\n", e.Line, e.Column, e.Message)
+	
+	fmt.Printf("\t-- Line: %s\n", e.LineContent)
 }

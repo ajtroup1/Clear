@@ -1,29 +1,20 @@
 package main
 
 import (
+	"fmt"
 	"os"
+	"os/user"
 
-	"github.com/ajtroup1/goclear/src/lexer"
-	"github.com/ajtroup1/goclear/src/parser"
-	"github.com/sanity-io/litter"
+	"github.com/ajtroup1/goclear/src/repl"
 )
 
 func main() {
-	// Read in all the bytes from a hardcoded source file
-	// TODO: Take in a param that denotes the file to run
-	// ex. "make run repo/script.clr"
-	bytes, _ := os.ReadFile("./examples/02.clr")
-
-	// Extract all tokens (in a string) from the stringified byte array
-	tokens := lexer.Tokenize(string(bytes))
-
-	// Test print, displays every token for debugging
-	// for _, token := range tokens {
-	// 	token.Debug()
-	// }
-
-	ast := parser.Parse(tokens)
-
-	// Test print for the AST using Litter dependency
-	litter.Dump(ast)
+	user, err := user.Current()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("Hello %s! This is the Monkey programming language!\n",
+		user.Username)
+	fmt.Printf("Feel free to type in commands\n")
+	repl.Start(os.Stdin, os.Stdout)
 }

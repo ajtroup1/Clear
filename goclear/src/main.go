@@ -1,20 +1,36 @@
 package main
 
 import (
-	"fmt"
+	// "encoding/json"
+	// "fmt"
 	"os"
-	"os/user"
 
-	"github.com/ajtroup1/goclear/src/repl"
+	"github.com/ajtroup1/goclear/src/lexer"
+	"github.com/ajtroup1/goclear/src/parser"
+	"github.com/sanity-io/litter"
 )
 
 func main() {
-	user, err := user.Current()
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("Hello %s! This is the Monkey programming language!\n",
-		user.Username)
-	fmt.Printf("Feel free to type in commands\n")
-	repl.Start(os.Stdin, os.Stdout)
+	srcBytes, _ := os.ReadFile("./examples/00.clr")
+	src := string(srcBytes)
+
+	lexer := lexer.New(src)
+	parser := parser.New(lexer)
+	program := parser.ParseProgram()
+
+	litter.Dump(program)
+
+	// programJSON, err := json.MarshalIndent(program, "", "  ")
+	// if err != nil {
+	// 	fmt.Printf("Error serializing program to JSON: %v\n", err)
+	// 	return
+	// }
+
+	// err = os.WriteFile("program.json", programJSON, 0644)
+	// if err != nil {
+	// 	fmt.Printf("Error writing JSON to file: %v\n", err)
+	// 	return
+	// }
+
+	// fmt.Println("Program has been dumped to program.json")
 }

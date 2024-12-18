@@ -1,0 +1,57 @@
+{
+  "Statements": [
+    {
+      "Token": {
+        "Type": "INT",
+        "Literal": "10",
+        "Line": 1,
+        "Column": 1
+      },
+      "Expression": {
+        "Token": {
+          "Type": "+",
+          "Literal": "+",
+          "Line": 1,
+          "Column": 4
+        },
+        "Left": {
+          "Token": {
+            "Type": "INT",
+            "Literal": "10",
+            "Line": 1,
+            "Column": 1
+          },
+          "Value": 10
+        },
+        "Operator": "+",
+        "Right": {
+          "Token": {
+            "Type": "*",
+            "Literal": "*",
+            "Line": 1,
+            "Column": 8
+          },
+          "Left": {
+            "Token": {
+              "Type": "INT",
+              "Literal": "2",
+              "Line": 1,
+              "Column": 6
+            },
+            "Value": 2
+          },
+          "Operator": "*",
+          "Right": {
+            "Token": {
+              "Type": "INT",
+              "Literal": "5",
+              "Line": 1,
+              "Column": 10
+            },
+            "Value": 5
+          }
+        }
+      }
+    }
+  ]
+}

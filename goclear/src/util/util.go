@@ -7,7 +7,7 @@ import (
 )
 
 func PrintParserError(e types.ParserError) {
-	fmt.Printf("Parser::Error --> (line %d, col %d): %s\n", e.Line, e.Column, e.Message)
-	
-	fmt.Printf("\t-- Line: %s\n", e.LineContent)
+	fmt.Printf("\033[31mParser::Error --> (line %d, col %d): %s\n\033[0m", e.Line, e.Column, e.Message)
+
+	fmt.Printf("\t\033[33m-- Line: %s\n\033[0m", e.LineContent)
 }

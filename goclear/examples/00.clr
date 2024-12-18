@@ -1,1 +1,2 @@
-10 + 2 * 5;
+let result = 2;
+return 0;

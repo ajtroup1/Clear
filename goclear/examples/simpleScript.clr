@@ -1,0 +1,11 @@
+let x = 7;
+
+x = x * 2;
+
+let y = x / 10
+
+if (x < 12) {
+  return x;
+} else {
+  return y;
+}

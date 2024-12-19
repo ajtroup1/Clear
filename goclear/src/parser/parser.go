@@ -39,6 +39,7 @@ var precedences = map[token.TokenType]int{
 	token.MINUS:    SUM,
 	token.SLASH:    PRODUCT,
 	token.ASTERISK: PRODUCT,
+	token.LPAREN:   CALL,
 }
 
 // Parser struct tracks state, errors, and handlers for parsing
@@ -84,6 +85,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.LPAREN, p.parseGroupedExpression)
 	// Since grouped expressions are handled with just the left paren above, maybe add a handler for right paren that returns a parser error?
 	p.registerPrefix(token.IF, p.parseIfExpression)
+	p.registerPrefix(token.FUNCTION, p.parseFunctionLiteral)
 
 	// Register infix functions
 	p.infixParseFns = make(map[token.TokenType]infixParseFn)
@@ -95,6 +97,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerInfix(token.NOT_EQ, p.parseInfixExpression)
 	p.registerInfix(token.LT, p.parseInfixExpression)
 	p.registerInfix(token.GT, p.parseInfixExpression)
+	p.registerInfix(token.LPAREN, p.parseCallExpression)
 
 	return p
 }
@@ -179,7 +182,8 @@ func (p *Parser) parseLetStatement() *ast.LetStatement {
 
 	// let x = [7];
 	//          ^
-	// TODO: We're skipping the expressions until we encounter a semicolon
+	p.nextToken()
+	stmt.Value = p.parseExpression(LOWEST)
 
 	// let x = 7[;]
 	//           ^
@@ -217,7 +221,7 @@ func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
 	// 	- "x + 7"
 	// 	- "myObject.property"
 	// 	- "myFunction()"
-	// TODO: We're skipping the expressions until we encounter a semicolon
+	stmt.ReturnValue = p.parseExpression(LOWEST)
 
 	// return 0 [;]
 	//          ^
@@ -380,7 +384,7 @@ func (p *Parser) parsePrefixExpression() ast.Expression {
 	// In this instance we should receive:
 	// ast.Identifier : Expression { Token: IDENT, Value: "x" }
 	expression.Right = p.parseExpression(PREFIX)
-	
+
 	// Now, we should have:
 	// ast.PrefixExpression : Expression {
 	// 	Token: MINUS,
@@ -404,9 +408,9 @@ func (p *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
 	// x [+] 7;
 	//    ^
 	expression := &ast.InfixExpression{
-		Token:    p.curToken, // PLUS
+		Token:    p.curToken,         // PLUS
 		Operator: p.curToken.Literal, // "+"
-		Left:     left, // ast.Identifier : Expression { Token: IDENT, Value: "x" }
+		Left:     left,               // ast.Identifier : Expression { Token: IDENT, Value: "x" }
 	}
 
 	// Returns the SUM (4) precedence associated with '+'
@@ -507,7 +511,7 @@ func (p *Parser) parseIfExpression() ast.Expression {
 	// 	Statements: [
 	// 		ast.ReturnStatement {
 	// 			Token: RETURN,
-	// 			ReturnValue: ast.IntegerLiteral : Expression { 
+	// 			ReturnValue: ast.IntegerLiteral : Expression {
 	// 				Token: INT,
 	// 				Value: ast.Identifier : Expression { Token: IDENT, Value: "x" },
 	// 			},
@@ -539,7 +543,7 @@ func (p *Parser) parseIfExpression() ast.Expression {
 	// 		Statements: [
 	// 			ast.ReturnStatement {
 	// 				Token: RETURN,
-	// 				ReturnValue: ast.IntegerLiteral : Expression { 
+	// 				ReturnValue: ast.IntegerLiteral : Expression {
 	// 					Token: INT,
 	// 					Value: ast.Identifier : Expression { Token: IDENT, Value: "x" },
 	// 				},
@@ -551,7 +555,7 @@ func (p *Parser) parseIfExpression() ast.Expression {
 	// 		Statements: [
 	// 			ast.ReturnStatement {
 	// 				Token: RETURN,
-	// 				ReturnValue: ast.IntegerLiteral : Expression { 
+	// 				ReturnValue: ast.IntegerLiteral : Expression {
 	// 					Token: INT,
 	//					Value: ast.Identifier : Expression { Token: IDENT, Value: "x" },
 	// 				},
@@ -580,6 +584,123 @@ func (p *Parser) parseBlockStatement() *ast.BlockStatement {
 		p.nextToken()
 	}
 	return block
+}
+
+// Parses an entire function, which has parameters and a block statement
+func (p *Parser) parseFunctionLiteral() ast.Expression {
+	// We need to assign:
+	// 	-	1. All parameters defined for the function
+	// 	- 2. The BlockStatement containing functionality
+	// Both will use helper functions
+
+	// Instantiate the function with the FN token
+	lit := &ast.FunctionLiteral{Token: p.curToken}
+
+	// Start reading parameters, indicated by opening parentheses
+	if !p.expectPeek(token.LPAREN) {
+		return nil
+	}
+
+	// Assign parameters to the function, returned from the helper
+	lit.Parameters = p.parseFunctionParameters()
+
+	// Indicate the beginning of the function body with a LBRACE
+	if !p.expectPeek(token.LBRACE) {
+		return nil
+	}
+
+	// Assign the function body by simply parsing a block statement
+	lit.Body = p.parseBlockStatement()
+
+	// Now, you should have something like:
+	// ast.FunctionLiteral : Expression {
+	// 	Token: FN,
+	// 	Parameters: [
+	// 		ast.Identifier : Expression { Token: IDENT, Value: "myParameter" },
+	// 		ast.Identifier : Expression { Token: IDENT, Value: "mySecondParam" },
+	// 	],
+	// 	Body: ast.BlockStatement : Expression {
+	// 		Token: LBRACE,
+	// 		Statements: [
+	// 			ast.ExpressionStatement : Statement {
+	// 				Token: IDENT,
+	// 				Expression: ast.InfixExpression : Expression {
+	// 					Token: PLUS,
+	// 					Operator: "+",
+	// 					Left: ast.Identifier : Expression { Token: IDENT, Value: "x" },
+	// 					Right: ast.Identifier : Expression { Token: IDENT, Value: "y" },
+	// 				},
+	// 			},
+	// 			ast.ReturnStatement : Statement {
+	// 				Token: RETURN,
+	// 				ReturnValue: ast.Identifier : Expression { Token: IDENT, Value: "x" },
+	// 			},
+	// 		]
+	// 	},
+	// }
+	return lit
+}
+
+// The helper function for returning parameters for functions
+func (p *Parser) parseFunctionParameters() []*ast.Identifier {
+	// Initialize as an empty Identifier list since there can be >= 0 params
+	identifiers := []*ast.Identifier{}
+
+	// If there are no parameters, skip the right parenthesis and return the empty slice
+	if p.peekTokenIs(token.RPAREN) {
+		p.nextToken()
+		return identifiers
+	}
+	p.nextToken()
+
+	// At this point, there is at least one parameter
+	ident := &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+	identifiers = append(identifiers, ident)
+
+	// As long as we continue to get comma separated params, keep parsing params
+	for p.peekTokenIs(token.COMMA) {
+		p.nextToken()
+		p.nextToken()
+		ident := &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+		identifiers = append(identifiers, ident)
+	}
+
+	// No longer encountering comma separated params, we should see a right parenthesis now
+	if !p.expectPeek(token.RPAREN) {
+		return nil
+	}
+
+	// Now we should be returning something like:
+	// []*ast.Identifier : Expression [
+	// 	ast.Identifier : Expression { Token: IDENT, Value: "firstParameter" },
+	// 	ast.Identifier : Expression { Token: IDENT, Value: "secondParameter" },
+	// ]
+	return identifiers
+}
+
+func (p *Parser) parseCallExpression(function ast.Expression) ast.Expression {
+	exp := &ast.CallExpression{Token: p.curToken, Function: function}
+	exp.Arguments = p.parseCallArguments()
+	return exp
+}
+
+func (p *Parser) parseCallArguments() []ast.Expression {
+	args := []ast.Expression{}
+	if p.peekTokenIs(token.RPAREN) {
+		p.nextToken()
+		return args
+	}
+	p.nextToken()
+	args = append(args, p.parseExpression(LOWEST))
+	for p.peekTokenIs(token.COMMA) {
+		p.nextToken()
+		p.nextToken()
+		args = append(args, p.parseExpression(LOWEST))
+	}
+	if !p.expectPeek(token.RPAREN) {
+		return nil
+	}
+	return args
 }
 
 func (p *Parser) curTokenIs(t token.TokenType) bool {

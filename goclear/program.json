@@ -10,22 +10,179 @@
       "Name": {
         "Token": {
           "Type": "IDENT",
-          "Literal": "result",
+          "Literal": "x",
           "Line": 1,
           "Column": 5
         },
-        "Value": "result"
+        "Value": "x"
       },
-      "Value": null
+      "Value": {
+        "Token": {
+          "Type": "INT",
+          "Literal": "7",
+          "Line": 1,
+          "Column": 9
+        },
+        "Value": 7
+      }
+    },
+    {
+      "Token": {
+        "Type": "IDENT",
+        "Literal": "x",
+        "Line": 3,
+        "Column": 2
+      },
+      "Expression": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "x",
+          "Line": 3,
+          "Column": 2
+        },
+        "Value": "x"
+      }
+    },
+    {
+      "Token": {
+        "Type": "=",
+        "Literal": "=",
+        "Line": 3,
+        "Column": 4
+      },
+      "Expression": null
+    },
+    {
+      "Token": {
+        "Type": "IDENT",
+        "Literal": "x",
+        "Line": 3,
+        "Column": 6
+      },
+      "Expression": {
+        "Token": {
+          "Type": "*",
+          "Literal": "*",
+          "Line": 3,
+          "Column": 8
+        },
+        "Left": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "x",
+            "Line": 3,
+            "Column": 6
+          },
+          "Value": "x"
+        },
+        "Operator": "*",
+        "Right": {
+          "Token": {
+            "Type": "INT",
+            "Literal": "2",
+            "Line": 3,
+            "Column": 10
+          },
+          "Value": 2
+        }
+      }
+    },
+    {
+      "Token": {
+        "Type": "LET",
+        "Literal": "let",
+        "Line": 5,
+        "Column": 2
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "y",
+          "Line": 5,
+          "Column": 6
+        },
+        "Value": "y"
+      },
+      "Value": {
+        "Token": {
+          "Type": "/",
+          "Literal": "/",
+          "Line": 5,
+          "Column": 12
+        },
+        "Left": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "x",
+            "Line": 5,
+            "Column": 10
+          },
+          "Value": "x"
+        },
+        "Operator": "/",
+        "Right": {
+          "Token": {
+            "Type": "INT",
+            "Literal": "10",
+            "Line": 5,
+            "Column": 14
+          },
+          "Value": 10
+        }
+      }
+    },
+    {
+      "Token": {
+        "Type": "}",
+        "Literal": "}",
+        "Line": 9,
+        "Column": 2
+      },
+      "Expression": null
+    },
+    {
+      "Token": {
+        "Type": "ELSE",
+        "Literal": "else",
+        "Line": 9,
+        "Column": 4
+      },
+      "Expression": null
+    },
+    {
+      "Token": {
+        "Type": "{",
+        "Literal": "{",
+        "Line": 9,
+        "Column": 9
+      },
+      "Expression": null
     },
     {
       "Token": {
         "Type": "RETURN",
         "Literal": "return",
-        "Line": 2,
+        "Line": 10,
+        "Column": 4
+      },
+      "ReturnValue": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "y",
+          "Line": 10,
+          "Column": 11
+        },
+        "Value": "y"
+      }
+    },
+    {
+      "Token": {
+        "Type": "}",
+        "Literal": "}",
+        "Line": 11,
         "Column": 2
       },
-      "ReturnValue": null
+      "Expression": null
     }
   ]
 }

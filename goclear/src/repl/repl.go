@@ -32,8 +32,25 @@ func Start(in io.Reader, out io.Writer) {
 		io.WriteString(out, "\n")
 	}
 }
+
+const MONKEY_FACE = ` __,__
+  .--. .-"     "-. .--.
+/ .. \/  .-. .-.  \/ .. \
+| |  '|  /   Y   \  |'  |
+| \   \  \ 0 | 0 /  /   /
+ \ '- ,\.-"""""""-./, -' /
+  ''-' /_   ^ ^   _\ '-''
+       |  \._   _./  |
+       \   \ '~' /   /
+        '._ '-=-' _.'
+           '-----'
+`
+
 func printParserErrors(out io.Writer, errors []types.ParserError) {
+	io.WriteString(out, MONKEY_FACE)
+	io.WriteString(out, "Woops! We ran into some monkey business here!\n")
+	io.WriteString(out, " parser errors:\n")
 	for _, pe := range errors {
-		io.WriteString(out, fmt.Sprintf("\03333m\t (line %d, col %d) "+pe.Message+"\n\0330m", pe.Line, pe.Column))
+		io.WriteString(out, "\t"+pe.Message+"\n")
 	}
 }

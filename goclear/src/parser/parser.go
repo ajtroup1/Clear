@@ -157,50 +157,50 @@ func (p *Parser) parseStatement() ast.Statement {
 // -----------------
 
 func (p *Parser) parseLetStatement() *ast.LetStatement {
-	// * Example parse: "[let] [x] [=] [7] [;]"
-	// * "let x = 7;"
-	// Need to assign:
-	// 	1 - The LET token
-	// 	2 - The identifier / Name property (basically just a string)
-	// 	3 - The value assigned to the variable (can be any expression)
+    // * Example parse: "[let] [x] [=] [7] [;]"
+    // * "let x = 7;"
+    // Need to assign:
+    // 	1 - The LET token
+    // 	2 - The identifier / Name property (basically just a string)
+    // 	3 - The value assigned to the variable (can be any expression)
 
-	// [let] x = 7;
-	//   ^
-	stmt := &ast.LetStatement{Token: p.curToken}
-	if !p.expectPeek(token.IDENT) {
-		return nil
-	}
+    // [let] x = 7;
+    //   ^
+    stmt := &ast.LetStatement{Token: p.curToken}
+    if !p.expectPeek(token.IDENT) {
+        return nil
+    }
 
-	// let [x] = 7;
-	//      ^
-	stmt.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal} // Identifier struct simply wraps the literal name value with the IDENT token
-	// let x [=] 7;
-	//        ^
-	if !p.expectPeek(token.ASSIGN) {
-		return nil
-	}
+    // let [x] = 7;
+    //      ^
+    stmt.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal} // Identifier struct simply wraps the literal name value with the IDENT token
+    // let x [=] 7;
+    //        ^
+    if !p.expectPeek(token.ASSIGN) {
+        return nil
+    }
 
-	// let x = [7];
-	//          ^
-	p.nextToken()
-	stmt.Value = p.parseExpression(LOWEST)
+    // let x = [7];
+    //          ^
+    p.nextToken()
+    stmt.Value = p.parseExpression(LOWEST)
 
-	// let x = 7[;]
-	//           ^
-	for !p.curTokenIs(token.SEMICOLON) {
-		p.nextToken()
-	}
+    // let x = 7[;]
+    //           ^
+    for !p.curTokenIs(token.SEMICOLON) {
+        p.nextToken()
+    }
 
-	// Now, we should have:
-	// ast.LetStatement {
-	// 	Token: LET,
-	// 	Name: ast.Identifier : Expression { Token: IDENT, Value: "x" },
-	// 	Value: ast.IntegerLiteral : Expression {
-	// 		Token: INT,
-	// 		Value: 7,
-	// 	},
-	// }
-	return stmt
+    // Now, we should have:
+    // ast.LetStatement {
+    // 	Token: LET,
+    // 	Name: ast.Identifier : Expression { Token: IDENT, Value: "x" },
+    // 	Value: ast.IntegerLiteral : Expression {
+    // 		Token: INT,
+    // 		Value: 7,
+    // 	},
+    // }
+    return stmt
 }
 
 func (p *Parser) parseReturnStatement() *ast.ReturnStatement {

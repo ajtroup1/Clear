@@ -1,0 +1,10 @@
+^C:\USERS\EPICN\DESKTOP\SHENANIGANS AND HIJINX\CLEAR\CLEAR\BUILD\CMAKEFILES\B8C5554589EE60BC2EC59DC38E91AD3B\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Users/epicn/Desktop/shenanigans and hijinx/Clear/clear" "-BC:/Users/epicn/Desktop/shenanigans and hijinx/Clear/clear/build" --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file "C:/Users/epicn/Desktop/shenanigans and hijinx/Clear/clear/build/Clear.sln"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

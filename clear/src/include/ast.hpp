@@ -9,7 +9,7 @@
 class ASTNode {
  public:
   virtual ~ASTNode() = default;
-  virtual std::string stringify() const = 0;
+  virtual std::string stringify() = 0;
 };
 
 // Forward declaration of BlockStatement is necessary for Program class
@@ -33,8 +33,12 @@ class Statement : public ASTNode {
 class Program : public ASTNode {
  public:
   virtual ~Program() = default;
-  std::string stringify() const override {
+  std::string stringify() override {
     return "Program(" + statements->stringify() + ")";
+  }
+  BlockStatement getStatemtents() { return *statements; }
+  void setStatements(std::unique_ptr<BlockStatement> stmts) {
+    statements = std::move(stmts);
   }
 
  private:
@@ -50,9 +54,9 @@ class Program : public ASTNode {
 class BlockStatement : public Statement {
  public:
   virtual ~BlockStatement() = default;
-  std::string stringify() const override {
+  std::string stringify() override {
     std::string result = "BlockStatement(";
-    for (const auto& stmt : statements) {
+    for (auto& stmt : statements) {
       result += stmt->stringify() + "; ";
     }
     result += ")";
@@ -68,7 +72,7 @@ class BlockStatement : public Statement {
 class LetStatement : public Statement {
  public:
   virtual ~LetStatement() = default;
-  std::string stringify() const override {
+  std::string stringify() override {
     return "LetStatement(" + name + ", " + value->stringify() + ")";
   }
 
@@ -80,10 +84,26 @@ class LetStatement : public Statement {
   std::unique_ptr<Expression> value;
 };
 
+class ConstStatement : public Statement {
+ public:
+  virtual ~ConstStatement() = default;
+  std::string stringify() override {
+    return "LetStatement(" + name + ", " + value->stringify() + ")";
+  }
+
+ private:
+  // The ConstStatement class contains a name and an expression
+  // The name is the identifier of the variable being declared
+  // The expression is the value being assigned to the variable
+  // The ConstStatement is necessary for constant variables, whose values cannot be changed (as opposed to let variables)
+  std::string name;
+  std::unique_ptr<Expression> value;
+};
+
 class ReturnStatement : public Statement {
  public:
   virtual ~ReturnStatement() = default;
-  std::string stringify() const override {
+  std::string stringify() override {
     return "ReturnStatement(" + value->stringify() + ")";
   }
 
@@ -96,7 +116,7 @@ class ReturnStatement : public Statement {
 class ExpressionStatement : public Statement {
  public:
   virtual ~ExpressionStatement() = default;
-  std::string stringify() const override {
+  std::string stringify() override {
     return "ExpressionStatement(" + expression->stringify() + ")";
   }
 
@@ -110,7 +130,7 @@ class ExpressionStatement : public Statement {
 class WhileStatement : public Statement {
  public:
   virtual ~WhileStatement() = default;
-  std::string stringify() const override {
+  std::string stringify() override {
     return "WhileStatement(" + condition->stringify() + ", " +
            body->stringify() + ")";
   }
@@ -127,7 +147,7 @@ class WhileStatement : public Statement {
 class ForStatement : public Statement {
  public:
   virtual ~ForStatement() = default;
-  std::string stringify() const override {
+  std::string stringify() override {
     return "ForStatement(" + initializer->stringify() + ", " +
            condition->stringify() + ", " + increment->stringify() + ", " +
            body->stringify() + ")";
@@ -153,7 +173,7 @@ class ForStatement : public Statement {
 class Identifier : public Expression {
  public:
   virtual ~Identifier() = default;
-  std::string stringify() const override { return "Identifier(" + value + ")"; }
+  std::string stringify() override { return "Identifier(" + value + ")"; }
 
  private:
   // The Identifier class contains a string value
@@ -164,7 +184,7 @@ class Identifier : public Expression {
 class IntegerLiteral : public Expression {
  public:
   virtual ~IntegerLiteral() = default;
-  std::string stringify() const override {
+  std::string stringify() override {
     return "IntegerLiteral(" + std::to_string(value) + ")";
   }
 
@@ -177,7 +197,7 @@ class IntegerLiteral : public Expression {
 class FloatLiteral : public Expression {
  public:
   virtual ~FloatLiteral() = default;
-  std::string stringify() const override {
+  std::string stringify() override {
     return "FloatLiteral(" + std::to_string(value) + ")";
   }
 
@@ -190,9 +210,7 @@ class FloatLiteral : public Expression {
 class StringLiteral : public Expression {
  public:
   virtual ~StringLiteral() = default;
-  std::string stringify() const override {
-    return "StringLiteral(" + value + ")";
-  }
+  std::string stringify() override { return "StringLiteral(" + value + ")"; }
 
  private:
   // The StringLiteral class contains a string value
@@ -203,7 +221,7 @@ class StringLiteral : public Expression {
 class BooleanLiteral : public Expression {
  public:
   virtual ~BooleanLiteral() = default;
-  std::string stringify() const override {
+  std::string stringify() override {
     return "Boolean(" + std::string(value ? "true" : "false") + ")";
   }
 
@@ -216,7 +234,7 @@ class BooleanLiteral : public Expression {
 class PrefixExpression : public Expression {
  public:
   virtual ~PrefixExpression() = default;
-  std::string stringify() const override {
+  std::string stringify() override {
     return "PrefixExpression(" + op + ", " + right->stringify() + ")";
   }
 
@@ -233,7 +251,7 @@ class PrefixExpression : public Expression {
 class BinaryExpression : public Expression {
  public:
   virtual ~BinaryExpression() = default;
-  std::string stringify() const override {
+  std::string stringify() override {
     return "BinaryExpression(" + left->stringify() + ", " + op + ", " +
            right->stringify() + ")";
   }
@@ -251,7 +269,7 @@ class BinaryExpression : public Expression {
 class GroupedExpression : public Expression {
  public:
   virtual ~GroupedExpression() = default;
-  std::string stringify() const override {
+  std::string stringify() override {
     return "GroupedExpression(" + expression->stringify() + ")";
   }
 
@@ -264,7 +282,7 @@ class GroupedExpression : public Expression {
 class IfExpression : public Expression {
  public:
   virtual ~IfExpression() = default;
-  std::string stringify() const override {
+  std::string stringify() override {
     return "IfExpression(" + condition->stringify() + ", " +
            consequence->stringify() + ", " +
            (alternative ? alternative->stringify() : "no alternative defined") +
@@ -285,10 +303,10 @@ class IfExpression : public Expression {
 class FunctionLiteral : public Expression {
  public:
   virtual ~FunctionLiteral() = default;
-  std::string stringify() const override {
+  std::string stringify() override {
     std::string result = "FunctionLiteral(";
     result += "params: [";
-    for (const auto& param : parameters) {
+    for (auto& param : parameters) {
       result += param + ", ";
     }
     result += "], body: " + body->stringify() + ")";
@@ -307,10 +325,10 @@ class FunctionLiteral : public Expression {
 class UnnamedFunctionLiteral : public Expression {
  public:
   virtual ~UnnamedFunctionLiteral() = default;
-  std::string stringify() const override {
+  std::string stringify() override {
     std::string result = "UnnamedFunctionLiteral(";
     result += "params: [";
-    for (const auto& param : parameters) {
+    for (auto& param : parameters) {
       result += param + ", ";
     }
     result += "], body: " + body->stringify() + ")";
@@ -322,7 +340,7 @@ class UnnamedFunctionLiteral : public Expression {
   // block statement The parameters are the identifiers of the function's
   // parameters The body is the block of statements that make up the function's
   // body Unnamed functions are functions without a name, examples include: let
-  // add = function(x, y) { return x + y; } <--- Clear const result = ((x) => x
+  // add = function(x, y) { return x + y; } <--- Clear  result = ((x) => x
   // * 2)(5); <--- JavaScript
   std::vector<std::string> parameters;
   std::unique_ptr<BlockStatement> body;
@@ -331,10 +349,10 @@ class UnnamedFunctionLiteral : public Expression {
 class CallExpression : public Expression {
  public:
   virtual ~CallExpression() = default;
-  std::string stringify() const override {
+  std::string stringify() override {
     std::string result =
         "CallExpression(" + function->stringify() + ", args: [";
-    for (const auto& arg : arguments) {
+    for (auto& arg : arguments) {
       result += arg->stringify() + ", ";
     }
     result += "])";
@@ -352,7 +370,7 @@ class CallExpression : public Expression {
 class MemberExpression : public Expression {
  public:
   virtual ~MemberExpression() = default;
-  std::string stringify() const override {
+  std::string stringify() override {
     return "MemberExpression(" + object->stringify() + ", " + property + ")";
   }
 
@@ -367,7 +385,7 @@ class MemberExpression : public Expression {
 class AssignmentExpression : public Expression {
  public:
   virtual ~AssignmentExpression() = default;
-  std::string stringify() const override {
+  std::string stringify() override {
     return "AssignmentExpression(" + left->stringify() + ", " +
            right->stringify() + ")";
   }
@@ -386,9 +404,9 @@ class AssignmentExpression : public Expression {
 class ArrayExpression : public Expression {
  public:
   virtual ~ArrayExpression() = default;
-  std::string stringify() const override {
+  std::string stringify() override {
     std::string result = "ArrayExpression([";
-    for (const auto& elem : elements) {
+    for (auto& elem : elements) {
       result += elem->stringify() + ", ";
     }
     result += "])";
@@ -404,7 +422,7 @@ class ArrayExpression : public Expression {
 class IndexExpression : public Expression {
  public:
   virtual ~IndexExpression() = default;
-  std::string stringify() const override {
+  std::string stringify() override {
     return "IndexExpression(" + left->stringify() + ", " + index->stringify() +
            ")";
   }

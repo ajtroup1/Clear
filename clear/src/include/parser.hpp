@@ -11,6 +11,7 @@ public:
     Parser(const std::vector<Token>& tokens);
     ~Parser() = default;
     std::unique_ptr<Program> parse(std::vector<Token>& tokens);
+    std::unique_ptr<Program> parse();
 
 private:
     std::vector<Token> tokens;

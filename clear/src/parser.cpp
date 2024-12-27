@@ -10,7 +10,7 @@ Token Parser::peekToken() const {
     if (pos < tokens.size()) {
         return tokens[pos];
     }
-    return Token(TokenType::UNDEFINED, "", 0, 0); // Return a default Token if out of bounds
+    return Token(TokenType::UNDEFINED, "", 0, 0); 
 }
 
 Token Parser::consumeToken() {
@@ -23,6 +23,10 @@ void Parser::nextToken() {
     if (pos < tokens.size()) {
         currentToken = tokens[pos++];
     }
+}
+
+std::unique_ptr<Program> Parser::parse() {
+    return parseProgram();
 }
 
 std::unique_ptr<Program> Parser::parseProgram() {
@@ -46,8 +50,6 @@ std::unique_ptr<Statement> Parser::parseStatement() {
         return parseLetStatement();
     } else if (currentToken.getType() == TokenType::RETURN) {
         return parseReturnStatement();
-    } else if (currentToken.getType() == TokenType::IF) {
-        return parseIfExpression();
     } else if (currentToken.getType() == TokenType::WHILE) {
         return parseWhileStatement();
     } else if (currentToken.getType() == TokenType::FOR) {
@@ -68,22 +70,22 @@ std::unique_ptr<Expression> Parser::parseExpression() {
 
 std::unique_ptr<Identifier> Parser::parseIdentifier() {
     Token token = consumeToken();
-    return std::make_unique<Identifier>(token.getLexeme());
+    return std::make_unique<Identifier>(token.getLiteral());
 }
 
 std::unique_ptr<IntegerLiteral> Parser::parseIntegerLiteral() {
     Token token = consumeToken();
-    return std::make_unique<IntegerLiteral>(std::stoi(token.getLexeme()));
+    return std::make_unique<IntegerLiteral>(std::stoi(token.getLiteral()));
 }
 
 std::unique_ptr<FloatLiteral> Parser::parseFloatLiteral() {
     Token token = consumeToken();
-    return std::make_unique<FloatLiteral>(std::stof(token.getLexeme()));
+    return std::make_unique<FloatLiteral>(std::stof(token.getLiteral()));
 }
 
 std::unique_ptr<StringLiteral> Parser::parseStringLiteral() {
     Token token = consumeToken();
-    return std::make_unique<StringLiteral>(token.getLexeme());
+    return std::make_unique<StringLiteral>(token.getLiteral());
 }
 
 std::unique_ptr<BooleanLiteral> Parser::parseBooleanLiteral() {
@@ -128,5 +130,55 @@ std::unique_ptr<Statement> Parser::parseContinueStatement() {
 
 std::unique_ptr<ExpressionStatement> Parser::parseExpressionStatement() {
     // Implement expression statement parsing
+    return nullptr;
+}
+
+std::unique_ptr<FunctionLiteral> Parser::parseFunctionLiteral() {
+    // Implement function literal parsing
+    return nullptr;
+}
+
+std::unique_ptr<UnnamedFunctionLiteral> Parser::parseUnnamedFunctionLiteral() {
+    // Implement unnamed function literal parsing
+    return nullptr;
+}
+
+std::unique_ptr<CallExpression> Parser::parseCallExpression() {
+    // Implement call expression parsing
+    return nullptr;
+}
+
+std::unique_ptr<MemberExpression> Parser::parseMemberExpression() {
+    // Implement member expression parsing
+    return nullptr;
+}
+
+std::unique_ptr<ArrayExpression> Parser::parseArrayExpression() {
+    // Implement array expression parsing
+    return nullptr;
+}
+
+std::unique_ptr<IndexExpression> Parser::parseIndexExpression() {
+    // Implement index expression parsing
+    return nullptr;
+}
+
+std::unique_ptr<AssignmentExpression> Parser::parseAssignmentExpression() {
+    // Implement assignment expression parsing
+    return nullptr;
+}
+
+std::unique_ptr<BinaryExpression> Parser::parseBinaryExpression() {
+    // Implement binary expression parsing
+    return nullptr;
+}
+
+std::unique_ptr<PrefixExpression> Parser::parsePrefixExpression() {
+    // Implement prefix expression parsing
+    return nullptr;
+}
+
+std::unique_ptr<IfExpression> Parser::parseIfExpression() {
+    // Implement if expression parsing
     return nullptr;
 }

@@ -49,6 +49,8 @@ enum class TokenType {
   // Logical operators
   AND,  // &&
   OR,   // ||
+  TRUE,
+  FALSE,
 
   // Keywords
   IDENT,
@@ -81,6 +83,8 @@ class Token {
  public:
   Token(TokenType type, const std::string& literal, int line, int column)
       : type(type), literal(literal), line(line), column(column) {}
+  Token()
+      : type(TokenType::UNDEFINED), literal(""), line(0), column(0) {}
 
   TokenType getType() const { return type; }
   void setType(TokenType type) { this->type = type; }

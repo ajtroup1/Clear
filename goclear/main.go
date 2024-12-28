@@ -5,10 +5,11 @@ import (
 	"os"
 
 	"github.com/ajtroup1/goclear/lexer"
+	"github.com/ajtroup1/goclear/parser"
 )
 
 func main() {
-	debug := true
+	debug := false
 	if len(os.Args) < 2 {
 		fmt.Println("Please provide a file path")
 		return
@@ -34,4 +35,10 @@ func main() {
 		}
 	}
 
+	parser := parser.New(lexer)
+	program := parser.ParseProgram()
+	if debug {
+		fmt.Println(parser)
+		fmt.Println(program.ToString())
+	}
 }

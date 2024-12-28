@@ -1,3 +1,11 @@
+/*
+
+	Tokens are the structured building blocks of information that the Parser uses to generate the AST
+	This file is used to define and reference the lowest level of source code information that can be
+	referenced for building the AST and generating parsing errors
+
+*/
+
 package token
 
 import "fmt"

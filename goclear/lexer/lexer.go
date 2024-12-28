@@ -1,3 +1,12 @@
+/*
+
+	The Lexer converts source code into tokens, which are the building blocks for any AST
+	The Parser relies on Tokens to see structured information about the source code and turn it into a hierarchal tree to traverse later
+	Lexing is the first and probably easiest step of converting source code into either machine code, assembly, C, or whatever
+	This file defines the necessary functionality for returning a stream of Tokens from a given string of source code
+
+*/
+
 package lexer
 
 import "github.com/ajtroup1/goclear/token"
@@ -47,7 +56,7 @@ func New(src string) *Lexer {
 func (l *Lexer) Lex() []token.Token {
 	var tokens []token.Token
 	for l.c != 0 {
-		tok := l.nextToken()
+		tok := l.NextToken()
 		tokens = append(tokens, tok)
 		if tok.Type == token.EOF {
 			break
@@ -56,7 +65,7 @@ func (l *Lexer) Lex() []token.Token {
 	return tokens
 }
 
-func (l *Lexer) nextToken() token.Token {
+func (l *Lexer) NextToken() token.Token {
 	l.skipWhitespace()
 
 	var tok token.Token

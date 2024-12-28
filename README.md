@@ -1,149 +1,21 @@
 # Clear
 
----
+TODO: add links to resources
 
-## GoClear
+This repo contains tinkering on interpreters and compilers
 
-Follows Tyler Laceby's parsing series with the Pikachu on the thumbnails
+If I care about one of the subfolders that exists in this repo, than hopefully it should have a corresponding `README.md` file to explain what's going on there
 
-## JClear
 
-Follows the classic Crafting Interpreters
+I've been using numerous resources such as:
+- Writing an Interpreter in Go by `Thorston Ball`
+- Writing a Compiler in Go also by `Thorston Ball`
+- `Tyler Laceby`'s series on parsing with the Pikachu on the cover
+- `Pixeled`'s series on writing a compiler in C++
+- The classic Crafting Interpreters
+- My project `GoDocs`, which operates similarly to Doxygen or Rust's documentation generator
+  - Maybe the most I've learned during a project
+  - Helped me realize that Parsers are simple organizers that arrange information in a hierarchal, object-oriented manner
+  - AST visualizers also help illustrate this point
 
-The Java implementation and also my first Java project ever
-
-### Grammar
-
-$$
-
-% \begin{align}
-
-% expression     → literal
-
-%                | unary
-
-%                | binary
-
-%                | grouping ;
-
-% literal        → NUMBER | STRING | "true" | "false" | "nil" ;
-
-% grouping       → "(" expression ")" ;
-
-% unary          → ( "-" | "!" ) expression ;
-
-% binary         → expression operator expression ;
-
-% operator       → "==" | "!=" | "<" | "<=" | ">" | ">="
-
-%                | "+"  | "-"  | "*" | "/" ;
-
-% [\text{Expression}] &\to&
-
-% \begin{cases}
-
-% [\text{Literal}] \\
-
-% [\text{Unary}] \\
-
-% [\text{Binary}] \\
-
-% [\text{Grouping}] \\
-
-% \end{cases}
-
-% \\
-
-% [\text{Literal}] &\to&
-
-% \begin{cases}
-
-% NUMBER \\
-
-% STRING \\
-
-% \text{"true"} \\
-
-% \text{"false"} \\
-
-% \text{"nil"} \\
-
-% \end{cases}
-
-% \\
-
-% [\text{Grouping}] &\to& \text{"(" [Expression] ")"}
-
-% \\
-
-% [\text{Unary}] &\to& \text{("-" | "!") [Expression]}
-
-% \\
-
-% [\text{Binary}] &\to& \text{[Expression] \, [Operator] \, [Expression]}
-
-% \\
-
-% [\text{Operator}] &\to&
-
-% \begin{cases}
-
-% \text{"+"} \\
-
-% \text{"-"} \\
-
-% \text{"*"} \\
-
-% \text{"/"} \\
-
-% \text{"=="} \\
-
-% \text{"!="} \\
-
-% \text{"<"} \\
-
-% \text{"<="} \\
-
-% \text{">"} \\
-
-% \text{">="} \\
-
-% \end{cases}
-
-% \end{align}
-
-$$
-
-**Expression** →  
-- Literal  
-- Unary  
-- Binary  
-- Grouping  
-
-**Literal** →  
-- NUMBER  
-- STRING  
-- "true"  
-- "false"  
-- "nil"  
-
-**Grouping** →  
-- "(" Expression ")"  
-
-**Unary** →  
-- ("-" | "!") Expression  
-
-**Binary** →  
-- Expression Operator Expression  
-
-**Operator** →  
-- "+"  
-- "-"  
-- "*"  
-- "/"  
-- "=="  
-- "!="  
-- "<"  
-- "<="  
-- ">"  
-- ">=" 
+Forever Clear

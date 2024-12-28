@@ -1,3 +1,0 @@
-C:/Users/epicn/Desktop/shenanigans and hijinx/Clear/clear/build/CMakeFiles/clear.dir
-C:/Users/epicn/Desktop/shenanigans and hijinx/Clear/clear/build/CMakeFiles/ALL_BUILD.dir
-C:/Users/epicn/Desktop/shenanigans and hijinx/Clear/clear/build/CMakeFiles/ZERO_CHECK.dir

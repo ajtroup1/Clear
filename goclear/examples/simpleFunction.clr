@@ -1,6 +1,0 @@
-fn add(num, num2) {
-  let sum = num + num2;
-  return sum;
-}
-
-add(10, 15);

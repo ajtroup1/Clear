@@ -1,0 +1,66 @@
+{
+  "Statements": [
+    {
+      "Token": {
+        "Type": "LET",
+        "Literal": "let",
+        "Line": 1,
+        "Col": 1
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "x",
+          "Line": 1,
+          "Col": 5
+        },
+        "Value": "x"
+      },
+      "Value": {
+        "Token": {
+          "Type": "ASTERISK",
+          "Literal": "*",
+          "Line": 1,
+          "Col": 17
+        },
+        "Operator": "*",
+        "Left": {
+          "Token": {
+            "Type": "PLUS",
+            "Literal": "+",
+            "Line": 1,
+            "Col": 12
+          },
+          "Operator": "+",
+          "Left": {
+            "Token": {
+              "Type": "INT",
+              "Literal": "2",
+              "Line": 1,
+              "Col": 10
+            },
+            "Value": 2
+          },
+          "Right": {
+            "Token": {
+              "Type": "INT",
+              "Literal": "3",
+              "Line": 1,
+              "Col": 14
+            },
+            "Value": 3
+          }
+        },
+        "Right": {
+          "Token": {
+            "Type": "INT",
+            "Literal": "7",
+            "Line": 1,
+            "Col": 19
+          },
+          "Value": 7
+        }
+      }
+    }
+  ]
+}

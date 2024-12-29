@@ -38,12 +38,20 @@ type (
 	infixParseFn  func(ast.Expression) ast.Expression
 )
 
+type ParserError struct {
+	Msg string
+	Line int
+	Col int
+}
+
 type Parser struct {
 	l      *lexer.Lexer
-	errors []string
+	errors []ParserError
 
 	curToken  token.Token
 	peekToken token.Token
+
+	pos int
 
 	prefixParseFns map[token.TokenType]prefixParseFn
 	infixParseFns  map[token.TokenType]infixParseFn
@@ -52,12 +60,13 @@ type Parser struct {
 func New(l *lexer.Lexer) *Parser {
 	p := &Parser{
 		l:      l,
-		errors: []string{},
+		errors: []ParserError{},
 	}
 
 	p.prefixParseFns = make(map[token.TokenType]prefixParseFn)
 	p.registerPrefix(token.IDENT, p.parseIdentifier)
 	p.registerPrefix(token.INT, p.parseIntegerLiteral)
+	p.registerPrefix(token.FLOAT, p.parseFloatLiteral)
 	p.registerPrefix(token.BANG, p.parsePrefixExpression)
 	p.registerPrefix(token.MINUS, p.parsePrefixExpression)
 	p.registerPrefix(token.TRUE, p.parseBoolean)
@@ -65,6 +74,8 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.LPAREN, p.parseGroupedExpression)
 	p.registerPrefix(token.IF, p.parseIfExpression)
 	p.registerPrefix(token.FUNCTION, p.parseFunctionLiteral)
+	p.registerPrefix(token.STRING, p.parseStringLiteral)
+	p.registerPrefix(token.CHAR, p.parseStringLiteral)
 
 	p.infixParseFns = make(map[token.TokenType]infixParseFn)
 	p.registerInfix(token.PLUS, p.parseInfixExpression)
@@ -79,16 +90,31 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerInfix(token.LPAREN, p.parseCallExpression)
 
 	// Read two tokens, so curToken and peekToken are both set
-	p.nextToken()
-	p.nextToken()
+	p.curToken = l.Tokens[0]
+	p.peekToken = l.Tokens[1]
+	p.pos = 0
+
 
 	return p
 }
 
 func (p *Parser) nextToken() {
-	p.curToken = p.peekToken
-	p.peekToken = p.l.NextToken()
+    p.pos++
+    if p.pos >= len(p.l.Tokens) {
+        p.curToken = token.Token{Type: token.EOF, Literal: "", Line: 0, Col: 0}
+        p.peekToken = token.Token{Type: token.EOF, Literal: "", Line: 0, Col: 0}
+        return
+    }
+
+    p.curToken = p.l.Tokens[p.pos]
+
+    if p.pos+1 < len(p.l.Tokens) {
+        p.peekToken = p.l.Tokens[p.pos+1]
+    } else {
+        p.peekToken = token.Token{Type: token.EOF, Literal: "", Line: 0, Col: 0}
+    }
 }
+
 
 func (p *Parser) curTokenIs(t token.TokenType) bool {
 	return p.curToken.Type == t
@@ -108,19 +134,19 @@ func (p *Parser) expectPeek(t token.TokenType) bool {
 	}
 }
 
-func (p *Parser) Errors() []string {
+func (p *Parser) Errors() []ParserError {
 	return p.errors
 }
 
 func (p *Parser) peekError(t token.TokenType) {
 	msg := fmt.Sprintf("expected next token to be %s, got %s instead",
 		t, p.peekToken.Type)
-	p.errors = append(p.errors, msg)
+	p.errors = append(p.errors, ParserError{Msg: msg, Line: p.peekToken.Line, Col: p.peekToken.Col})
 }
 
 func (p *Parser) noPrefixParseFnError(t token.TokenType) {
 	msg := fmt.Sprintf("no prefix parse function for %s found", t)
-	p.errors = append(p.errors, msg)
+	p.errors = append(p.errors, ParserError{Msg: msg, Line: p.curToken.Line, Col: p.curToken.Col})
 }
 
 func (p *Parser) ParseProgram() *ast.Program {
@@ -241,13 +267,32 @@ func (p *Parser) parseIdentifier() ast.Expression {
 	return &ast.Identifier{BaseNode: ast.BaseNode{Token: p.curToken}, Value: p.curToken.Literal}
 }
 
+func (p *Parser) parseStringLiteral() ast.Expression {
+	return &ast.StringLiteral{BaseNode: ast.BaseNode{Token: p.curToken}, Value: p.curToken.Literal}
+}
+
 func (p *Parser) parseIntegerLiteral() ast.Expression {
 	lit := &ast.IntegerLiteral{BaseNode: ast.BaseNode{Token: p.curToken}}
 
 	value, err := strconv.ParseInt(p.curToken.Literal, 0, 64)
 	if err != nil {
 		msg := fmt.Sprintf("could not parse %q as integer", p.curToken.Literal)
-		p.errors = append(p.errors, msg)
+		p.errors = append(p.errors, ParserError{Msg: msg, Line: p.curToken.Line, Col: p.curToken.Col})
+		return nil
+	}
+
+	lit.Value = value
+
+	return lit
+}
+
+func (p *Parser) parseFloatLiteral() ast.Expression {
+	lit := &ast.FloatLiteral{BaseNode: ast.BaseNode{Token: p.curToken}}
+
+	value, err := strconv.ParseFloat(p.curToken.Literal, 64)
+	if err != nil {
+		msg := fmt.Sprintf("could not parse %q as float", p.curToken.Literal)
+		p.errors = append(p.errors, ParserError{Msg: msg, Line: p.curToken.Line, Col: p.curToken.Col})
 		return nil
 	}
 
@@ -288,7 +333,7 @@ func (p *Parser) parseBoolean() ast.Expression {
 }
 
 func (p *Parser) parseGroupedExpression() ast.Expression {
-	p.nextToken()
+	p.nextToken() // Move past the LPAREN
 
 	exp := p.parseExpression(LOWEST)
 
@@ -351,6 +396,11 @@ func (p *Parser) parseBlockStatement() *ast.BlockStatement {
 
 func (p *Parser) parseFunctionLiteral() ast.Expression {
 	lit := &ast.FunctionLiteral{BaseNode: ast.BaseNode{Token: p.curToken}}
+
+	if p.peekTokenIs(token.IDENT) {
+		lit.Name = &ast.Identifier{BaseNode: ast.BaseNode{Token: p.peekToken}, Value: p.peekToken.Literal}
+		p.nextToken()
+	}
 
 	if !p.expectPeek(token.LPAREN) {
 		return nil

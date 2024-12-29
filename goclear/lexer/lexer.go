@@ -12,8 +12,8 @@ package lexer
 import "github.com/ajtroup1/goclear/token"
 
 var keywords = map[string]token.TokenType{
-	"true":     token.BOOL,
-	"false":    token.BOOL,
+	"true":     token.TRUE,
+	"false":    token.FALSE,
 	"if":       token.IF,
 	"else":     token.ELSE,
 	"for":      token.FOR,
@@ -34,6 +34,8 @@ var keywords = map[string]token.TokenType{
 }
 
 type Lexer struct {
+	Tokens []token.Token
+
 	src     string
 	pos     int
 	readPos int
@@ -53,7 +55,7 @@ func New(src string) *Lexer {
 	return l
 }
 
-func (l *Lexer) Lex() []token.Token {
+func (l *Lexer) Lex() {
 	var tokens []token.Token
 	for l.c != 0 {
 		tok := l.NextToken()
@@ -62,7 +64,7 @@ func (l *Lexer) Lex() []token.Token {
 			break
 		}
 	}
-	return tokens
+	l.Tokens = tokens
 }
 
 func (l *Lexer) NextToken() token.Token {
@@ -153,6 +155,10 @@ func (l *Lexer) NextToken() token.Token {
 		tok = token.Token{Type: token.LBRACKET, Literal: string(l.c), Line: l.line, Col: l.col}
 	case ']':
 		tok = token.Token{Type: token.RBRACKET, Literal: string(l.c), Line: l.line, Col: l.col}
+	case '"':
+		tok = l.readString()
+	case '\'':
+		tok = l.readCharacter()
 	default:
 		if isLetter(l.c) {
 			return l.readIdentifier()
@@ -176,6 +182,31 @@ func (l *Lexer) readIdentifier() token.Token {
 	}
 	literal := l.src[pos:l.pos]
 	return keywordLookup(literal, startLine, startCol)
+}
+
+func (l *Lexer) readString() token.Token {
+	startLine, startCol := l.line, l.col
+
+	l.readChar()
+	pos := l.pos
+	for l.c != '"' && l.c != 0 {
+		l.readChar()
+	}
+	literal := l.src[pos:l.pos]
+	return token.Token{Type: token.STRING, Literal: literal, Line: startLine, Col: startCol}
+}
+
+func (l *Lexer) readCharacter() token.Token {
+	l.readChar() // The opening single quote
+
+	tok := token.Token{Type: token.CHAR, Literal: string(l.c), Line: l.line, Col: l.col}
+
+	if l.peek() != '\'' {
+		panic("Unterminated character literal")
+	}
+	l.readChar() // The closing single quote
+
+	return tok
 }
 
 func keywordLookup(ident string, line, col int) token.Token {

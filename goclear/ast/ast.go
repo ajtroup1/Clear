@@ -106,9 +106,6 @@ func (i *Identifier) expression() {}
 func (i *Identifier) ToString() string {
 	return fmt.Sprintf("IDENT %s", i.Value)
 }
-func (i *Identifier) Position() (line, col int) {
-	return i.Token.Line, i.Token.Col
-}
 
 type IntegerLiteral struct {
 	BaseNode
@@ -191,6 +188,7 @@ func (ie *IfExpression) ToString() string {
 
 type FunctionLiteral struct {
 	BaseNode
+	Name 		 	*Identifier
 	Parameters []*Identifier
 	Body       *BlockStatement
 }

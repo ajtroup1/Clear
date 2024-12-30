@@ -283,3 +283,27 @@ func (ce *CallExpression) expression() {}
 func (ce *CallExpression) ToString() string {
 	return fmt.Sprintf("CALL %v %v", ce.Function, ce.Arguments)
 }
+
+type ClassStatement struct {
+	BaseNode
+	Name       *Identifier
+	Properties []*PropertyStatement
+	Methods    []*FunctionLiteral
+}
+
+func (cs *ClassStatement) statement() {}
+func (cs *ClassStatement) ToString() string {
+	return fmt.Sprintf("CLASS %s %v %v", cs.Name.Value, cs.Properties, cs.Methods)
+}
+
+type PropertyStatement struct {
+	BaseNode
+	Name  string
+	Type  string
+	Value interface{}
+}
+
+func (ps *PropertyStatement) statement() {}
+func (ps *PropertyStatement) ToString() string {
+	return fmt.Sprintf("PROPERTY %s %s %v", ps.Name, ps.Type, ps.Value)
+}

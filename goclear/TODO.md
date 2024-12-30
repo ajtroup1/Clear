@@ -1,6 +1,14 @@
 # TODO
+- **I have to restructure the parser to be STATICALLY TYPED**
+  - This is due to issues with the transition to object-orientied
+  - It is optimal for the host language being Go since Go is statically typed
+    - This makes dynamic typing take extra steps since Go types are not inferred
+  - Static typing is also just more performant
+  - I was going to make a statically typed language eventually, so let's go for it
 - Line numbers are messed up, col numbers seem good. Should be an easy fix maybe duplicate line++
 - Make the parser object oriented
-- Import statements
+- Arrays
+  - Are they going to be a library?
+  - In modern languages I feel like they have to be built in
 - Can always improve error messaging and handling
 - Have chat gpt come up with unique scripts to execute to handle edge cases i can't think of

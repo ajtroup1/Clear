@@ -16,7 +16,7 @@ func main() {
 	jsonMode := true
 	litterMode := false
 	debug := false
-	
+
 	readingDir := false
 
 	if len(os.Args) < 2 {
@@ -74,6 +74,7 @@ func clearAndCreateJsonFolder() error {
 }
 
 func processFile(filePath string, debug, jsonMode, litterMode bool) {
+	fmt.Printf("Processing file: %s\n", filePath)
 	bytes, err := os.ReadFile(filePath)
 	if err != nil {
 		fmt.Println("Error reading file:", err)
@@ -88,9 +89,9 @@ func processFile(filePath string, debug, jsonMode, litterMode bool) {
 	lexer := lexer.New(src)
 	lexer.Lex()
 	if debug {
-		// for i, token := range lexer.Tokens {
-		// 	fmt.Println(i, token.Stringify())
-		// }
+		for i, token := range lexer.Tokens {
+			fmt.Println("\t", i, token.Stringify())
+		}
 	}
 
 	parser := parser.New(lexer)

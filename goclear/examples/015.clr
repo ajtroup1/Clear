@@ -1,5 +1,0 @@
-class myClass {
-  property1: int
-
-  fn classMethod(x)
-}

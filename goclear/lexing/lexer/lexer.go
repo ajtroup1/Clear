@@ -14,6 +14,12 @@ import "github.com/ajtroup1/goclear/lexing/token"
 var keywords = map[string]token.TokenType{
 	"true":     token.TRUE,
 	"false":    token.FALSE,
+	"int":      token.INT,
+	"float":    token.FLOAT,
+	"string":   token.STRING,
+	"char":     token.CHAR,
+	"bool":     token.BOOL,
+	"void":     token.VOID,
 	"if":       token.IF,
 	"else":     token.ELSE,
 	"for":      token.FOR,

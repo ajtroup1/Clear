@@ -1,4 +1,7 @@
-let a = 10;
-let b = 20;
-let result = a + b;
-return result;
+const string myString = "adkamsk"
+
+if (myString == "example") {
+  return 1;
+}
+
+return "else";

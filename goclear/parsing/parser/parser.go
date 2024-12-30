@@ -2,6 +2,7 @@ package parser
 
 import (
 	"fmt"
+	"strings"
 
 	"strconv"
 
@@ -34,6 +35,12 @@ var precedences = map[token.TokenType]int{
 	token.LPAREN:   CALL,
 }
 
+type SymbolTable map[string]string
+
+func NewSymbolTable() SymbolTable {
+	return make(SymbolTable)
+}
+
 type (
 	prefixParseFn  func() ast.Expression
 	infixParseFn   func(ast.Expression) ast.Expression
@@ -53,6 +60,7 @@ type Parser struct {
 
 	curToken  token.Token
 	peekToken token.Token
+	symbols   SymbolTable
 
 	pos int
 
@@ -69,6 +77,7 @@ func New(l *lexer.Lexer) *Parser {
 		l:              l,
 		parsingImports: false,
 		errors:         []ParserError{},
+		symbols:        NewSymbolTable(),
 	}
 
 	p.AST = &ast.Program{Statements: []ast.Statement{}, Imports: []*ast.ModuleStatement{}}
@@ -85,7 +94,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.IF, p.parseIfExpression)
 	p.registerPrefix(token.FUNCTION, p.parseFunctionLiteral)
 	p.registerPrefix(token.STRING, p.parseStringLiteral)
-	p.registerPrefix(token.CHAR, p.parseStringLiteral)
+	p.registerPrefix(token.CHAR, p.parseCharLiteral)
 
 	p.infixParseFns = make(map[token.TokenType]infixParseFn)
 	p.registerInfix(token.PLUS, p.parseInfixExpression)
@@ -198,8 +207,6 @@ func (p *Parser) ParseProgram() *ast.Program {
 
 func (p *Parser) parseStatement() ast.Statement {
 	switch p.curToken.Type {
-	case token.LET:
-		return p.parseLetStatement()
 	case token.CONST:
 		return p.parseConstStatement()
 	case token.RETURN:
@@ -209,12 +216,34 @@ func (p *Parser) parseStatement() ast.Statement {
 	case token.WHILE:
 		return p.parseWhileStatement()
 	default:
+		if isTypeToken(p.curToken.Type) {
+			stmt := p.parseVariableDeclaration()
+			if stmt.Type != token.ILLEGAL {
+				return stmt
+			}
+		}
 		return p.parseExpressionStatement()
 	}
 }
 
-func (p *Parser) parseLetStatement() *ast.LetStatement {
-	stmt := &ast.LetStatement{BaseNode: ast.BaseNode{Token: p.curToken}}
+func isTypeToken(t token.TokenType) bool {
+	typeTokens := []token.TokenType{
+		token.INT,
+		token.FLOAT,
+		token.STRING,
+		token.BOOL,
+		token.CHAR,
+	}
+	for _, tt := range typeTokens {
+		if t == tt {
+			return true
+		}
+	}
+	return false
+}
+
+func (p *Parser) parseVariableDeclaration() *ast.AssignStatement {
+	stmt := &ast.AssignStatement{BaseNode: ast.BaseNode{Token: p.curToken}, Type: p.curToken.Type}
 
 	if !p.expectPeek(token.IDENT) {
 		return nil
@@ -227,11 +256,18 @@ func (p *Parser) parseLetStatement() *ast.LetStatement {
 	}
 
 	p.nextToken()
-
 	stmt.Value = p.parseExpression(LOWEST)
 
 	if p.peekTokenIs(token.SEMICOLON) {
 		p.nextToken()
+	}
+
+	p.symbols[stmt.Name.Value] = strings.ToLower(string(stmt.Type))
+
+	if !p.checkTypeCompatibility(stmt.Value, string(stmt.Type)) {
+		msg := fmt.Sprintf("type mismatch: expected %s but got %s", strings.ToLower(string(stmt.Type)), p.getTypeOfExpression(stmt.Value))
+		p.errors = append(p.errors, ParserError{Msg: msg, Line: p.curToken.Line, Col: p.curToken.Col})
+		return &ast.AssignStatement{Type: token.ILLEGAL}
 	}
 
 	return stmt
@@ -240,25 +276,46 @@ func (p *Parser) parseLetStatement() *ast.LetStatement {
 func (p *Parser) parseConstStatement() *ast.ConstStatement {
 	stmt := &ast.ConstStatement{BaseNode: ast.BaseNode{Token: p.curToken}}
 
-	if !p.expectPeek(token.IDENT) {
-		return nil
-	}
-
-	stmt.Name = &ast.Identifier{BaseNode: ast.BaseNode{Token: p.curToken}, Value: p.curToken.Literal}
-
-	if !p.expectPeek(token.ASSIGN) {
-		return nil
-	}
-
 	p.nextToken()
 
-	stmt.Value = p.parseExpression(LOWEST)
+	myVar := p.parseVariableDeclaration()
 
-	if p.peekTokenIs(token.SEMICOLON) {
-		p.nextToken()
-	}
+	stmt.Name = myVar.Name
+	stmt.Value = myVar.Value
+	stmt.Type = myVar.Type
 
 	return stmt
+}
+
+func (p *Parser) checkTypeCompatibility(expr ast.Expression, expectedType string) bool {
+	actualType := p.getTypeOfExpression(expr)
+	return actualType == strings.ToLower(expectedType)
+}
+
+func (p *Parser) getTypeOfExpression(expr ast.Expression) string {
+	switch exp := expr.(type) {
+	case *ast.Identifier:
+		return p.symbols[exp.Value]
+	case *ast.IntegerLiteral:
+		return "int"
+	case *ast.FloatLiteral:
+		return "float"
+	case *ast.BooleanLiteral:
+		return "bool"
+	case *ast.StringLiteral:
+		return "string"
+	case *ast.CharLiteral:
+		return "char"
+	case *ast.InfixExpression:
+		leftType := p.getTypeOfExpression(exp.Left)
+		rightType := p.getTypeOfExpression(exp.Right)
+		if leftType == rightType {
+			return leftType
+		}
+		return "type mismatch"
+	default:
+		return "unknown"
+	}
 }
 
 func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
@@ -339,6 +396,17 @@ func (p *Parser) parseIdentifier() ast.Expression {
 
 func (p *Parser) parseStringLiteral() ast.Expression {
 	return &ast.StringLiteral{BaseNode: ast.BaseNode{Token: p.curToken}, Value: p.curToken.Literal}
+}
+
+func (p *Parser) parseCharLiteral() ast.Expression {
+	lit := p.curToken.Literal
+	if len(lit) != 1 {
+		msg := fmt.Sprintf("could not parse %q as char, chars must be one character only", p.curToken.Literal)
+		p.errors = append(p.errors, ParserError{Msg: msg, Line: p.curToken.Line, Col: p.curToken.Col})
+		return nil
+	}
+
+	return &ast.CharLiteral{BaseNode: ast.BaseNode{Token: p.curToken}, Value: rune(lit[0])}
 }
 
 func (p *Parser) parseIntegerLiteral() ast.Expression {
@@ -566,7 +634,7 @@ func (p *Parser) parseForStatement() *ast.ForStatement {
 	if p.curTokenIs(token.SEMICOLON) {
 		stmt.Init = nil
 	} else if p.curTokenIs(token.LET) {
-		stmt.Init = p.parseLetStatement()
+		stmt.Init = p.parseVariableDeclaration()
 	} else {
 		stmt.Init = p.parseExpressionStatement()
 	}

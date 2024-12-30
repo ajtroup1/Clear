@@ -1,6 +1,6 @@
 mod math;
 
-let x = 7;
+const int x = 7;
 
 if (x == 6) {
   return 0;

@@ -27,6 +27,7 @@ const (
 	ILLEGAL = "ILLEGAL"
 	EOF     = "EOF"
 	NULL    = "NULL"
+	VOID    = "VOID"
 
 	// Identifiers + literals
 	IDENT  = "IDENT" // add, foobar, x, y, ...

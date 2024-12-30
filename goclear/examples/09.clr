@@ -1,4 +1,4 @@
-let x = 3;
+int x = 3;
 const myBool = false;
 
 while (x > 0) {

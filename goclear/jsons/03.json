@@ -2,38 +2,30 @@
   "Statements": [
     {
       "Token": {
-        "Type": "IDENT",
-        "Literal": "x",
+        "Type": "CONST",
+        "Literal": "const",
         "Line": 1,
         "Col": 1
       },
-      "Expression": {
+      "Name": {
         "Token": {
           "Type": "IDENT",
           "Literal": "x",
           "Line": 1,
-          "Col": 1
+          "Col": 12
         },
         "Value": "x"
-      }
-    },
-    {
-      "Token": {
-        "Type": "INC",
-        "Literal": "++",
-        "Line": 1,
-        "Col": 3
       },
-      "Expression": {
+      "Value": {
         "Token": {
-          "Type": "INC",
-          "Literal": "++",
+          "Type": "CHAR",
+          "Literal": "m",
           "Line": 1,
-          "Col": 3
+          "Col": 17
         },
-        "Operator": "++",
-        "Left": null
-      }
+        "Value": 109
+      },
+      "Type": "CHAR"
     }
   ],
   "Imports": []

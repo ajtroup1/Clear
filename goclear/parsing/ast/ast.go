@@ -63,21 +63,23 @@ func (bs *BlockStatement) ToString() string {
 	return str
 }
 
-type LetStatement struct {
+type AssignStatement struct {
 	BaseNode
 	Name  *Identifier
 	Value Expression
+	Type  token.TokenType
 }
 
-func (ls *LetStatement) statement() {}
-func (ls *LetStatement) ToString() string {
-	return fmt.Sprintf("LET %s = %v", ls.Name.Value, ls.Value)
+func (as *AssignStatement) statement() {}
+func (as *AssignStatement) ToString() string {
+	return fmt.Sprintf("LET %s = %v", as.Name.Value, as.Value)
 }
 
 type ConstStatement struct {
 	BaseNode
 	Name  *Identifier
 	Value Expression
+	Type  token.TokenType
 }
 
 func (cs *ConstStatement) statement() {}
@@ -194,6 +196,26 @@ func (f *FloatLiteral) ToString() string {
 type StringLiteral struct {
 	BaseNode
 	Value string
+}
+
+type CharLiteral struct {
+	BaseNode
+	Value rune
+}
+
+type BooleanLiteral struct {
+	BaseNode
+	Value bool
+}
+
+func (b *BooleanLiteral) expression() {}
+func (b *BooleanLiteral) ToString() string {
+	return fmt.Sprintf("BOOL %t", b.Value)
+}
+
+func (c *CharLiteral) expression() {}
+func (c *CharLiteral) ToString() string {
+	return fmt.Sprintf("CHAR %c", c.Value)
 }
 
 func (s *StringLiteral) expression() {}

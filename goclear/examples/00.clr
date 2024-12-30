@@ -1,2 +1,2 @@
-let result = 2 + 3 * 7;
+int result = 2 + 3 * 7;
 return result;

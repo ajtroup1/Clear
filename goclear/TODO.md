@@ -5,7 +5,8 @@
     - This makes dynamic typing take extra steps since Go types are not inferred
   - Static typing is also just more performant
   - I was going to make a statically typed language eventually, so let's go for it
-- Line numbers are messed up, col numbers seem good. Should be an easy fix maybe duplicate line++
+- Column and line numbers need to be reevaluated
+- Handle unterminated strings
 - Make the parser object oriented
 - Arrays
   - Are they going to be a library?

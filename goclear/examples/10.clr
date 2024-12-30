@@ -1,6 +1,6 @@
-fn multiplyAndAdd(a, b, c) {
+fn multiplyAndAdd(a: int, b: int, c: int) => int {
   return a * b + c;
 }
 
-let result = multiplyAndAdd(2, 3, 4);
+const int result = multiplyAndAdd(2, 3, 4);
 return result;

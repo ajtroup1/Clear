@@ -4,14 +4,14 @@
       "Token": {
         "Type": "LET",
         "Literal": "let",
-        "Line": 1,
+        "Line": 5,
         "Col": 1
       },
       "Name": {
         "Token": {
           "Type": "IDENT",
           "Literal": "x",
-          "Line": 1,
+          "Line": 5,
           "Col": 5
         },
         "Value": "x"
@@ -19,40 +19,40 @@
       "Value": {
         "Token": {
           "Type": "INT",
-          "Literal": "5",
-          "Line": 1,
+          "Literal": "7",
+          "Line": 5,
           "Col": 9
         },
-        "Value": 5
+        "Value": 7
       }
     },
     {
       "Token": {
         "Type": "IF",
         "Literal": "if",
-        "Line": 3,
+        "Line": 9,
         "Col": 1
       },
       "Expression": {
         "Token": {
           "Type": "IF",
           "Literal": "if",
-          "Line": 3,
+          "Line": 9,
           "Col": 1
         },
         "Condition": {
           "Token": {
-            "Type": "GT",
-            "Literal": "\u003e",
-            "Line": 3,
-            "Col": 7
+            "Type": "EQ",
+            "Literal": "==",
+            "Line": 9,
+            "Col": 8
           },
-          "Operator": "\u003e",
+          "Operator": "==",
           "Left": {
             "Token": {
               "Type": "IDENT",
               "Literal": "x",
-              "Line": 3,
+              "Line": 9,
               "Col": 5
             },
             "Value": "x"
@@ -60,69 +60,53 @@
           "Right": {
             "Token": {
               "Type": "INT",
-              "Literal": "3",
-              "Line": 3,
-              "Col": 9
+              "Literal": "6",
+              "Line": 9,
+              "Col": 10
             },
-            "Value": 3
+            "Value": 6
           }
         },
         "Consequence": {
           "Token": {
             "Type": "LBRACE",
             "Literal": "{",
-            "Line": 3,
-            "Col": 12
+            "Line": 9,
+            "Col": 13
           },
           "Statements": [
             {
               "Token": {
                 "Type": "RETURN",
                 "Literal": "return",
-                "Line": 5,
+                "Line": 11,
                 "Col": 3
               },
               "Value": {
                 "Token": {
-                  "Type": "STRING",
-                  "Literal": "greater",
-                  "Line": 5,
+                  "Type": "INT",
+                  "Literal": "0",
+                  "Line": 11,
                   "Col": 10
                 },
-                "Value": "greater"
+                "Value": 0
               }
             }
           ]
         },
-        "Alternative": {
-          "Token": {
-            "Type": "LBRACE",
-            "Literal": "{",
-            "Line": 7,
-            "Col": 8
-          },
-          "Statements": [
-            {
-              "Token": {
-                "Type": "RETURN",
-                "Literal": "return",
-                "Line": 9,
-                "Col": 3
-              },
-              "Value": {
-                "Token": {
-                  "Type": "STRING",
-                  "Literal": "less",
-                  "Line": 9,
-                  "Col": 10
-                },
-                "Value": "less"
-              }
-            }
-          ]
-        }
+        "Alternative": null
       }
     }
   ],
-  "Imports": []
+  "Imports": [
+    {
+      "Token": {
+        "Type": "MODULE",
+        "Literal": "mod",
+        "Line": 1,
+        "Col": 1
+      },
+      "Name": "math"
+    }
+  ]
 }

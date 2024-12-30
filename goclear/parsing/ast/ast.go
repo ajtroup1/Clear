@@ -3,7 +3,7 @@ package ast
 import (
 	"fmt"
 
-	"github.com/ajtroup1/goclear/token"
+	"github.com/ajtroup1/goclear/lexing/token"
 )
 
 type Node interface {
@@ -23,6 +23,7 @@ type Expression interface {
 
 type Program struct {
 	Statements []Statement
+	Imports    []*ModuleStatement
 }
 
 func (p *Program) ToString() string {
@@ -116,16 +117,44 @@ func (ws *WhileStatement) ToString() string {
 }
 
 type ForStatement struct {
-    BaseNode
-    Init       Statement
-    Condition  Expression
-    Post       Expression
-    Body       *BlockStatement
+	BaseNode
+	Init      Statement
+	Condition Expression
+	Post      Expression
+	Body      *BlockStatement
 }
 
 func (fs *ForStatement) statement() {}
 func (fs *ForStatement) ToString() string {
-    return fmt.Sprintf("FOR %v %v %v %v", fs.Init, fs.Condition, fs.Post, fs.Body)
+	return fmt.Sprintf("FOR %v %v %v %v", fs.Init, fs.Condition, fs.Post, fs.Body)
+}
+
+type BreakStatement struct {
+	BaseNode
+}
+
+func (bs *BreakStatement) statement() {}
+func (bs *BreakStatement) ToString() string {
+	return "BREAK"
+}
+
+type ContinueStatement struct {
+	BaseNode
+}
+
+func (cs *ContinueStatement) statement() {}
+func (cs *ContinueStatement) ToString() string {
+	return "CONTINUE"
+}
+
+type ModuleStatement struct {
+	BaseNode
+	Name string
+}
+
+func (is *ModuleStatement) statement() {}
+func (is *ModuleStatement) ToString() string {
+	return fmt.Sprintf("IMPORT %s", is.Name)
 }
 
 // ===========
@@ -134,7 +163,7 @@ func (fs *ForStatement) ToString() string {
 
 type Identifier struct {
 	BaseNode
-	Value  string
+	Value string
 }
 
 func (i *Identifier) expression() {}
@@ -218,9 +247,9 @@ func (b *Boolean) ToString() string {
 
 type IfExpression struct {
 	BaseNode
-	Condition       Expression
-	Consequence     *BlockStatement
-	Alternative     *BlockStatement
+	Condition   Expression
+	Consequence *BlockStatement
+	Alternative *BlockStatement
 }
 
 func (ie *IfExpression) expression() {}
@@ -234,7 +263,7 @@ func (ie *IfExpression) ToString() string {
 
 type FunctionLiteral struct {
 	BaseNode
-	Name 		 	*Identifier
+	Name       *Identifier
 	Parameters []*Identifier
 	Body       *BlockStatement
 }

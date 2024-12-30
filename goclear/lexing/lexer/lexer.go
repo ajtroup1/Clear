@@ -9,7 +9,7 @@
 
 package lexer
 
-import "github.com/ajtroup1/goclear/token"
+import "github.com/ajtroup1/goclear/lexing/token"
 
 var keywords = map[string]token.TokenType{
 	"true":     token.TRUE,
@@ -30,8 +30,8 @@ var keywords = map[string]token.TokenType{
 	"this":     token.THIS,
 	"super":    token.SUPER,
 	"static":   token.STATIC,
-	"import":   token.IMPORT,
-	"export":   token.EXPORT,
+	"module":   token.MODULE,
+	"mod":      token.MODULE,
 }
 
 type Lexer struct {

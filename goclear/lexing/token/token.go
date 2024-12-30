@@ -86,7 +86,7 @@ const (
 	THIS     = "THIS"
 	SUPER    = "SUPER"
 	STATIC   = "STATIC"
-	IMPORT   = "IMPORT"
+	MODULE   = "MODULE"
 	EXPORT   = "EXPORT"
 	CONTINUE = "CONTINUE"
 	BREAK    = "BREAK"

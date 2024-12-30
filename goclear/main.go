@@ -7,16 +7,17 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ajtroup1/goclear/lexer"
-	"github.com/ajtroup1/goclear/parser"
+	"github.com/ajtroup1/goclear/lexing/lexer"
+	"github.com/ajtroup1/goclear/parsing/parser"
 	"github.com/sanity-io/litter"
 )
 
 func main() {
 	jsonMode := true
 	litterMode := false
-	readingDir := false
 	debug := false
+	
+	readingDir := false
 
 	if len(os.Args) < 2 {
 		fmt.Println("Please provide a file path")
@@ -109,7 +110,7 @@ func processFile(filePath string, debug, jsonMode, litterMode bool) {
 			fmt.Println("No program statements")
 			return
 		}
-		
+
 		if jsonMode {
 			jsonFilePath := filepath.Join("jsons", generateJsonFilename(filePath))
 			file, err := os.Create(jsonFilePath)
@@ -127,7 +128,7 @@ func processFile(filePath string, debug, jsonMode, litterMode bool) {
 			}
 			fmt.Printf("Program written to '%s'\n", jsonFilePath)
 		}
-		
+
 		if litterMode {
 			fmt.Println("Program Statements:")
 			litter.Dump(program)

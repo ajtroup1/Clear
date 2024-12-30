@@ -5,9 +5,9 @@ import (
 
 	"strconv"
 
-	"github.com/ajtroup1/goclear/ast"
-	"github.com/ajtroup1/goclear/lexer"
-	"github.com/ajtroup1/goclear/token"
+	"github.com/ajtroup1/goclear/lexing/lexer"
+	"github.com/ajtroup1/goclear/lexing/token"
+	"github.com/ajtroup1/goclear/parsing/ast"
 )
 
 const (
@@ -48,12 +48,16 @@ type ParserError struct {
 
 type Parser struct {
 	l      *lexer.Lexer
+	AST    *ast.Program
 	errors []ParserError
 
 	curToken  token.Token
 	peekToken token.Token
 
 	pos int
+
+	imports        []*ast.ModuleStatement
+	parsingImports bool
 
 	prefixParseFns  map[token.TokenType]prefixParseFn
 	infixParseFns   map[token.TokenType]infixParseFn
@@ -62,9 +66,12 @@ type Parser struct {
 
 func New(l *lexer.Lexer) *Parser {
 	p := &Parser{
-		l:      l,
-		errors: []ParserError{},
+		l:              l,
+		parsingImports: false,
+		errors:         []ParserError{},
 	}
+
+	p.AST = &ast.Program{Statements: []ast.Statement{}, Imports: []*ast.ModuleStatement{}}
 
 	p.prefixParseFns = make(map[token.TokenType]prefixParseFn)
 	p.registerPrefix(token.IDENT, p.parseIdentifier)
@@ -154,14 +161,35 @@ func (p *Parser) noPrefixParseFnError(t token.TokenType) {
 }
 
 func (p *Parser) ParseProgram() *ast.Program {
-	program := &ast.Program{}
-	program.Statements = []ast.Statement{}
+	program := &ast.Program{
+		Statements: []ast.Statement{},
+		Imports:    []*ast.ModuleStatement{},
+	}
 
 	for !p.curTokenIs(token.EOF) {
-		stmt := p.parseStatement()
-		if stmt != nil {
-			program.Statements = append(program.Statements, stmt)
+		if p.curTokenIs(token.MODULE) && !p.parsingImports {
+			p.parsingImports = true
 		}
+
+		if p.parsingImports {
+			if p.curTokenIs(token.MODULE) {
+				stmt := p.parseModuleStatement()
+				if stmt != nil {
+					program.Imports = append(program.Imports, stmt)
+					p.AST.Imports = append(p.AST.Imports, stmt)
+				}
+			} else {
+				p.parsingImports = false
+			}
+		}
+
+		if !p.parsingImports {
+			stmt := p.parseStatement()
+			if stmt != nil {
+				program.Statements = append(program.Statements, stmt)
+			}
+		}
+
 		p.nextToken()
 	}
 
@@ -547,7 +575,7 @@ func (p *Parser) parseForStatement() *ast.ForStatement {
 		return nil
 	}
 
-	p.nextToken() 
+	p.nextToken()
 
 	stmt.Condition = p.parseExpression(LOWEST)
 	if stmt.Condition == nil {
@@ -557,15 +585,15 @@ func (p *Parser) parseForStatement() *ast.ForStatement {
 	if !p.expectPeek(token.SEMICOLON) {
 		return nil
 	}
-	
+
 	p.nextToken()
-	
+
 	stmt.Post = p.parsePostfixExpression(&ast.Identifier{BaseNode: ast.BaseNode{Token: p.peekToken}, Value: p.peekToken.Literal})
 	if stmt.Post == nil {
 		return nil
 	}
 	p.nextToken()
-	
+
 	if !p.expectPeek(token.RPAREN) {
 		return nil
 	}
@@ -602,6 +630,23 @@ func (p *Parser) parseWhileStatement() *ast.WhileStatement {
 	}
 
 	stmt.Body = p.parseBlockStatement()
+
+	return stmt
+}
+
+func (p *Parser) parseModuleStatement() *ast.ModuleStatement {
+	stmt := &ast.ModuleStatement{BaseNode: ast.BaseNode{Token: p.curToken}}
+
+	// Expecting an identifier after 'import'
+	if !p.expectPeek(token.IDENT) {
+		return nil
+	}
+
+	stmt.Name = p.curToken.Literal
+
+	if p.peekTokenIs(token.SEMICOLON) {
+		p.nextToken() // Consume the semicolon
+	}
 
 	return stmt
 }

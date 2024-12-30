@@ -1,1 +1,2 @@
-let x = (2 + 3) * 7;
+let result = 2 + 3 * 7;
+return result;

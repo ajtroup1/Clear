@@ -1,0 +1,39 @@
+{
+  "Statements": [
+    {
+      "Token": {
+        "Type": "IDENT",
+        "Literal": "x",
+        "Line": 1,
+        "Col": 1
+      },
+      "Expression": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "x",
+          "Line": 1,
+          "Col": 1
+        },
+        "Value": "x"
+      }
+    },
+    {
+      "Token": {
+        "Type": "INC",
+        "Literal": "++",
+        "Line": 1,
+        "Col": 3
+      },
+      "Expression": {
+        "Token": {
+          "Type": "INC",
+          "Literal": "++",
+          "Line": 1,
+          "Col": 3
+        },
+        "Operator": "++",
+        "Left": null
+      }
+    }
+  ]
+}

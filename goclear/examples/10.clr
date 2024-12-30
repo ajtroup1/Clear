@@ -1,0 +1,6 @@
+fn multiplyAndAdd(a, b, c) {
+  return a * b + c;
+}
+
+let result = multiplyAndAdd(2, 3, 4);
+return result;

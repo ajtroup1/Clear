@@ -73,6 +73,17 @@ func (ls *LetStatement) ToString() string {
 	return fmt.Sprintf("LET %s = %v", ls.Name.Value, ls.Value)
 }
 
+type ConstStatement struct {
+	BaseNode
+	Name  *Identifier
+	Value Expression
+}
+
+func (cs *ConstStatement) statement() {}
+func (cs *ConstStatement) ToString() string {
+	return fmt.Sprintf("CONST %s = %v", cs.Name.Value, cs.Value)
+}
+
 type ReturnStatement struct {
 	BaseNode
 	Value Expression
@@ -91,6 +102,30 @@ type ExpressionStatement struct {
 func (es *ExpressionStatement) statement() {}
 func (es *ExpressionStatement) ToString() string {
 	return es.Expression.ToString()
+}
+
+type WhileStatement struct {
+	BaseNode
+	Condition Expression
+	Body      *BlockStatement
+}
+
+func (ws *WhileStatement) statement() {}
+func (ws *WhileStatement) ToString() string {
+	return fmt.Sprintf("WHILE %v %v", ws.Condition, ws.Body)
+}
+
+type ForStatement struct {
+    BaseNode
+    Init       Statement
+    Condition  Expression
+    Post       Expression
+    Body       *BlockStatement
+}
+
+func (fs *ForStatement) statement() {}
+func (fs *ForStatement) ToString() string {
+    return fmt.Sprintf("FOR %v %v %v %v", fs.Init, fs.Condition, fs.Post, fs.Body)
 }
 
 // ===========
@@ -146,6 +181,17 @@ type PrefixExpression struct {
 func (pe *PrefixExpression) expression() {}
 func (pe *PrefixExpression) ToString() string {
 	return fmt.Sprintf("(%s) %v", pe.Operator, pe.Right)
+}
+
+type PostfixExpression struct {
+	BaseNode
+	Operator string
+	Left     Expression
+}
+
+func (pe *PostfixExpression) expression() {}
+func (pe *PostfixExpression) ToString() string {
+	return fmt.Sprintf("%v (%s)", pe.Left, pe.Operator)
 }
 
 type InfixExpression struct {

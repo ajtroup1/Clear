@@ -1,0 +1,91 @@
+{
+  "Statements": [
+    {
+      "Token": {
+        "Type": "LET",
+        "Literal": "let",
+        "Line": 1,
+        "Col": 1
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "x",
+          "Line": 1,
+          "Col": 5
+        },
+        "Value": "x"
+      },
+      "Value": {
+        "Token": {
+          "Type": "INT",
+          "Literal": "10",
+          "Line": 1,
+          "Col": 9
+        },
+        "Value": 10
+      }
+    },
+    {
+      "Token": {
+        "Type": "LET",
+        "Literal": "let",
+        "Line": 3,
+        "Col": 1
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "y",
+          "Line": 3,
+          "Col": 5
+        },
+        "Value": "y"
+      },
+      "Value": {
+        "Token": {
+          "Type": "PLUS",
+          "Literal": "+",
+          "Line": 3,
+          "Col": 11
+        },
+        "Operator": "+",
+        "Left": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "x",
+            "Line": 3,
+            "Col": 9
+          },
+          "Value": "x"
+        },
+        "Right": {
+          "Token": {
+            "Type": "INT",
+            "Literal": "5",
+            "Line": 3,
+            "Col": 13
+          },
+          "Value": 5
+        }
+      }
+    },
+    {
+      "Token": {
+        "Type": "RETURN",
+        "Literal": "return",
+        "Line": 5,
+        "Col": 1
+      },
+      "Value": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "y",
+          "Line": 5,
+          "Col": 8
+        },
+        "Value": "y"
+      }
+    }
+  ]
+}

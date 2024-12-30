@@ -20,6 +20,7 @@ var keywords = map[string]token.TokenType{
 	"while":    token.WHILE,
 	"fn":       token.FUNCTION,
 	"let":      token.LET,
+	"const":    token.CONST,
 	"return":   token.RETURN,
 	"break":    token.BREAK,
 	"continue": token.CONTINUE,

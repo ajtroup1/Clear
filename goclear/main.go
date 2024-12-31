@@ -91,15 +91,9 @@ func processFile(filePath string, debug, jsonMode, litterMode bool) {
 		fmt.Printf("File '%s' is empty\n", filePath)
 		return
 	}
-	lexer.Lex()
-	if debug {
-		for i, token := range lexer.Tokens {
-			fmt.Println("\t", i, token.Stringify())
-		}
-	}
 
 	parser := parser.New(lexer)
-	program := parser.ParseProgram()
+	program := parser.Parse()
 
 	if len(parser.Errors()) != 0 {
 		fmt.Printf("\033[31mParser errors for '%s':\n", filePath)
@@ -107,6 +101,11 @@ func processFile(filePath string, debug, jsonMode, litterMode bool) {
 			fmt.Printf("\tParser::Error --> '%s' [line: %d, col: %d]\n", err.Msg, err.Line, err.Col)
 		}
 		fmt.Print("\033[0m")
+		return
+	}
+
+	if len(program.Statements) == 0 || program == nil {
+		fmt.Printf("No program statements for '%s'\n", filePath)
 		return
 	}
 

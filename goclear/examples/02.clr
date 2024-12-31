@@ -1,2 +1,2 @@
-int result = -2 + 3;
-return result;
+int x = 0;
+x = 0;

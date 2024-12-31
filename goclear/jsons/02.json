@@ -1,0 +1,60 @@
+{
+  "Statements": [
+    {
+      "Token": {
+        "Type": "INT",
+        "Literal": "int",
+        "Line": 1,
+        "Col": 1
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "x",
+          "Line": 1,
+          "Col": 5
+        },
+        "Value": "x",
+        "Type": ""
+      },
+      "Value": {
+        "Token": {
+          "Type": "INT",
+          "Literal": "0",
+          "Line": 1,
+          "Col": 9
+        },
+        "Value": 0
+      },
+      "Type": "INT"
+    },
+    {
+      "Token": {
+        "Type": "IDENT",
+        "Literal": "x",
+        "Line": 3,
+        "Col": 1
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "x",
+          "Line": 3,
+          "Col": 1
+        },
+        "Value": "x",
+        "Type": ""
+      },
+      "Value": {
+        "Token": {
+          "Type": "INT",
+          "Literal": "0",
+          "Line": 3,
+          "Col": 5
+        },
+        "Value": 0
+      }
+    }
+  ],
+  "Imports": null
+}

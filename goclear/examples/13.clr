@@ -1,5 +1,0 @@
-class myClass {
-  property1: int
-  property2: float
-  property3: bool
-}

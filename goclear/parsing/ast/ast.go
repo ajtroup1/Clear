@@ -7,6 +7,18 @@ import (
 	"github.com/ajtroup1/goclear/lexing/token"
 )
 
+type DataType string
+
+const (
+	UNKNOWN DataType = "UNKNOWN"
+	INT     DataType = "INT"
+	FLOAT   DataType = "FLOAT"
+	STRING  DataType = "STRING"
+	CHAR    DataType = "CHAR"
+	BOOL    DataType = "BOOL"
+	VOID    DataType = "VOID"
+)
+
 type Node interface {
 	ToString() string
 	Position() (line, col int)
@@ -20,6 +32,7 @@ type Statement interface {
 type Expression interface {
 	Node
 	expression()
+	GetType() DataType
 }
 
 type Program struct {
@@ -68,19 +81,30 @@ type AssignStatement struct {
 	BaseNode
 	Name  *Identifier
 	Value Expression
-	Type  token.TokenType
+	Type  DataType
 }
 
 func (as *AssignStatement) statement() {}
 func (as *AssignStatement) ToString() string {
-	return fmt.Sprintf("LET %s = %v", as.Name.Value, as.Value)
+	return fmt.Sprintf("(%s) %s = %v", as.Type, as.Name.Value, as.Value)
+}
+
+type ReassignStatement struct {
+	BaseNode
+	Name  *Identifier
+	Value Expression
+}
+
+func (rs *ReassignStatement) statement() {}
+func (rs *ReassignStatement) ToString() string {
+	return fmt.Sprintf("REASSIGN (%s) %s = %v", rs.Name.Type, rs.Name.Value, rs.Value)
 }
 
 type ConstStatement struct {
 	BaseNode
 	Name  *Identifier
 	Value Expression
-	Type  token.TokenType
+	Type  DataType
 }
 
 func (cs *ConstStatement) statement() {}
@@ -160,6 +184,30 @@ func (is *ModuleStatement) ToString() string {
 	return fmt.Sprintf("IMPORT %s", is.Name)
 }
 
+type ClassStatement struct {
+	BaseNode
+	Name       *Identifier
+	Properties []*PropertyStatement
+	Methods    []*FunctionLiteral
+}
+
+func (cs *ClassStatement) statement() {}
+func (cs *ClassStatement) ToString() string {
+	return fmt.Sprintf("CLASS %s %v %v", cs.Name.Value, cs.Properties, cs.Methods)
+}
+
+type PropertyStatement struct {
+	BaseNode
+	Name  string
+	Type  DataType
+	Value interface{}
+}
+
+func (ps *PropertyStatement) statement() {}
+func (ps *PropertyStatement) ToString() string {
+	return fmt.Sprintf("PROPERTY %s %s %v", ps.Name, ps.Type, ps.Value)
+}
+
 // ===========
 // EXPRESSIONS
 // ===========
@@ -167,12 +215,15 @@ func (is *ModuleStatement) ToString() string {
 type Identifier struct {
 	BaseNode
 	Value string
-	Type  token.TokenType
+	Type  DataType
 }
 
 func (i *Identifier) expression() {}
 func (i *Identifier) ToString() string {
 	return fmt.Sprintf("IDENT %s: %s", i.Value, strings.ToLower(string(i.Type)))
+}
+func (i *Identifier) GetType() DataType {
+	return i.Type
 }
 
 type IntegerLiteral struct {
@@ -184,6 +235,9 @@ func (i *IntegerLiteral) expression() {}
 func (i *IntegerLiteral) ToString() string {
 	return fmt.Sprintf("INT %d", i.Value)
 }
+func (i *IntegerLiteral) GetType() DataType {
+	return INT
+}
 
 type FloatLiteral struct {
 	BaseNode
@@ -194,15 +248,34 @@ func (f *FloatLiteral) expression() {}
 func (f *FloatLiteral) ToString() string {
 	return fmt.Sprintf("FLOAT %f", f.Value)
 }
+func (f *FloatLiteral) GetType() DataType {
+	return FLOAT
+}
 
 type StringLiteral struct {
 	BaseNode
 	Value string
 }
 
+func (s *StringLiteral) expression() {}
+func (s *StringLiteral) ToString() string {
+	return fmt.Sprintf("STRING %s", s.Value)
+}
+func (s *StringLiteral) GetType() DataType {
+	return STRING
+}
+
 type CharLiteral struct {
 	BaseNode
 	Value rune
+}
+
+func (c *CharLiteral) expression() {}
+func (c *CharLiteral) ToString() string {
+	return fmt.Sprintf("CHAR %c", c.Value)
+}
+func (c *CharLiteral) GetType() DataType {
+	return CHAR
 }
 
 type BooleanLiteral struct {
@@ -214,15 +287,8 @@ func (b *BooleanLiteral) expression() {}
 func (b *BooleanLiteral) ToString() string {
 	return fmt.Sprintf("BOOL %t", b.Value)
 }
-
-func (c *CharLiteral) expression() {}
-func (c *CharLiteral) ToString() string {
-	return fmt.Sprintf("CHAR %c", c.Value)
-}
-
-func (s *StringLiteral) expression() {}
-func (s *StringLiteral) ToString() string {
-	return fmt.Sprintf("STRING %s", s.Value)
+func (b *BooleanLiteral) GetType() DataType {
+	return BOOL
 }
 
 type PrefixExpression struct {
@@ -235,6 +301,9 @@ func (pe *PrefixExpression) expression() {}
 func (pe *PrefixExpression) ToString() string {
 	return fmt.Sprintf("(%s) %v", pe.Operator, pe.Right)
 }
+func (pe *PrefixExpression) GetType() DataType {
+	return pe.Right.GetType()
+}
 
 type PostfixExpression struct {
 	BaseNode
@@ -245,6 +314,9 @@ type PostfixExpression struct {
 func (pe *PostfixExpression) expression() {}
 func (pe *PostfixExpression) ToString() string {
 	return fmt.Sprintf("%v (%s)", pe.Left, pe.Operator)
+}
+func (pe *PostfixExpression) GetType() DataType {
+	return pe.Left.GetType()
 }
 
 type InfixExpression struct {
@@ -257,6 +329,9 @@ type InfixExpression struct {
 func (ie *InfixExpression) expression() {}
 func (ie *InfixExpression) ToString() string {
 	return fmt.Sprintf("(%v) %s (%v)", ie.Left, ie.Operator, ie.Right)
+}
+func (ie *InfixExpression) GetType() DataType {
+	return ie.Left.GetType()
 }
 
 type IfExpression struct {
@@ -274,18 +349,24 @@ func (ie *IfExpression) ToString() string {
 	}
 	return str
 }
+func (ie *IfExpression) GetType() DataType {
+	return BOOL
+}
 
 type FunctionLiteral struct {
 	BaseNode
 	Name       *Identifier
 	Parameters []*Identifier
 	Body       *BlockStatement
-	ReturnType token.TokenType
+	ReturnType DataType
 }
 
 func (fl *FunctionLiteral) expression() {}
 func (fl *FunctionLiteral) ToString() string {
 	return fmt.Sprintf("FUNCTION:\n\tReturn Type: %v\n\tParameters: %v\n\tBody: %v", fl.ReturnType, fl.Parameters, fl.Body)
+}
+func (fl *FunctionLiteral) GetType() DataType {
+	return fl.ReturnType
 }
 
 type CallExpression struct {
@@ -298,38 +379,20 @@ func (ce *CallExpression) expression() {}
 func (ce *CallExpression) ToString() string {
 	return fmt.Sprintf("CALL %s\nArguments:\n\t%v", ce.FunctionIdentifier, ce.Arguments)
 }
+func (ce *CallExpression) GetType() DataType {
+	return ce.FunctionIdentifier.GetType()
+}
 
 type CallArgument struct {
 	BaseNode
 	Expression Expression
-	Type       token.TokenType
+	Type       DataType
 }
 
 func (ca *CallArgument) expression() {}
 func (ca *CallArgument) ToString() string {
 	return fmt.Sprintf("ARG %v %s", ca.Expression, ca.Type)
 }
-
-type ClassStatement struct {
-	BaseNode
-	Name       *Identifier
-	Properties []*PropertyStatement
-	Methods    []*FunctionLiteral
-}
-
-func (cs *ClassStatement) statement() {}
-func (cs *ClassStatement) ToString() string {
-	return fmt.Sprintf("CLASS %s %v %v", cs.Name.Value, cs.Properties, cs.Methods)
-}
-
-type PropertyStatement struct {
-	BaseNode
-	Name  string
-	Type  string
-	Value interface{}
-}
-
-func (ps *PropertyStatement) statement() {}
-func (ps *PropertyStatement) ToString() string {
-	return fmt.Sprintf("PROPERTY %s %s %v", ps.Name, ps.Type, ps.Value)
+func (ca *CallArgument) GetType() DataType {
+	return ca.Type
 }

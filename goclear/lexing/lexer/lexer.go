@@ -65,17 +65,17 @@ func New(src string) *Lexer {
 	return l
 }
 
-func (l *Lexer) Lex() {
-	var tokens []token.Token
-	for l.c != 0 {
-		tok := l.NextToken()
-		tokens = append(tokens, tok)
-		if tok.Type == token.EOF {
-			break
-		}
-	}
-	l.Tokens = tokens
-}
+// func (l *Lexer) Lex() {
+// 	var tokens []token.Token
+// 	for l.c != 0 {
+// 		tok := l.NextToken()
+// 		tokens = append(tokens, tok)
+// 		if tok.Type == token.EOF {
+// 			break
+// 		}
+// 	}
+// 	l.Tokens = tokens
+// }
 
 func (l *Lexer) NextToken() token.Token {
 	l.skipWhitespace()

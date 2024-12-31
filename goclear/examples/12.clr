@@ -1,7 +1,0 @@
-mod math;
-
-const int x = 7;
-
-if (x == 6) {
-  return 0;
-}

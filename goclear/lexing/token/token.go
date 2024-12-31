@@ -8,7 +8,10 @@
 
 package token
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
 type TokenType string
 
@@ -56,6 +59,7 @@ const (
 	DIV_EQ   = "DIV_EQ"
 	INC      = "INC"
 	DEC      = "DEC"
+	DOT      = "DOT"
 
 	// Logical Operators
 	AND = "AND"
@@ -94,3 +98,32 @@ const (
 	WHILE    = "WHILE"
 	FOR      = "FOR"
 )
+
+func (t *Token) Int() (int, error) {
+	return strconv.Atoi(t.Literal)
+}
+
+func (t *Token) Float() (float64, error) {
+	return strconv.ParseFloat(t.Literal, 64)
+}
+
+func (t *Token) Bool() (bool, error) {
+	return strconv.ParseBool(t.Literal)
+}
+
+func (t *Token) Char() (rune, error) {
+	if len(t.Literal) == 1 {
+		return rune(t.Literal[0]), nil
+	}
+
+	unquoted, err := strconv.Unquote(t.Literal)
+	if err != nil {
+		return 0, fmt.Errorf("could not unquote character literal %q: %v", t.Literal, err)
+	}
+
+	if len(unquoted) != 1 {
+		return 0, fmt.Errorf("character literal %q is not a single character", t.Literal)
+	}
+
+	return rune(unquoted[0]), nil
+}

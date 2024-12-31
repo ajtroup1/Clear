@@ -1,6 +1,0 @@
-fn multiplyAndAdd(a: int, b: int, c: int) => int {
-  return a * b + c;
-}
-
-const int result = multiplyAndAdd(2, 3, 4);
-return result;

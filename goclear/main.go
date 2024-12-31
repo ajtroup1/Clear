@@ -9,7 +9,7 @@ import (
 
 	"github.com/ajtroup1/goclear/lexing/lexer"
 	"github.com/ajtroup1/goclear/parsing/parser"
-	"github.com/sanity-io/litter"
+	"github.com/ajtroup1/goclear/utils"
 )
 
 func main() {
@@ -87,6 +87,10 @@ func processFile(filePath string, debug, jsonMode, litterMode bool) {
 
 	src := string(bytes)
 	lexer := lexer.New(src)
+	if lexer == nil {
+		fmt.Printf("File '%s' is empty\n", filePath)
+		return
+	}
 	lexer.Lex()
 	if debug {
 		for i, token := range lexer.Tokens {
@@ -132,7 +136,7 @@ func processFile(filePath string, debug, jsonMode, litterMode bool) {
 
 		if litterMode {
 			fmt.Println("Program Statements:")
-			litter.Dump(program)
+			utils.PrettyPrintASTNode(program)
 		}
 	}
 }

@@ -53,6 +53,9 @@ type Lexer struct {
 }
 
 func New(src string) *Lexer {
+	if len(src) == 0 {
+		return nil
+	}
 	l := &Lexer{
 		src:  src,
 		line: 1,

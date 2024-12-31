@@ -2,5 +2,6 @@ const int x = 5;
 if (x > 3) {
   return "greater";
 } else {
+  string y = "foo";
   return "less";
 }

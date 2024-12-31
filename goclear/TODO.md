@@ -1,12 +1,11 @@
 # TODO
 - **I have to restructure the parser to be STATICALLY TYPED**
-  - This is due to issues with the transition to object-orientied
-  - It is optimal for the host language being Go since Go is statically typed
-    - This makes dynamic typing take extra steps since Go types are not inferred
-  - Static typing is also just more performant
-  - I was going to make a statically typed language eventually, so let's go for it
 - Column and line numbers need to be reevaluated
 - Handle unterminated strings
+- Go through debug mode and figure out what exactly to print and how to convery what information
+  - What is necessary to be displayed? In what format to display it (terminal, log file, etc)? How much do I display before it becomes verbose?
+  - Add verbose debug mode, which shows even more information about the Lexing, Parsing, whatever process
+- Variable scope and naming duplicates
 - Make the parser object oriented
 - Arrays
   - Are they going to be a library?

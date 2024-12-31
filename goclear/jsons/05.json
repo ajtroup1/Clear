@@ -1,0 +1,194 @@
+{
+  "Statements": [
+    {
+      "Token": {
+        "Type": "FUNCTION",
+        "Literal": "fn",
+        "Line": 1,
+        "Col": 1
+      },
+      "Expression": {
+        "Token": {
+          "Type": "FUNCTION",
+          "Literal": "fn",
+          "Line": 1,
+          "Col": 1
+        },
+        "Name": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "add",
+            "Line": 1,
+            "Col": 4
+          },
+          "Value": "add",
+          "Type": ""
+        },
+        "Parameters": [
+          {
+            "Token": {
+              "Type": "IDENT",
+              "Literal": "x",
+              "Line": 1,
+              "Col": 8
+            },
+            "Value": "x",
+            "Type": "INT"
+          },
+          {
+            "Token": {
+              "Type": "IDENT",
+              "Literal": "y",
+              "Line": 1,
+              "Col": 16
+            },
+            "Value": "y",
+            "Type": "INT"
+          }
+        ],
+        "Body": {
+          "Token": {
+            "Type": "LBRACE",
+            "Literal": "{",
+            "Line": 1,
+            "Col": 31
+          },
+          "Statements": [
+            {
+              "Token": {
+                "Type": "RETURN",
+                "Literal": "return",
+                "Line": 3,
+                "Col": 3
+              },
+              "Value": {
+                "Token": {
+                  "Type": "PLUS",
+                  "Literal": "+",
+                  "Line": 3,
+                  "Col": 12
+                },
+                "Operator": "+",
+                "Left": {
+                  "Token": {
+                    "Type": "IDENT",
+                    "Literal": "x",
+                    "Line": 3,
+                    "Col": 10
+                  },
+                  "Value": "x",
+                  "Type": ""
+                },
+                "Right": {
+                  "Token": {
+                    "Type": "IDENT",
+                    "Literal": "y",
+                    "Line": 3,
+                    "Col": 14
+                  },
+                  "Value": "y",
+                  "Type": ""
+                }
+              }
+            }
+          ]
+        },
+        "ReturnType": "INT"
+      }
+    },
+    {
+      "Token": {
+        "Type": "INT",
+        "Literal": "int",
+        "Line": 9,
+        "Col": 1
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "result",
+          "Line": 9,
+          "Col": 5
+        },
+        "Value": "result",
+        "Type": ""
+      },
+      "Value": {
+        "Token": {
+          "Type": "LPAREN",
+          "Literal": "(",
+          "Line": 9,
+          "Col": 17
+        },
+        "FunctionIdentifier": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "add",
+            "Line": 9,
+            "Col": 14
+          },
+          "Value": "add",
+          "Type": ""
+        },
+        "Arguments": [
+          {
+            "Token": {
+              "Type": "INT",
+              "Literal": "3",
+              "Line": 9,
+              "Col": 18
+            },
+            "Expression": {
+              "Token": {
+                "Type": "INT",
+                "Literal": "3",
+                "Line": 9,
+                "Col": 18
+              },
+              "Value": 3
+            },
+            "Type": "INT"
+          },
+          {
+            "Token": {
+              "Type": "INT",
+              "Literal": "3",
+              "Line": 9,
+              "Col": 18
+            },
+            "Expression": {
+              "Token": {
+                "Type": "INT",
+                "Literal": "4",
+                "Line": 9,
+                "Col": 21
+              },
+              "Value": 4
+            },
+            "Type": "INT"
+          }
+        ]
+      },
+      "Type": "INT"
+    },
+    {
+      "Token": {
+        "Type": "RETURN",
+        "Literal": "return",
+        "Line": 11,
+        "Col": 1
+      },
+      "Value": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "result",
+          "Line": 11,
+          "Col": 8
+        },
+        "Value": "result",
+        "Type": ""
+      }
+    }
+  ],
+  "Imports": []
+}

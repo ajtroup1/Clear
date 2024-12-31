@@ -2,6 +2,7 @@ package ast
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/ajtroup1/goclear/lexing/token"
 )
@@ -166,11 +167,12 @@ func (is *ModuleStatement) ToString() string {
 type Identifier struct {
 	BaseNode
 	Value string
+	Type  token.TokenType
 }
 
 func (i *Identifier) expression() {}
 func (i *Identifier) ToString() string {
-	return fmt.Sprintf("IDENT %s", i.Value)
+	return fmt.Sprintf("IDENT %s: %s", i.Value, strings.ToLower(string(i.Type)))
 }
 
 type IntegerLiteral struct {
@@ -257,16 +259,6 @@ func (ie *InfixExpression) ToString() string {
 	return fmt.Sprintf("(%v) %s (%v)", ie.Left, ie.Operator, ie.Right)
 }
 
-type Boolean struct {
-	BaseNode
-	Value bool
-}
-
-func (b *Boolean) expression() {}
-func (b *Boolean) ToString() string {
-	return fmt.Sprintf("BOOL %t", b.Value)
-}
-
 type IfExpression struct {
 	BaseNode
 	Condition   Expression
@@ -288,22 +280,34 @@ type FunctionLiteral struct {
 	Name       *Identifier
 	Parameters []*Identifier
 	Body       *BlockStatement
+	ReturnType token.TokenType
 }
 
 func (fl *FunctionLiteral) expression() {}
 func (fl *FunctionLiteral) ToString() string {
-	return fmt.Sprintf("FUNCTION %v %v", fl.Parameters, fl.Body)
+	return fmt.Sprintf("FUNCTION:\n\tReturn Type: %v\n\tParameters: %v\n\tBody: %v", fl.ReturnType, fl.Parameters, fl.Body)
 }
 
 type CallExpression struct {
 	BaseNode
-	Function  Expression
-	Arguments []Expression
+	FunctionIdentifier  Expression
+	Arguments []CallArgument
 }
 
 func (ce *CallExpression) expression() {}
 func (ce *CallExpression) ToString() string {
-	return fmt.Sprintf("CALL %v %v", ce.Function, ce.Arguments)
+	return fmt.Sprintf("CALL %s\nArguments:\n\t%v", ce.FunctionIdentifier, ce.Arguments)
+}
+
+type CallArgument struct {
+	BaseNode
+	Expression Expression
+	Type       token.TokenType
+}
+
+func (ca *CallArgument) expression() {}
+func (ca *CallArgument) ToString() string {
+	return fmt.Sprintf("ARG %v %s", ca.Expression, ca.Type)
 }
 
 type ClassStatement struct {

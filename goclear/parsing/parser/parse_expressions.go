@@ -8,6 +8,10 @@ import (
 )
 
 func (p *Parser) parseExpression(precedence int) ast.Expression {
+	if p.curToken == (token.Token{}) {
+		p.addError("unexpected end of file", 0, 0)
+		return nil
+	}
 	prefix := p.prefixParseFns[p.curToken.Type]
 	if prefix == nil {
 		p.noPrefixParseFnError(p.curToken.Type)
@@ -54,19 +58,55 @@ func (p *Parser) parseIdentifier() ast.Expression {
 }
 
 func (p *Parser) parseIntegerLiteral() ast.Expression {
-    lit := &ast.IntegerLiteral{BaseNode: ast.BaseNode{Token: p.curToken}}
+	lit := &ast.IntegerLiteral{BaseNode: ast.BaseNode{Token: p.curToken}}
 
-    value, err := p.curToken.Int()
-    if err != nil {
-        msg := fmt.Sprintf("could not parse %q as integer", p.curToken.Literal)
-        p.errors = append(p.errors, ParserError{Msg: msg, Line: p.curToken.Line, Col: p.curToken.Col})
-        return nil
-    }
+	value, err := p.curToken.Int()
+	if err != nil {
+		msg := fmt.Sprintf("could not parse %q as integer", p.curToken.Literal)
+		p.errors = append(p.errors, ParserError{Msg: msg, Line: p.curToken.Line, Col: p.curToken.Col})
+		return nil
+	}
 
-    lit.Value = int64(value)
-    return lit
+	lit.Value = int64(value)
+	return lit
+}
+
+func (p *Parser) parseFloatLiteral() ast.Expression {
+	lit := &ast.FloatLiteral{BaseNode: ast.BaseNode{Token: p.curToken}}
+
+	value, err := p.curToken.Float()
+	if err != nil {
+		msg := fmt.Sprintf("could not parse %q as float", p.curToken.Literal)
+		p.errors = append(p.errors, ParserError{Msg: msg, Line: p.curToken.Line, Col: p.curToken.Col})
+		return nil
+	}
+
+	lit.Value = value
+	return lit
 }
 
 func (p *Parser) parseStringLiteral() ast.Expression {
-		return &ast.StringLiteral{BaseNode: ast.BaseNode{Token: p.curToken}, Value: p.curToken.Literal}
+	return &ast.StringLiteral{BaseNode: ast.BaseNode{Token: p.curToken}, Value: p.curToken.Literal}
+}
+
+func (p *Parser) parseCharLiteral() ast.Expression {
+	value, err := p.curToken.Char()
+	if err != nil {
+		msg := fmt.Sprintf("could not parse %q as char", p.curToken.Literal)
+		p.errors = append(p.errors, ParserError{Msg: msg, Line: p.curToken.Line, Col: p.curToken.Col})
+		return nil
+	}
+
+	return &ast.CharLiteral{BaseNode: ast.BaseNode{Token: p.curToken}, Value: value}
+}
+
+func (p *Parser) parseBooleanLiteral() ast.Expression {
+	value, err := p.curToken.Bool()
+	if err != nil {
+		msg := fmt.Sprintf("could not parse %q as bool", p.curToken.Literal)
+		p.errors = append(p.errors, ParserError{Msg: msg, Line: p.curToken.Line, Col: p.curToken.Col})
+		return nil
+	}
+
+	return &ast.BooleanLiteral{BaseNode: ast.BaseNode{Token: p.curToken}, Value: value}
 }

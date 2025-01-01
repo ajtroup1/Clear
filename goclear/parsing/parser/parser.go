@@ -81,11 +81,11 @@ func New(l *lexer.Lexer) *Parser {
 	// Register prefix parse functions
 	p.registerPrefix(token.IDENT, p.parseIdentifier)
 	p.registerPrefix(token.INT, p.parseIntegerLiteral)
-	// p.registerPrefix(token.FLOAT, p.parseFloatLiteral)
+	p.registerPrefix(token.FLOAT, p.parseFloatLiteral)
 	p.registerPrefix(token.STRING, p.parseStringLiteral)
-	// p.registerPrefix(token.CHAR, p.parseCharLiteral)
-	// p.registerPrefix(token.TRUE, p.parseBoolean)
-	// p.registerPrefix(token.FALSE, p.parseBoolean)
+	p.registerPrefix(token.CHAR, p.parseCharLiteral)
+	p.registerPrefix(token.TRUE, p.parseBooleanLiteral)
+	p.registerPrefix(token.FALSE, p.parseBooleanLiteral)
 	// p.registerPrefix(token.BANG, p.parsePrefixExpression)
 	// p.registerPrefix(token.MINUS, p.parsePrefixExpression)
 	// p.registerPrefix(token.LPAREN, p.parseGroupedExpression)
@@ -205,6 +205,7 @@ func (p *Parser) parseProgram() *ast.Program {
 	program := &ast.Program{}
 	program.Statements = []ast.Statement{}
 
+	
 	for p.curToken.Type != token.EOF {
 		stmt := p.parseStatement()
 		if stmt != nil {

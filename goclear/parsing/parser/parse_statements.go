@@ -33,8 +33,8 @@ func (p *Parser) parseAssignStatement() *ast.AssignStatement {
 	}
 
 	if p.peekToken.Type == token.ASSIGN {
-		p.nextToken() // Consume '='
-		p.nextToken() // Move to the expression
+		p.nextToken() 
+		p.nextToken() 
 
 		stmt.Value = p.parseExpression(LOWEST)
 
@@ -59,7 +59,6 @@ func (p *Parser) parseAssignStatement() *ast.AssignStatement {
 }
 
 func (p *Parser) parseReassignStatement() *ast.ReassignStatement {
-	fmt.Printf("symbols: %v\n", p.symbols)
 	stmt := &ast.ReassignStatement{BaseNode: ast.BaseNode{Token: p.curToken}}
 
 	stmt.Name = &ast.Identifier{BaseNode: ast.BaseNode{Token: p.curToken}, Value: p.curToken.Literal}
@@ -71,7 +70,6 @@ func (p *Parser) parseReassignStatement() *ast.ReassignStatement {
 	p.nextToken() // Move to the expression
 
 	stmt.Value = p.parseExpression(LOWEST)
-	fmt.Printf("stmt.Value: %v\n", stmt.Value.ToString())
 	stringType := strings.Split(stmt.Value.ToString(), " ")[0]
 	if p.symbols[stmt.Name.Value].Type != mapTokenTypeToDataType(token.TokenType(stringType)) {
 		p.addError(fmt.Sprintf(
@@ -88,7 +86,6 @@ func (p *Parser) parseReassignStatement() *ast.ReassignStatement {
 		Type:  p.symbols[stmt.Name.Value].Type,
 		Value: stmt.Value,
 	}
-	fmt.Printf("new symbols: %v\n", p.symbols)
 
 	return stmt
 }

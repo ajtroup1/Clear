@@ -86,10 +86,10 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.CHAR, p.parseCharLiteral)
 	p.registerPrefix(token.TRUE, p.parseBooleanLiteral)
 	p.registerPrefix(token.FALSE, p.parseBooleanLiteral)
-	// p.registerPrefix(token.BANG, p.parsePrefixExpression)
-	// p.registerPrefix(token.MINUS, p.parsePrefixExpression)
-	// p.registerPrefix(token.LPAREN, p.parseGroupedExpression)
-	// p.registerPrefix(token.IF, p.parseIfExpression)
+	p.registerPrefix(token.BANG, p.parsePrefixExpression)
+	p.registerPrefix(token.MINUS, p.parsePrefixExpression)
+	p.registerPrefix(token.LPAREN, p.parseGroupedExpression)
+	p.registerPrefix(token.IF, p.parseIfExpression)
 	// p.registerPrefix(token.FUNCTION, p.parseFunctionLiteral)
 
 	// Register infix parse functions
@@ -179,6 +179,7 @@ func (p *Parser) peekPrecedence() int {
 }
 
 func mapTokenTypeToDataType(t token.TokenType) ast.DataType {
+	// fmt.Printf("t: %s\n", t)
 	switch t {
 	case token.INT:
 		return ast.INT
@@ -192,6 +193,8 @@ func mapTokenTypeToDataType(t token.TokenType) ast.DataType {
 		return ast.BOOL
 	case token.VOID:
 		return ast.VOID
+	case token.IDENT:
+		return ast.UNKNOWN
 	default:
 		return ast.UNKNOWN
 	}
@@ -205,7 +208,6 @@ func (p *Parser) parseProgram() *ast.Program {
 	program := &ast.Program{}
 	program.Statements = []ast.Statement{}
 
-	
 	for p.curToken.Type != token.EOF {
 		stmt := p.parseStatement()
 		if stmt != nil {

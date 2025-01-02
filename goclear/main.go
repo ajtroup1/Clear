@@ -96,7 +96,7 @@ func processFile(filePath string, debug, jsonMode, litterMode bool) {
 	program := parser.Parse()
 
 	if len(parser.Errors()) != 0 {
-		fmt.Printf("\033[31mParser errors for '%s':\n", filePath)
+		fmt.Printf("\033[31mParser error(s) for '%s':\n", filePath)
 		for _, err := range parser.Errors() {
 			fmt.Printf("\tParser::Error --> '%s' [line: %d, col: %d]\n", err.Msg, err.Line, err.Col)
 		}

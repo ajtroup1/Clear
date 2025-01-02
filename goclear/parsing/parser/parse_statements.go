@@ -19,6 +19,23 @@ func (p *Parser) parseStatement() ast.Statement {
 	}
 }
 
+func (p *Parser) parseBlockStatement() *ast.BlockStatement {
+	block := &ast.BlockStatement{BaseNode: ast.BaseNode{Token: p.curToken}}
+	block.Statements = []ast.Statement{}
+
+	p.nextToken()
+
+	for !p.curTokenIs(token.RBRACE) && !p.curTokenIs(token.EOF) {
+		stmt := p.parseStatement()
+		if stmt != nil {
+			block.Statements = append(block.Statements, stmt)
+		}
+		p.nextToken()
+	}
+
+	return block
+}
+
 func (p *Parser) parseAssignStatement() *ast.AssignStatement {
 	stmt := &ast.AssignStatement{BaseNode: ast.BaseNode{Token: p.curToken}}
 	stmt.Type = mapTokenTypeToDataType(p.curToken.Type)
@@ -33,10 +50,11 @@ func (p *Parser) parseAssignStatement() *ast.AssignStatement {
 	}
 
 	if p.peekToken.Type == token.ASSIGN {
-		p.nextToken() 
-		p.nextToken() 
+		p.nextToken()
+		p.nextToken()
 
 		stmt.Value = p.parseExpression(LOWEST)
+		fmt.Printf("stmt.Value: %s\n", stmt.Value.GetType())
 
 		if stmt.Type != stmt.Value.GetType() {
 			p.addError(fmt.Sprintf(

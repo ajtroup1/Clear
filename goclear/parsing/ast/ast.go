@@ -302,7 +302,12 @@ func (pe *PrefixExpression) ToString() string {
 	return fmt.Sprintf("(%s) %v", pe.Operator, pe.Right)
 }
 func (pe *PrefixExpression) GetType() DataType {
-	return pe.Right.GetType()
+	if pe.Operator == "!" {
+		return BOOL
+	} else if pe.Operator == "-" {
+		return pe.Right.GetType()
+	}
+	return UNKNOWN
 }
 
 type PostfixExpression struct {
@@ -316,7 +321,7 @@ func (pe *PostfixExpression) ToString() string {
 	return fmt.Sprintf("%v (%s)", pe.Left, pe.Operator)
 }
 func (pe *PostfixExpression) GetType() DataType {
-	return pe.Left.GetType()
+	return UNKNOWN
 }
 
 type InfixExpression struct {
@@ -331,7 +336,12 @@ func (ie *InfixExpression) ToString() string {
 	return fmt.Sprintf("(%v) %s (%v)", ie.Left, ie.Operator, ie.Right)
 }
 func (ie *InfixExpression) GetType() DataType {
-	return ie.Left.GetType()
+	lType := ie.Left.GetType()
+	rType := ie.Right.GetType()
+	if lType == rType {
+		return lType
+	}
+	return UNKNOWN
 }
 
 type IfExpression struct {

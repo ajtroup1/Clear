@@ -1,0 +1,151 @@
+{
+  "Statements": [
+    {
+      "Token": {
+        "Type": "INT",
+        "Literal": "int",
+        "Line": 1,
+        "Col": 1
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "x",
+          "Line": 1,
+          "Col": 5
+        },
+        "Value": "x",
+        "Type": ""
+      },
+      "Value": {
+        "Token": {
+          "Type": "INT",
+          "Literal": "10",
+          "Line": 1,
+          "Col": 9
+        },
+        "Value": 10
+      },
+      "Type": "INT"
+    },
+    {
+      "Token": {
+        "Type": "IF",
+        "Literal": "if",
+        "Line": 5,
+        "Col": 1
+      },
+      "Expression": {
+        "Token": {
+          "Type": "IF",
+          "Literal": "if",
+          "Line": 5,
+          "Col": 1
+        },
+        "Condition": {
+          "Token": {
+            "Type": "LT",
+            "Literal": "\u003c",
+            "Line": 5,
+            "Col": 7
+          },
+          "Operator": "\u003c",
+          "Left": {
+            "Token": {
+              "Type": "IDENT",
+              "Literal": "x",
+              "Line": 5,
+              "Col": 5
+            },
+            "Value": "x",
+            "Type": ""
+          },
+          "Right": {
+            "Token": {
+              "Type": "INT",
+              "Literal": "11",
+              "Line": 5,
+              "Col": 9
+            },
+            "Value": 11
+          }
+        },
+        "Consequence": {
+          "Token": {
+            "Type": "LBRACE",
+            "Literal": "{",
+            "Line": 5,
+            "Col": 13
+          },
+          "Statements": [
+            {
+              "Token": {
+                "Type": "IDENT",
+                "Literal": "x",
+                "Line": 7,
+                "Col": 3
+              },
+              "Name": {
+                "Token": {
+                  "Type": "IDENT",
+                  "Literal": "x",
+                  "Line": 7,
+                  "Col": 3
+                },
+                "Value": "x",
+                "Type": ""
+              },
+              "Value": {
+                "Token": {
+                  "Type": "INT",
+                  "Literal": "0",
+                  "Line": 7,
+                  "Col": 7
+                },
+                "Value": 0
+              }
+            }
+          ]
+        },
+        "Alternative": {
+          "Token": {
+            "Type": "LBRACE",
+            "Literal": "{",
+            "Line": 9,
+            "Col": 8
+          },
+          "Statements": [
+            {
+              "Token": {
+                "Type": "IDENT",
+                "Literal": "x",
+                "Line": 11,
+                "Col": 3
+              },
+              "Name": {
+                "Token": {
+                  "Type": "IDENT",
+                  "Literal": "x",
+                  "Line": 11,
+                  "Col": 3
+                },
+                "Value": "x",
+                "Type": ""
+              },
+              "Value": {
+                "Token": {
+                  "Type": "INT",
+                  "Literal": "1",
+                  "Line": 11,
+                  "Col": 7
+                },
+                "Value": 1
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "Imports": null
+}

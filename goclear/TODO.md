@@ -1,8 +1,8 @@
 # TODO
-- **I have to restructure the parser to be STATICALLY TYPED**
 - Column and line numbers need to be reevaluated
 - Handle unterminated strings
-- Go through debug mode and figure out what exactly to print and how to convery what information
+- else if
+- Think through debug mode and figure out what exactly to print and how to convery what information
   - What is necessary to be displayed? In what format to display it (terminal, log file, etc)? How much do I display before it becomes verbose?
   - Add verbose debug mode, which shows even more information about the Lexing, Parsing, whatever process
 - Variable scope and naming duplicates

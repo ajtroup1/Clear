@@ -158,15 +158,12 @@ func (p *Parser) parseFunctionLiteral() ast.Expression {
 	lit := &ast.FunctionLiteral{BaseNode: ast.BaseNode{Token: p.curToken}}
 	p.nextToken()
 	lit.Name = p.parseIdentifier().(*ast.Identifier)
-	// fmt.Printf("lit.Name: %v\n", lit.Name)
 	
 	if !p.expectPeek(token.LPAREN) {
 		return nil
 	}
-	// fmt.Printf("p.peekToken: %v\n", p.peekToken)
 	
 	lit.Parameters = p.parseFunctionParameters()
-	// fmt.Printf("lit.Parameters: %v\n", lit.Parameters)
 
 	if !p.expectPeek(token.ARROW) {
 		return nil
@@ -177,7 +174,6 @@ func (p *Parser) parseFunctionLiteral() ast.Expression {
 	}
 
 	lit.ReturnType = mapTokenTypeToDataType(p.curToken.Type)
-	fmt.Printf("lit.ReturnType: %v\n", lit.ReturnType)
 
 	if !p.expectPeek(token.LBRACE) {
 		return nil

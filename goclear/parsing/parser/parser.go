@@ -217,7 +217,6 @@ func (p *Parser) Parse() *ast.Program {
 func (p *Parser) parseProgram() *ast.Program {
 	program := &ast.Program{}
 	program.Statements = []ast.Statement{}
-	fmt.Printf("p.curToken: %s\n", p.curToken.Type)
 
 	for p.curToken.Type != token.EOF {
 		stmt := p.parseStatement()

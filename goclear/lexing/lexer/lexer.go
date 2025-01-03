@@ -9,7 +9,9 @@
 
 package lexer
 
-import "github.com/ajtroup1/goclear/lexing/token"
+import (
+	"github.com/ajtroup1/goclear/lexing/token"
+)
 
 var keywords = map[string]token.TokenType{
 	"true":     token.TRUE,
@@ -241,28 +243,20 @@ func (l *Lexer) readNumber() token.Token {
 	return token.Token{Type: token.INT, Literal: literal, Line: startLine, Col: startCol}
 }
 
-func (l *Lexer) skipWhitespace() {
-	for isWhitespace(l.c) {
-		l.readChar()
-	}
-}
-
 func (l *Lexer) readChar() {
-	if l.readPos >= len(l.src) {
-		l.c = 0
-	} else {
-		l.c = l.src[l.readPos]
-	}
-
-	if l.c == '\n' || l.c == '\r' {
-		l.line++
-		l.col = 0
-	} else {
-		l.col++
-	}
-
-	l.pos = l.readPos
-	l.readPos++
+    if l.readPos >= len(l.src) {
+        l.c = 0
+    } else {
+        l.c = l.src[l.readPos]
+    }
+    if l.c == '\n' {
+        l.line++
+        l.col = 0
+    } else {
+        l.col++
+    }
+    l.pos = l.readPos
+    l.readPos++
 }
 
 func (l *Lexer) peek() byte {
@@ -271,22 +265,6 @@ func (l *Lexer) peek() byte {
 	}
 
 	return l.src[l.readPos]
-}
-
-func (l *Lexer) peekN(n int) byte {
-	if l.readPos+n >= len(l.src) {
-		return 0
-	}
-
-	return l.src[l.readPos+n]
-}
-
-func (l *Lexer) consume() {
-	if l.readPos >= len(l.src) {
-		l.c = 0
-	} else {
-		l.c = l.src[l.readPos]
-	}
 }
 
 func isWhitespace(c byte) bool {
@@ -299,3 +277,38 @@ func isLetter(c byte) bool {
 func isDigit(c byte) bool {
 	return '0' <= c && c <= '9'
 }
+
+func (l *Lexer) skipWhitespace() {
+    for {
+        for isWhitespace(l.c) {
+            l.readChar()
+        }
+
+        if l.c == '/' && l.peek() == '/' {
+            for l.c != '\n' && l.c != 0 {
+                l.readChar()
+            }
+            continue
+        }
+
+        if l.c == '/' && l.peek() == '*' {
+            l.readChar() 
+            l.readChar() 
+            for {
+                if l.c == '*' && l.peek() == '/' {
+                    l.readChar()
+                    l.readChar() 
+                    break
+                }
+                if l.c == 0 {
+                    panic("Unterminated multi-line comment")
+                }
+                l.readChar()
+            }
+            continue
+        }
+
+        break
+    }
+}
+

@@ -1,3 +1,8 @@
+/* 
+  Functions are a pivotal tool in coding, so of course Clear supports them
+  Clear uses the 'fn' keyword as opposed to 'func' or 'function'
+*/
+
 fn add(x: int, y: int) -> int {
   return x + y;
 }

@@ -4,21 +4,21 @@
       "Token": {
         "Type": "FUNCTION",
         "Literal": "fn",
-        "Line": 1,
+        "Line": 6,
         "Col": 1
       },
       "Expression": {
         "Token": {
           "Type": "FUNCTION",
           "Literal": "fn",
-          "Line": 1,
+          "Line": 6,
           "Col": 1
         },
         "Name": {
           "Token": {
             "Type": "IDENT",
             "Literal": "add",
-            "Line": 1,
+            "Line": 6,
             "Col": 4
           },
           "Value": "add",
@@ -29,7 +29,7 @@
             "Token": {
               "Type": "IDENT",
               "Literal": "x",
-              "Line": 1,
+              "Line": 6,
               "Col": 8
             },
             "Value": "x",
@@ -39,7 +39,7 @@
             "Token": {
               "Type": "IDENT",
               "Literal": "y",
-              "Line": 1,
+              "Line": 6,
               "Col": 16
             },
             "Value": "y",
@@ -50,7 +50,7 @@
           "Token": {
             "Type": "LBRACE",
             "Literal": "{",
-            "Line": 1,
+            "Line": 6,
             "Col": 31
           },
           "Statements": [
@@ -58,14 +58,14 @@
               "Token": {
                 "Type": "RETURN",
                 "Literal": "return",
-                "Line": 3,
+                "Line": 7,
                 "Col": 3
               },
               "Value": {
                 "Token": {
                   "Type": "PLUS",
                   "Literal": "+",
-                  "Line": 3,
+                  "Line": 7,
                   "Col": 12
                 },
                 "Operator": "+",
@@ -73,7 +73,7 @@
                   "Token": {
                     "Type": "IDENT",
                     "Literal": "x",
-                    "Line": 3,
+                    "Line": 7,
                     "Col": 10
                   },
                   "Value": "x",
@@ -83,7 +83,7 @@
                   "Token": {
                     "Type": "IDENT",
                     "Literal": "y",
-                    "Line": 3,
+                    "Line": 7,
                     "Col": 14
                   },
                   "Value": "y",

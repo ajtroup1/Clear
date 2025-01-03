@@ -31,6 +31,7 @@ const (
 	EOF     = "EOF"
 	NULL    = "NULL"
 	VOID    = "VOID"
+	ARROW   = "ARROW"
 
 	// Identifiers + literals
 	IDENT  = "IDENT" // add, foobar, x, y, ...

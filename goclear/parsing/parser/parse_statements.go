@@ -54,7 +54,6 @@ func (p *Parser) parseAssignStatement() *ast.AssignStatement {
 		p.nextToken()
 
 		stmt.Value = p.parseExpression(LOWEST)
-		fmt.Printf("stmt.Value: %s\n", stmt.Value.GetType())
 
 		if stmt.Type != stmt.Value.GetType() {
 			p.addError(fmt.Sprintf(

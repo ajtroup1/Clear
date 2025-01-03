@@ -77,6 +77,9 @@ func (l *Lexer) NextToken() token.Token {
 		if l.peek() == '=' {
 			l.readChar()
 			tok = token.Token{Type: token.EQ, Literal: "==", Line: l.line, Col: l.col}
+		} else if l.peek() == '>' {
+			l.readChar()
+			tok = token.Token{Type: token.ARROW, Literal: "=>", Line: l.line, Col: l.col}
 		} else {
 			tok = token.Token{Type: token.ASSIGN, Literal: string(l.c), Line: l.line, Col: l.col}
 		}
@@ -97,6 +100,9 @@ func (l *Lexer) NextToken() token.Token {
 		} else if l.peek() == '-' {
 			l.readChar()
 			tok = token.Token{Type: token.DEC, Literal: "--", Line: l.line, Col: l.col}
+		} else if l.peek() == '>' {
+			l.readChar()
+			tok = token.Token{Type: token.ARROW, Literal: "->", Line: l.line, Col: l.col}
 		} else {
 			tok = token.Token{Type: token.MINUS, Literal: string(l.c), Line: l.line, Col: l.col}
 		}

@@ -18,7 +18,6 @@ func (p *Parser) parseExpression(precedence int) ast.Expression {
 		return nil
 	}
 	leftExp := prefix()
-	fmt.Printf("current token: %s\n", p.curToken.Type)
 
 	for !p.peekTokenIs(token.SEMICOLON) && precedence < p.peekPrecedence() {
 		infix := p.infixParseFns[p.peekToken.Type]
@@ -153,4 +152,86 @@ func (p *Parser) parseIfExpression() ast.Expression {
 	}
 
 	return expression
+}
+
+func (p *Parser) parseFunctionLiteral() ast.Expression {
+	lit := &ast.FunctionLiteral{BaseNode: ast.BaseNode{Token: p.curToken}}
+	p.nextToken()
+	lit.Name = p.parseIdentifier().(*ast.Identifier)
+	// fmt.Printf("lit.Name: %v\n", lit.Name)
+	
+	if !p.expectPeek(token.LPAREN) {
+		return nil
+	}
+	// fmt.Printf("p.peekToken: %v\n", p.peekToken)
+	
+	lit.Parameters = p.parseFunctionParameters()
+	// fmt.Printf("lit.Parameters: %v\n", lit.Parameters)
+
+	if !p.expectPeek(token.ARROW) {
+		return nil
+	}
+
+	if !p.isDataType() {
+		return nil
+	}
+
+	lit.ReturnType = mapTokenTypeToDataType(p.curToken.Type)
+	fmt.Printf("lit.ReturnType: %v\n", lit.ReturnType)
+
+	if !p.expectPeek(token.LBRACE) {
+		return nil
+	}
+
+	lit.Body = p.parseBlockStatement()
+
+	return lit
+}
+
+func (p *Parser) parseFunctionParameters() []*ast.Identifier {
+	identifiers := []*ast.Identifier{}
+
+	if p.peekTokenIs(token.RPAREN) {
+		p.nextToken()
+		return identifiers
+	}
+	
+	p.nextToken()
+	
+	ident := &ast.Identifier{BaseNode: ast.BaseNode{Token: p.curToken}, Value: p.curToken.Literal}
+
+	if !p.expectPeek(token.COLON) {
+		return nil
+	}
+	
+	if !p.isDataType() {
+		return nil
+	}
+
+	ident.Type = mapTokenTypeToDataType(p.curToken.Type)
+	
+	identifiers = append(identifiers, ident)
+	
+	for p.peekTokenIs(token.COMMA) {
+		p.nextToken()
+		p.nextToken()
+		ident := &ast.Identifier{BaseNode: ast.BaseNode{Token: p.curToken}, Value: p.curToken.Literal}
+		if !p.expectPeek(token.COLON) {
+			return nil
+		}
+
+		if !p.isDataType() {
+			return nil
+		}
+
+		ident.Type = mapTokenTypeToDataType(p.curToken.Type)
+
+		identifiers = append(identifiers, ident)
+	}
+
+	if !p.expectPeek(token.RPAREN) {
+		return nil
+	}
+
+	return identifiers
 }

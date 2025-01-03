@@ -90,7 +90,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.MINUS, p.parsePrefixExpression)
 	p.registerPrefix(token.LPAREN, p.parseGroupedExpression)
 	p.registerPrefix(token.IF, p.parseIfExpression)
-	// p.registerPrefix(token.FUNCTION, p.parseFunctionLiteral)
+	p.registerPrefix(token.FUNCTION, p.parseFunctionLiteral)
 
 	// Register infix parse functions
 	p.registerInfix(token.PLUS, p.parseInfixExpression)
@@ -200,6 +200,16 @@ func mapTokenTypeToDataType(t token.TokenType) ast.DataType {
 	}
 }
 
+func (p *Parser) isDataType() bool {
+	switch p.peekToken.Type {
+	case token.INT, token.FLOAT, token.STRING, token.CHAR, token.BOOL:
+		p.nextToken()
+		return true
+	default:
+		return false
+	}
+}
+
 func (p *Parser) Parse() *ast.Program {
 	return p.parseProgram()
 }
@@ -207,6 +217,7 @@ func (p *Parser) Parse() *ast.Program {
 func (p *Parser) parseProgram() *ast.Program {
 	program := &ast.Program{}
 	program.Statements = []ast.Statement{}
+	fmt.Printf("p.curToken: %s\n", p.curToken.Type)
 
 	for p.curToken.Type != token.EOF {
 		stmt := p.parseStatement()

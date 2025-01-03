@@ -1,0 +1,101 @@
+{
+  "Statements": [
+    {
+      "Token": {
+        "Type": "FUNCTION",
+        "Literal": "fn",
+        "Line": 1,
+        "Col": 1
+      },
+      "Expression": {
+        "Token": {
+          "Type": "FUNCTION",
+          "Literal": "fn",
+          "Line": 1,
+          "Col": 1
+        },
+        "Name": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "add",
+            "Line": 1,
+            "Col": 4
+          },
+          "Value": "add",
+          "Type": ""
+        },
+        "Parameters": [
+          {
+            "Token": {
+              "Type": "IDENT",
+              "Literal": "x",
+              "Line": 1,
+              "Col": 8
+            },
+            "Value": "x",
+            "Type": "INT"
+          },
+          {
+            "Token": {
+              "Type": "IDENT",
+              "Literal": "y",
+              "Line": 1,
+              "Col": 16
+            },
+            "Value": "y",
+            "Type": "INT"
+          }
+        ],
+        "Body": {
+          "Token": {
+            "Type": "LBRACE",
+            "Literal": "{",
+            "Line": 1,
+            "Col": 31
+          },
+          "Statements": [
+            {
+              "Token": {
+                "Type": "RETURN",
+                "Literal": "return",
+                "Line": 3,
+                "Col": 3
+              },
+              "Value": {
+                "Token": {
+                  "Type": "PLUS",
+                  "Literal": "+",
+                  "Line": 3,
+                  "Col": 12
+                },
+                "Operator": "+",
+                "Left": {
+                  "Token": {
+                    "Type": "IDENT",
+                    "Literal": "x",
+                    "Line": 3,
+                    "Col": 10
+                  },
+                  "Value": "x",
+                  "Type": ""
+                },
+                "Right": {
+                  "Token": {
+                    "Type": "IDENT",
+                    "Literal": "y",
+                    "Line": 3,
+                    "Col": 14
+                  },
+                  "Value": "y",
+                  "Type": ""
+                }
+              }
+            }
+          ]
+        },
+        "ReturnType": "INT"
+      }
+    }
+  ],
+  "Imports": null
+}

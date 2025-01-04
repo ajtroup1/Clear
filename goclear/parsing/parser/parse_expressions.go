@@ -1,3 +1,5 @@
+// Outsource the parsing of expressions to separate file.
+
 package parser
 
 import (

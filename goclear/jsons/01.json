@@ -1,0 +1,193 @@
+{
+  "Statements": [
+    {
+      "Token": {
+        "Type": "INT",
+        "Literal": "int",
+        "Line": 3,
+        "Col": 1
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "undeclared",
+          "Line": 3,
+          "Col": 5
+        },
+        "Value": "undeclared",
+        "Type": ""
+      },
+      "Value": null,
+      "Type": "INT"
+    },
+    {
+      "Token": {
+        "Type": "INT",
+        "Literal": "int",
+        "Line": 4,
+        "Col": 1
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "x",
+          "Line": 4,
+          "Col": 5
+        },
+        "Value": "x",
+        "Type": ""
+      },
+      "Value": {
+        "Token": {
+          "Type": "INT",
+          "Literal": "0",
+          "Line": 4,
+          "Col": 9
+        },
+        "Value": 0
+      },
+      "Type": "INT"
+    },
+    {
+      "Token": {
+        "Type": "FLOAT",
+        "Literal": "float",
+        "Line": 5,
+        "Col": 1
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "y",
+          "Line": 5,
+          "Col": 7
+        },
+        "Value": "y",
+        "Type": ""
+      },
+      "Value": {
+        "Token": {
+          "Type": "FLOAT",
+          "Literal": "0.1",
+          "Line": 5,
+          "Col": 11
+        },
+        "Value": 0.1
+      },
+      "Type": "FLOAT"
+    },
+    {
+      "Token": {
+        "Type": "STRING",
+        "Literal": "string",
+        "Line": 6,
+        "Col": 1
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "name",
+          "Line": 6,
+          "Col": 8
+        },
+        "Value": "name",
+        "Type": ""
+      },
+      "Value": {
+        "Token": {
+          "Type": "STRING",
+          "Literal": "Joe",
+          "Line": 6,
+          "Col": 15
+        },
+        "Value": "Joe"
+      },
+      "Type": "STRING"
+    },
+    {
+      "Token": {
+        "Type": "CHAR",
+        "Literal": "char",
+        "Line": 7,
+        "Col": 1
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "c",
+          "Line": 7,
+          "Col": 6
+        },
+        "Value": "c",
+        "Type": ""
+      },
+      "Value": {
+        "Token": {
+          "Type": "CHAR",
+          "Literal": "c",
+          "Line": 7,
+          "Col": 11
+        },
+        "Value": 99
+      },
+      "Type": "CHAR"
+    },
+    {
+      "Token": {
+        "Type": "BOOL",
+        "Literal": "bool",
+        "Line": 8,
+        "Col": 1
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "myBoolean",
+          "Line": 8,
+          "Col": 6
+        },
+        "Value": "myBoolean",
+        "Type": ""
+      },
+      "Value": {
+        "Token": {
+          "Type": "TRUE",
+          "Literal": "true",
+          "Line": 8,
+          "Col": 18
+        },
+        "Value": true
+      },
+      "Type": "BOOL"
+    },
+    {
+      "Token": {
+        "Type": "BOOL",
+        "Literal": "bool",
+        "Line": 9,
+        "Col": 1
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "myOtherBoolean",
+          "Line": 9,
+          "Col": 6
+        },
+        "Value": "myOtherBoolean",
+        "Type": ""
+      },
+      "Value": {
+        "Token": {
+          "Type": "FALSE",
+          "Literal": "false",
+          "Line": 9,
+          "Col": 23
+        },
+        "Value": false
+      },
+      "Type": "BOOL"
+    }
+  ],
+  "Imports": null
+}

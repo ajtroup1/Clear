@@ -1,14 +1,51 @@
 # TODO
-- Column and line numbers need to be reevaluated
-- Handle unterminated strings
-- else if
-- Think through debug mode and figure out what exactly to print and how to convery what information
-  - What is necessary to be displayed? In what format to display it (terminal, log file, etc)? How much do I display before it becomes verbose?
+
+- High Level
+  - Make the parser object oriented
+  - Think through debug mode and figure out what exactly to print and how to convery what information
+    - What is necessary to be displayed? In what format to display it (terminal, log file, etc)? How much do I display before it becomes verbose?
+  - Performance testing
+  - Documentation
+  - Error handling and recovery can always be improved
+  - Optional generation of logs
+
+- General Additions
+  - Imports
+    - Import other .clr files
+      - Need to think about how to handle transferring data between files
+        - Export system?
+        - Just dump all classes, global vars, globals funcs into the scope of the main file?
+    - Import prebuilt modules
+      - Math
+      - String
+      - Cast
+        - Data casting
+      - IO
+      - List
+      - Stack
+      - Tree structure
+      - DateTime
+      - System
+      - Regex
+      - Random
+      - Timer / timing
+      - UUID
+      - Hashing
+      - Logging
+      - Serialization (JSON, XML, ...)
+      - Difficult:
+        - Network (HTTP, sockets, url parsing, ...)
+        - Database
+        - Concurrency
+        - Machine Learning
+        - Graphics
+        - Audio / video
+  - Variable scope and naming duplicates
+
+- Quick Fixes / Additions hopefully
+  - Handle unterminated strings
+  - else if
   - Add verbose debug mode, which shows even more information about the Lexing, Parsing, whatever process
-- Variable scope and naming duplicates
-- Make the parser object oriented
-- Arrays
-  - Are they going to be a library?
-  - In modern languages I feel like they have to be built in
-- Can always improve error messaging and handling
-- Have chat gpt come up with unique scripts to execute to handle edge cases i can't think of
+
+- Testing
+  - Have chat gpt come up with unique scripts to execute to handle edge cases i can't think of

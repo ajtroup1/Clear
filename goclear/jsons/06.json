@@ -1,0 +1,226 @@
+{
+  "Statements": [
+    {
+      "Token": {
+        "Type": "INT",
+        "Literal": "int",
+        "Line": 1,
+        "Col": 1
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "x",
+          "Line": 1,
+          "Col": 5
+        },
+        "Value": "x",
+        "Type": ""
+      },
+      "Value": {
+        "Token": {
+          "Type": "INT",
+          "Literal": "10",
+          "Line": 1,
+          "Col": 9
+        },
+        "Value": 10
+      },
+      "Type": "INT"
+    },
+    {
+      "Token": {
+        "Type": "BOOL",
+        "Literal": "bool",
+        "Line": 2,
+        "Col": 1
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "condition",
+          "Line": 2,
+          "Col": 6
+        },
+        "Value": "condition",
+        "Type": ""
+      },
+      "Value": {
+        "Token": {
+          "Type": "TRUE",
+          "Literal": "true",
+          "Line": 2,
+          "Col": 18
+        },
+        "Value": true
+      },
+      "Type": "BOOL"
+    },
+    {
+      "Token": {
+        "Type": "WHILE",
+        "Literal": "while",
+        "Line": 4,
+        "Col": 1
+      },
+      "Condition": {
+        "Token": {
+          "Type": "EQ",
+          "Literal": "==",
+          "Line": 4,
+          "Col": 19
+        },
+        "Operator": "==",
+        "Left": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "contition",
+            "Line": 4,
+            "Col": 8
+          },
+          "Value": "contition",
+          "Type": ""
+        },
+        "Right": {
+          "Token": {
+            "Type": "TRUE",
+            "Literal": "true",
+            "Line": 4,
+            "Col": 21
+          },
+          "Value": true
+        }
+      },
+      "Body": {
+        "Token": {
+          "Type": "RPAREN",
+          "Literal": ")",
+          "Line": 4,
+          "Col": 25
+        },
+        "Statements": [
+          {
+            "Token": {
+              "Type": "LBRACE",
+              "Literal": "{",
+              "Line": 4,
+              "Col": 27
+            },
+            "Statements": [
+              {
+                "Token": {
+                  "Type": "IF",
+                  "Literal": "if",
+                  "Line": 5,
+                  "Col": 3
+                },
+                "Expression": {
+                  "Token": {
+                    "Type": "IF",
+                    "Literal": "if",
+                    "Line": 5,
+                    "Col": 3
+                  },
+                  "Condition": {
+                    "Token": {
+                      "Type": "EQ",
+                      "Literal": "==",
+                      "Line": 5,
+                      "Col": 10
+                    },
+                    "Operator": "==",
+                    "Left": {
+                      "Token": {
+                        "Type": "IDENT",
+                        "Literal": "x",
+                        "Line": 5,
+                        "Col": 7
+                      },
+                      "Value": "x",
+                      "Type": ""
+                    },
+                    "Right": {
+                      "Token": {
+                        "Type": "INT",
+                        "Literal": "5",
+                        "Line": 5,
+                        "Col": 12
+                      },
+                      "Value": 5
+                    }
+                  },
+                  "Consequence": {
+                    "Token": {
+                      "Type": "LBRACE",
+                      "Literal": "{",
+                      "Line": 5,
+                      "Col": 15
+                    },
+                    "Statements": [
+                      {
+                        "Token": {
+                          "Type": "IDENT",
+                          "Literal": "condition",
+                          "Line": 6,
+                          "Col": 5
+                        },
+                        "Name": {
+                          "Token": {
+                            "Type": "IDENT",
+                            "Literal": "condition",
+                            "Line": 6,
+                            "Col": 5
+                          },
+                          "Value": "condition",
+                          "Type": ""
+                        },
+                        "Value": {
+                          "Token": {
+                            "Type": "FALSE",
+                            "Literal": "false",
+                            "Line": 6,
+                            "Col": 17
+                          },
+                          "Value": false
+                        }
+                      }
+                    ]
+                  },
+                  "Alternative": null
+                }
+              },
+              {
+                "Token": {
+                  "Type": "IDENT",
+                  "Literal": "x",
+                  "Line": 8,
+                  "Col": 3
+                },
+                "Expression": {
+                  "Token": {
+                    "Type": "DEC",
+                    "Literal": "--",
+                    "Line": 8,
+                    "Col": 5
+                  },
+                  "Operator": "--",
+                  "Left": {
+                    "Token": {
+                      "Type": "IDENT",
+                      "Literal": "x",
+                      "Line": 8,
+                      "Col": 3
+                    },
+                    "Value": "x",
+                    "Type": ""
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "Imports": null
+}

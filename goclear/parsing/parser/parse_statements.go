@@ -19,6 +19,12 @@ func (p *Parser) parseStatement() ast.Statement {
 		return p.parseAssignStatement()
 	case token.RETURN:
 		return p.parseReturnStatement()
+	case token.LBRACE:
+		return p.parseBlockStatement()
+	case token.WHILE:
+		return p.parseWhileStatement()
+	case token.EOF:
+		return nil
 	default:
 		return p.parseExpressionStatement()
 	}
@@ -148,6 +154,18 @@ func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
 	if p.peekTokenIs(token.SEMICOLON) {
 		p.nextToken()
 	}
+
+	return stmt
+}
+
+func (p *Parser) parseWhileStatement() *ast.WhileStatement {
+	stmt := &ast.WhileStatement{BaseNode: ast.BaseNode{Token: p.curToken}}
+
+	p.nextToken()
+
+	stmt.Condition = p.parseExpression(LOWEST)
+
+	stmt.Body = p.parseBlockStatement()
 
 	return stmt
 }

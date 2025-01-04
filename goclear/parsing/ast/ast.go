@@ -10,14 +10,24 @@ import (
 type DataType string
 
 const (
-	UNKNOWN  DataType = "UNKNOWN"
-	INT      DataType = "INT"
-	FLOAT    DataType = "FLOAT"
-	STRING   DataType = "STRING"
-	CHAR     DataType = "CHAR"
-	BOOL     DataType = "BOOL"
-	VOID     DataType = "VOID"
-	FUNCTION DataType = "FUNCTION"
+	UNKNOWN        DataType = "UNKNOWN"
+	INT            DataType = "INT"
+	FLOAT          DataType = "FLOAT"
+	STRING         DataType = "STRING"
+	CHAR           DataType = "CHAR"
+	BOOL           DataType = "BOOL"
+	VOID           DataType = "VOID"
+	FUNCTION       DataType = "FUNCTION"
+	MODULE         DataType = "MODULE"
+	// MODULEFUNCTION is a special type used to represent a function imported from a module
+	// This is used to differentiate between functions defined in the current file and functions imported from a module
+	// Example: "mod math: Round" would be of type MODULEFUNCTION and it's symbol would look like:
+	// {
+	// 	"Name": "Round",
+	// 	"Type": "MODULEFUNCTION",
+	// 	"Value": "math" <-- The module name. Uses the Value property especially for the parent import identifier
+	// }
+	MODULEFUNCTION DataType = "MODULEFUNCTION"
 )
 
 type Node interface {
@@ -177,12 +187,24 @@ func (cs *ContinueStatement) ToString() string {
 
 type ModuleStatement struct {
 	BaseNode
-	Name string
+	Name *Identifier
+	// Flag to determine if all functions should be imported
+	// Toggled to true by using '*': "mod math: *"
+	ImportAll bool
+	// If not importing all, this will be a list of functions to import
+	// Contained within brackets and separated by commas: "mod math: [Round, Pow]"
+	Imports []*Identifier
 }
 
 func (is *ModuleStatement) statement() {}
 func (is *ModuleStatement) ToString() string {
-	return fmt.Sprintf("IMPORT %s", is.Name)
+	output := fmt.Sprintf("IMPORT %s\n\tImport all: %v\n\tImports: ", is.Name.ToString(), is.ImportAll)
+	output += "[\n\t\t"
+	for _, imp := range is.Imports {
+		output += "   " + imp.ToString() + ",\n\t\t"
+	}
+	output += " ]"
+	return output
 }
 
 type ClassStatement struct {

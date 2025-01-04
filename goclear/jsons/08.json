@@ -1,0 +1,95 @@
+{
+  "Statements": [
+    {
+      "Token": {
+        "Type": "INT",
+        "Literal": "int",
+        "Line": 4,
+        "Col": 1
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "x",
+          "Line": 4,
+          "Col": 5
+        },
+        "Value": "x",
+        "Type": ""
+      },
+      "Value": {
+        "Token": {
+          "Type": "INT",
+          "Literal": "0",
+          "Line": 4,
+          "Col": 9
+        },
+        "Value": 0
+      },
+      "Type": "INT"
+    }
+  ],
+  "Imports": [
+    {
+      "Token": {
+        "Type": "MODULE",
+        "Literal": "mod",
+        "Line": 1,
+        "Col": 1
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "strings",
+          "Line": 1,
+          "Col": 5
+        },
+        "Value": "strings",
+        "Type": "MODULE"
+      },
+      "ImportAll": true,
+      "Imports": null
+    },
+    {
+      "Token": {
+        "Type": "MODULE",
+        "Literal": "mod",
+        "Line": 2,
+        "Col": 1
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "math",
+          "Line": 2,
+          "Col": 5
+        },
+        "Value": "math",
+        "Type": "MODULE"
+      },
+      "ImportAll": false,
+      "Imports": [
+        {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "Pow",
+            "Line": 2,
+            "Col": 12
+          },
+          "Value": "Pow",
+          "Type": "MODULEFUNCTION"
+        },
+        {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "Round",
+            "Line": 2,
+            "Col": 17
+          },
+          "Value": "Round",
+          "Type": "MODULEFUNCTION"
+        }
+      ]
+    }
+  ]
+}

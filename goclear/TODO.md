@@ -1,5 +1,9 @@
 # TODO
 
+- "Urgent"
+  - Go though errors and make sure they return a specified error not just return nil
+    - Think of every case, simple
+
 - High Level
   - Make the parser object oriented
   - Think through debug mode and figure out what exactly to print and how to convery what information

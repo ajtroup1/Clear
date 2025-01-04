@@ -13,6 +13,7 @@ import (
 // Core parsing functions for recognizing statement keywords and parsing the corresponding statements
 func (p *Parser) parseStatement() ast.Statement {
 	// Execute the corresponding parsing function based on the *current* token type
+	// fmt.Printf("p.curToken.Type: %s\n", p.curToken.Type)
 	switch p.curToken.Type {
 	// If a data type is found, it is an assignment statement
 	case token.INT, token.FLOAT, token.STRING, token.CHAR, token.BOOL:
@@ -25,6 +26,8 @@ func (p *Parser) parseStatement() ast.Statement {
 		return p.parseWhileStatement()
 	case token.FOR:
 		return p.parseForStatement()
+	case token.MODULE:
+		return p.parseModuleStatement()
 	case token.EOF:
 		return nil
 	default:
@@ -160,36 +163,6 @@ func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
 	return stmt
 }
 
-func (p *Parser) parseWhileStatement() *ast.WhileStatement {
-	stmt := &ast.WhileStatement{BaseNode: ast.BaseNode{Token: p.curToken}}
-
-	p.nextToken()
-
-	stmt.Condition = p.parseExpression(LOWEST)
-
-	stmt.Body = p.parseBlockStatement()
-
-	return stmt
-}
-
-// Parses an expression and wraps it in an ExpressionStatement node
-// This is necessary for expressions that are not part of a larger statement to be appended to the program's statements slice
-func (p *Parser) parseExpressionStatement() ast.Statement {
-	stmt := &ast.ExpressionStatement{BaseNode: ast.BaseNode{Token: p.curToken}}
-
-	if p.peekToken.Type == token.ASSIGN {
-		return p.parseReassignStatement()
-	}
-
-	stmt.Expression = p.parseExpression(LOWEST)
-
-	if p.peekTokenIs(token.SEMICOLON) {
-		p.nextToken()
-	}
-
-	return stmt
-}
-
 func (p *Parser) parseForStatement() *ast.ForStatement {
 	stmt := &ast.ForStatement{BaseNode: ast.BaseNode{Token: p.curToken}}
 
@@ -220,6 +193,96 @@ func (p *Parser) parseForStatement() *ast.ForStatement {
 
 	p.nextToken()
 	stmt.Body = p.parseBlockStatement()
+
+	return stmt
+}
+
+func (p *Parser) parseWhileStatement() *ast.WhileStatement {
+	stmt := &ast.WhileStatement{BaseNode: ast.BaseNode{Token: p.curToken}}
+
+	p.nextToken()
+
+	stmt.Condition = p.parseExpression(LOWEST)
+
+	stmt.Body = p.parseBlockStatement()
+
+	return stmt
+}
+
+func (p *Parser) parseModuleStatement() *ast.ModuleStatement {
+    stmt := &ast.ModuleStatement{BaseNode: ast.BaseNode{Token: p.curToken}}
+
+    if !p.expectPeek(token.IDENT) {
+        return nil
+    }
+
+		ident := &ast.Identifier{BaseNode: ast.BaseNode{Token: p.curToken}, Value: p.curToken.Literal, Type: ast.MODULE}
+
+    stmt.Name = ident
+
+    if !p.expectPeek(token.COLON) {
+        return nil
+    }
+
+    if p.peekTokenIs(token.ASTERISK) {
+        stmt.ImportAll = true
+        p.nextToken()
+    } else if p.peekTokenIs(token.LBRACKET) {
+        stmt.Imports = p.parseModuleImports()
+    } else {
+        p.addError("expected '*' or list of imports after module statement", p.peekToken.Line, p.peekToken.Col)
+        return nil
+    }
+
+    if p.peekTokenIs(token.SEMICOLON) {
+        p.nextToken()
+    }
+
+		fmt.Printf("stmt: %v\n", stmt)
+
+    return stmt
+}
+
+func (p *Parser) parseModuleImports() []*ast.Identifier {
+    var imports []*ast.Identifier
+    p.nextToken() // Skip '['
+
+    for !p.peekTokenIs(token.RBRACKET) {
+        if !p.peekTokenIs(token.IDENT) {
+            p.addError("expected identifier in imports list", p.peekToken.Line, p.peekToken.Col)
+            return nil
+        }
+
+				ident := &ast.Identifier{BaseNode: ast.BaseNode{Token: p.peekToken}, Value: p.peekToken.Literal, Type: ast.MODULEFUNCTION}
+
+        imports = append(imports, ident)
+        p.nextToken()
+
+        if p.peekTokenIs(token.COMMA) {
+            p.nextToken()
+        }
+    }
+
+		fmt.Printf("imports: %v\n", imports)
+
+    p.nextToken() // Skip ']'
+    return imports
+}
+
+// Parses an expression and wraps it in an ExpressionStatement node
+// This is necessary for expressions that are not part of a larger statement to be appended to the program's statements slice
+func (p *Parser) parseExpressionStatement() ast.Statement {
+	stmt := &ast.ExpressionStatement{BaseNode: ast.BaseNode{Token: p.curToken}}
+
+	if p.peekToken.Type == token.ASSIGN {
+		return p.parseReassignStatement()
+	}
+
+	stmt.Expression = p.parseExpression(LOWEST)
+
+	if p.peekTokenIs(token.SEMICOLON) {
+		p.nextToken()
+	}
 
 	return stmt
 }

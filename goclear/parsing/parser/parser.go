@@ -251,18 +251,23 @@ func (p *Parser) Parse() *ast.Program {
 // Highest-level parsing function for the program
 // Parses the program as a slice of statements and returns the program node
 func (p *Parser) parseProgram() *ast.Program {
-	program := &ast.Program{}
-	program.Statements = []ast.Statement{}
+    program := &ast.Program{}
+    program.Statements = []ast.Statement{}
+    program.Imports = []*ast.ModuleStatement{}
 
-	for p.curToken.Type != token.EOF {
-		stmt := p.parseStatement()
-		if stmt != nil {
-			program.Statements = append(program.Statements, stmt)
-		}
-		p.nextToken()
-	}
+    for p.curToken.Type != token.EOF {
+        stmt := p.parseStatement()
+        if stmt != nil {
+            if moduleStmt, ok := stmt.(*ast.ModuleStatement); ok {
+                program.Imports = append(program.Imports, moduleStmt)
+            } else {
+                program.Statements = append(program.Statements, stmt)
+            }
+        }
+        p.nextToken()
+    }
 
-	// utils.PrettyPrintASTNode(program)
+    // utils.PrettyPrintASTNode(program)
 
-	return program
+    return program
 }

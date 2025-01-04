@@ -23,6 +23,8 @@ func (p *Parser) parseStatement() ast.Statement {
 		return p.parseBlockStatement()
 	case token.WHILE:
 		return p.parseWhileStatement()
+	case token.FOR:
+		return p.parseForStatement()
 	case token.EOF:
 		return nil
 	default:
@@ -184,6 +186,40 @@ func (p *Parser) parseExpressionStatement() ast.Statement {
 	if p.peekTokenIs(token.SEMICOLON) {
 		p.nextToken()
 	}
+
+	return stmt
+}
+
+func (p *Parser) parseForStatement() *ast.ForStatement {
+	stmt := &ast.ForStatement{BaseNode: ast.BaseNode{Token: p.curToken}}
+
+	if !p.expectPeek(token.LPAREN) {
+		return nil
+	}
+
+	p.nextToken()
+
+	stmt.Init = p.parseStatement()
+
+	if !p.curTokenIs(token.SEMICOLON) {
+		return nil
+	}
+
+	p.nextToken()
+
+	stmt.Condition = p.parseExpression(LOWEST)
+	p.nextToken()
+
+	if !p.curTokenIs(token.SEMICOLON) {
+		return nil
+	}
+
+	p.nextToken()
+
+	stmt.Post = p.parseExpression(LOWEST)
+
+	p.nextToken()
+	stmt.Body = p.parseBlockStatement()
 
 	return stmt
 }

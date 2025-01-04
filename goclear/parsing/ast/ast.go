@@ -86,7 +86,7 @@ type AssignStatement struct {
 
 func (as *AssignStatement) statement() {}
 func (as *AssignStatement) ToString() string {
-	return fmt.Sprintf("(%s) %s = %v", as.Type, as.Name.Value, as.Value)
+	return fmt.Sprintf("(%s) %s = %v", as.Type, as.Name.Value, as.Value.ToString())
 }
 
 type ReassignStatement struct {
@@ -220,7 +220,7 @@ type Identifier struct {
 
 func (i *Identifier) expression() {}
 func (i *Identifier) ToString() string {
-	return fmt.Sprintf("IDENT %s: %s", i.Value, strings.ToLower(string(i.Type)))
+	return fmt.Sprintf("IDENT %s: (%s)", i.Value, strings.ToLower(string(i.Type)))
 }
 func (i *Identifier) GetType() DataType {
 	return i.Type
@@ -299,7 +299,7 @@ type PrefixExpression struct {
 
 func (pe *PrefixExpression) expression() {}
 func (pe *PrefixExpression) ToString() string {
-	return fmt.Sprintf("(%s) %v", pe.Operator, pe.Right)
+	return fmt.Sprintf("(%s) %v", pe.Operator, pe.Right.ToString())
 }
 func (pe *PrefixExpression) GetType() DataType {
 	if pe.Operator == "!" {
@@ -318,7 +318,7 @@ type PostfixExpression struct {
 
 func (pe *PostfixExpression) expression() {}
 func (pe *PostfixExpression) ToString() string {
-	return fmt.Sprintf("%v (%s)", pe.Left, pe.Operator)
+	return fmt.Sprintf("%v (%s)", pe.Left.ToString(), pe.Operator)
 }
 func (pe *PostfixExpression) GetType() DataType {
 	return UNKNOWN
@@ -333,7 +333,7 @@ type InfixExpression struct {
 
 func (ie *InfixExpression) expression() {}
 func (ie *InfixExpression) ToString() string {
-	return fmt.Sprintf("(%v) %s (%v)", ie.Left, ie.Operator, ie.Right)
+	return fmt.Sprintf("(%v) %s (%v)", ie.Left.ToString(), ie.Operator, ie.Right.ToString())
 }
 func (ie *InfixExpression) GetType() DataType {
 	lType := ie.Left.GetType()

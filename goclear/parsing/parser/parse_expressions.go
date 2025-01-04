@@ -75,6 +75,10 @@ func (p *Parser) parsePostfixExpression(left ast.Expression) ast.Expression {
 }
 
 func (p *Parser) parseIdentifier() ast.Expression {
+	found, ok := p.symbols[p.curToken.Literal]
+	if ok {
+		return &ast.Identifier{BaseNode: ast.BaseNode{Token: p.curToken}, Value: p.curToken.Literal, Type: found.Type}
+	}
 	return &ast.Identifier{BaseNode: ast.BaseNode{Token: p.curToken}, Value: p.curToken.Literal}
 }
 

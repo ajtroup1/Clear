@@ -1,0 +1,192 @@
+{
+  "Statements": [
+    {
+      "Token": {
+        "Type": "INT",
+        "Literal": "int",
+        "Line": 1,
+        "Col": 1
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "x",
+          "Line": 1,
+          "Col": 5
+        },
+        "Value": "x",
+        "Type": ""
+      },
+      "Value": {
+        "Token": {
+          "Type": "INT",
+          "Literal": "3",
+          "Line": 1,
+          "Col": 9
+        },
+        "Value": 3
+      },
+      "Type": "INT"
+    },
+    {
+      "Token": {
+        "Type": "INT",
+        "Literal": "int",
+        "Line": 2,
+        "Col": 1
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "y",
+          "Line": 2,
+          "Col": 5
+        },
+        "Value": "y",
+        "Type": ""
+      },
+      "Value": {
+        "Token": {
+          "Type": "INT",
+          "Literal": "0",
+          "Line": 2,
+          "Col": 9
+        },
+        "Value": 0
+      },
+      "Type": "INT"
+    },
+    {
+      "Token": {
+        "Type": "FOR",
+        "Literal": "for",
+        "Line": 4,
+        "Col": 1
+      },
+      "Init": {
+        "Token": {
+          "Type": "INT",
+          "Literal": "int",
+          "Line": 4,
+          "Col": 6
+        },
+        "Name": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "i",
+            "Line": 4,
+            "Col": 10
+          },
+          "Value": "i",
+          "Type": ""
+        },
+        "Value": {
+          "Token": {
+            "Type": "INT",
+            "Literal": "0",
+            "Line": 4,
+            "Col": 14
+          },
+          "Value": 0
+        },
+        "Type": "INT"
+      },
+      "Condition": {
+        "Token": {
+          "Type": "LT",
+          "Literal": "\u003c",
+          "Line": 4,
+          "Col": 19
+        },
+        "Operator": "\u003c",
+        "Left": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "i",
+            "Line": 4,
+            "Col": 17
+          },
+          "Value": "i",
+          "Type": "INT"
+        },
+        "Right": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "x",
+            "Line": 4,
+            "Col": 21
+          },
+          "Value": "x",
+          "Type": "INT"
+        }
+      },
+      "Post": {
+        "Token": {
+          "Type": "INC",
+          "Literal": "++",
+          "Line": 4,
+          "Col": 26
+        },
+        "Operator": "++",
+        "Left": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "i",
+            "Line": 4,
+            "Col": 24
+          },
+          "Value": "i",
+          "Type": "INT"
+        }
+      },
+      "Body": {
+        "Token": {
+          "Type": "RPAREN",
+          "Literal": ")",
+          "Line": 4,
+          "Col": 27
+        },
+        "Statements": [
+          {
+            "Token": {
+              "Type": "LBRACE",
+              "Literal": "{",
+              "Line": 4,
+              "Col": 29
+            },
+            "Statements": [
+              {
+                "Token": {
+                  "Type": "IDENT",
+                  "Literal": "y",
+                  "Line": 5,
+                  "Col": 3
+                },
+                "Expression": {
+                  "Token": {
+                    "Type": "INC",
+                    "Literal": "++",
+                    "Line": 5,
+                    "Col": 5
+                  },
+                  "Operator": "++",
+                  "Left": {
+                    "Token": {
+                      "Type": "IDENT",
+                      "Literal": "y",
+                      "Line": 5,
+                      "Col": 3
+                    },
+                    "Value": "y",
+                    "Type": "INT"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "Imports": null
+}

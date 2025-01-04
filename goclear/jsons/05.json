@@ -4,21 +4,21 @@
       "Token": {
         "Type": "FUNCTION",
         "Literal": "fn",
-        "Line": 6,
+        "Line": 11,
         "Col": 1
       },
       "Expression": {
         "Token": {
           "Type": "FUNCTION",
           "Literal": "fn",
-          "Line": 6,
+          "Line": 11,
           "Col": 1
         },
         "Name": {
           "Token": {
             "Type": "IDENT",
             "Literal": "add",
-            "Line": 6,
+            "Line": 11,
             "Col": 4
           },
           "Value": "add",
@@ -29,7 +29,7 @@
             "Token": {
               "Type": "IDENT",
               "Literal": "x",
-              "Line": 6,
+              "Line": 11,
               "Col": 8
             },
             "Value": "x",
@@ -39,7 +39,7 @@
             "Token": {
               "Type": "IDENT",
               "Literal": "y",
-              "Line": 6,
+              "Line": 11,
               "Col": 16
             },
             "Value": "y",
@@ -50,7 +50,7 @@
           "Token": {
             "Type": "LBRACE",
             "Literal": "{",
-            "Line": 6,
+            "Line": 11,
             "Col": 31
           },
           "Statements": [
@@ -58,22 +58,22 @@
               "Token": {
                 "Type": "RETURN",
                 "Literal": "return",
-                "Line": 7,
+                "Line": 12,
                 "Col": 3
               },
               "Value": {
                 "Token": {
                   "Type": "PLUS",
                   "Literal": "+",
-                  "Line": 7,
-                  "Col": 12
+                  "Line": 12,
+                  "Col": 11
                 },
                 "Operator": "+",
                 "Left": {
                   "Token": {
                     "Type": "IDENT",
                     "Literal": "x",
-                    "Line": 7,
+                    "Line": 12,
                     "Col": 10
                   },
                   "Value": "x",
@@ -83,8 +83,8 @@
                   "Token": {
                     "Type": "IDENT",
                     "Literal": "y",
-                    "Line": 7,
-                    "Col": 14
+                    "Line": 12,
+                    "Col": 12
                   },
                   "Value": "y",
                   "Type": ""

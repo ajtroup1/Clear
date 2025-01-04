@@ -1,6 +1,0 @@
-int x = 0;
-float y = 0.1;
-string name = "Joe";
-char c = 'c';
-bool myBoolean = true;
-bool myOtherBoolean = false;

@@ -1,1 +1,10 @@
-x++;
+import math
+import cast
+
+fn mathFn(int: x, float: y) -> {
+  if (x < 0) {
+    return math.Round(y + cast.castToFloat(x)) / 2;
+  }
+
+  return 0;
+}

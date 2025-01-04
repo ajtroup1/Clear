@@ -1,1 +1,9 @@
-return 0;
+// Variables can be declared by simply using a data type keyword, an identifier, and *optionally* a value.
+
+int undeclared;
+int x = 0;
+float y = 0.1;
+string name = "Joe";
+char c = 'c';
+bool myBoolean = true;
+bool myOtherBoolean = false;

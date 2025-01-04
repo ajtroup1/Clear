@@ -106,8 +106,8 @@ func New(l *lexer.Lexer) *Parser {
 	// p.registerInfix(token.DOT, p.parseMemberExpression)
 
 	// Register postfix parse functions
-	// p.registerPostfix(token.INC, p.parsePostfixExpression)
-	// p.registerPostfix(token.DEC, p.parsePostfixExpression)
+	p.registerPostfix(token.INC, p.parsePostfixExpression)
+	p.registerPostfix(token.DEC, p.parsePostfixExpression)
 
 	p.nextToken()
 	p.nextToken()
@@ -121,6 +121,10 @@ func (p *Parser) registerPrefix(tokenType token.TokenType, fn prefixParseFn) {
 
 func (p *Parser) registerInfix(tokenType token.TokenType, fn infixParseFn) {
 	p.infixParseFns[tokenType] = fn
+}
+
+func (p *Parser) registerPostfix(tokenType token.TokenType, fn postfixParseFn) {
+	p.postfixParseFns[tokenType] = fn
 }
 
 func (p *Parser) Errors() ErrorList {

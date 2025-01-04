@@ -1,2 +1,4 @@
+// Variables can be easily reassigned within the proper scope
+
 int x = 0;
 x = 0;

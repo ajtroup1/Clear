@@ -12,13 +12,27 @@ func (p *Parser) parseExpression(precedence int) ast.Expression {
 		p.addError("unexpected end of file", 0, 0)
 		return nil
 	}
+
+	// Handle prefix expressions (e.g., identifiers, literals, negations, etc.)
 	prefix := p.prefixParseFns[p.curToken.Type]
 	if prefix == nil {
 		p.noPrefixParseFnError(p.curToken.Type)
 		return nil
 	}
+
 	leftExp := prefix()
 
+	// Handle postfix expressions (e.g., x++, y--).
+	// If the next token is a valid postfix operator, process it.
+	for p.peekTokenIs(token.INC) || p.peekTokenIs(token.DEC) {
+		postfix := p.postfixParseFns[p.peekToken.Type]
+		if postfix != nil {
+			p.nextToken()              // Move past the postfix operator (e.g., '++', '--')
+			leftExp = postfix(leftExp) // Apply postfix operation
+		}
+	}
+
+	// Handle infix expressions based on precedence
 	for !p.peekTokenIs(token.SEMICOLON) && precedence < p.peekPrecedence() {
 		infix := p.infixParseFns[p.peekToken.Type]
 		if infix == nil {
@@ -26,7 +40,6 @@ func (p *Parser) parseExpression(precedence int) ast.Expression {
 		}
 
 		p.nextToken()
-
 		leftExp = infix(leftExp)
 	}
 
@@ -49,6 +62,12 @@ func (p *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
 	precedence := p.curPrecedence()
 	p.nextToken()
 	expression.Right = p.parseExpression(precedence)
+
+	return expression
+}
+
+func (p *Parser) parsePostfixExpression(left ast.Expression) ast.Expression {
+	expression := &ast.PostfixExpression{BaseNode: ast.BaseNode{Token: p.curToken}, Operator: p.curToken.Literal, Left: left}
 
 	return expression
 }
@@ -158,11 +177,11 @@ func (p *Parser) parseFunctionLiteral() ast.Expression {
 	lit := &ast.FunctionLiteral{BaseNode: ast.BaseNode{Token: p.curToken}}
 	p.nextToken()
 	lit.Name = p.parseIdentifier().(*ast.Identifier)
-	
+
 	if !p.expectPeek(token.LPAREN) {
 		return nil
 	}
-	
+
 	lit.Parameters = p.parseFunctionParameters()
 
 	if !p.expectPeek(token.ARROW) {
@@ -181,6 +200,8 @@ func (p *Parser) parseFunctionLiteral() ast.Expression {
 
 	lit.Body = p.parseBlockStatement()
 
+	p.checkReturnTypeConsistency(lit)
+
 	return lit
 }
 
@@ -191,23 +212,23 @@ func (p *Parser) parseFunctionParameters() []*ast.Identifier {
 		p.nextToken()
 		return identifiers
 	}
-	
+
 	p.nextToken()
-	
+
 	ident := &ast.Identifier{BaseNode: ast.BaseNode{Token: p.curToken}, Value: p.curToken.Literal}
 
 	if !p.expectPeek(token.COLON) {
 		return nil
 	}
-	
+
 	if !p.isDataType() {
 		return nil
 	}
 
 	ident.Type = mapTokenTypeToDataType(p.curToken.Type)
-	
+
 	identifiers = append(identifiers, ident)
-	
+
 	for p.peekTokenIs(token.COMMA) {
 		p.nextToken()
 		p.nextToken()
@@ -230,4 +251,20 @@ func (p *Parser) parseFunctionParameters() []*ast.Identifier {
 	}
 
 	return identifiers
+}
+
+func (p *Parser) checkReturnTypeConsistency(lit *ast.FunctionLiteral) {
+	for _, stmt := range lit.Body.Statements {
+		if retStmt, ok := stmt.(*ast.ReturnStatement); ok {
+			if retStmt.Value.GetType() != "" {
+				// Simply inferred type such as INT, FLOAT, STRING, etc.
+				if retStmt.Value.GetType() != lit.ReturnType {
+					p.addError(fmt.Sprintf(
+						"funciton return type mismatch for '%s': expected %s, got %s",
+						lit.Name.Value, lit.ReturnType, retStmt.Value.GetType()),
+						retStmt.Token.Line, retStmt.Token.Col)
+				}
+			}
+		}
+	}
 }

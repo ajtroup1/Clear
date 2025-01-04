@@ -10,13 +10,14 @@ import (
 type DataType string
 
 const (
-	UNKNOWN DataType = "UNKNOWN"
-	INT     DataType = "INT"
-	FLOAT   DataType = "FLOAT"
-	STRING  DataType = "STRING"
-	CHAR    DataType = "CHAR"
-	BOOL    DataType = "BOOL"
-	VOID    DataType = "VOID"
+	UNKNOWN  DataType = "UNKNOWN"
+	INT      DataType = "INT"
+	FLOAT    DataType = "FLOAT"
+	STRING   DataType = "STRING"
+	CHAR     DataType = "CHAR"
+	BOOL     DataType = "BOOL"
+	VOID     DataType = "VOID"
+	FUNCTION DataType = "FUNCTION"
 )
 
 type Node interface {
@@ -381,16 +382,16 @@ func (fl *FunctionLiteral) GetType() DataType {
 
 type CallExpression struct {
 	BaseNode
-	FunctionIdentifier  Expression
+	Function  *FunctionLiteral
 	Arguments []CallArgument
 }
 
 func (ce *CallExpression) expression() {}
 func (ce *CallExpression) ToString() string {
-	return fmt.Sprintf("CALL %s\nArguments:\n\t%v", ce.FunctionIdentifier, ce.Arguments)
+	return fmt.Sprintf("CALL %s\nArguments:\n\t%v", ce.Function.Name.Value, ce.Arguments)
 }
 func (ce *CallExpression) GetType() DataType {
-	return ce.FunctionIdentifier.GetType()
+	return ce.Function.GetType()
 }
 
 type CallArgument struct {

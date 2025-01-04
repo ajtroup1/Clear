@@ -183,6 +183,9 @@ func (p *Parser) parseFunctionLiteral() ast.Expression {
 	lit := &ast.FunctionLiteral{BaseNode: ast.BaseNode{Token: p.curToken}}
 	p.nextToken()
 	lit.Name = p.parseIdentifier().(*ast.Identifier)
+	if _, found := p.symbols[lit.Name.Value]; found {
+		p.addError(fmt.Sprintf("function '%s' already declared", lit.Name.Value), p.curToken.Line, p.curToken.Col)
+	}
 
 	if !p.expectPeek(token.LPAREN) {
 		return nil
@@ -207,6 +210,12 @@ func (p *Parser) parseFunctionLiteral() ast.Expression {
 	lit.Body = p.parseBlockStatement()
 
 	p.checkReturnTypeConsistency(lit)
+
+	p.symbols[lit.Name.Value] = Symbol{
+		Name:  lit.Name.Value,
+		Type:  ast.FUNCTION,
+		Value: lit,
+	}
 
 	return lit
 }
@@ -273,4 +282,60 @@ func (p *Parser) checkReturnTypeConsistency(lit *ast.FunctionLiteral) {
 			}
 		}
 	}
+}
+
+func (p *Parser) parseCallExpression(f ast.Expression) ast.Expression {
+	var fl *ast.FunctionLiteral
+	if found, ok := p.symbols[f.(*ast.Identifier).Value]; !ok {
+		p.addError(fmt.Sprintf("function '%s' not declared", f.(*ast.Identifier).Value), p.curToken.Line, p.curToken.Col)
+		return nil
+	} else {
+		fl = found.Value.(*ast.FunctionLiteral)
+	}
+
+	
+	exp := &ast.CallExpression{
+		BaseNode: ast.BaseNode{Token: p.curToken},
+		Function: fl,
+	}
+	
+	exp.Arguments = p.parseCallArguments()
+	flLen := len(fl.Parameters)
+	argLen := len(exp.Arguments)
+
+	if flLen != argLen {
+		p.addError(fmt.Sprintf("function '%s' expects %d arguments, got %d", fl.Name.Value, flLen, argLen), p.curToken.Line, p.curToken.Col)
+	}
+
+	for i, param := range fl.Parameters {
+		if exp.Arguments[i].Expression.GetType() != param.Type {
+			p.addError(fmt.Sprintf("type mismatch in function call for \"%s\": expected param: \"%s\": %s, got argument of type %s", fl.Name.Value, param.Value, param.Type, exp.Arguments[i].Expression.GetType()), p.curToken.Line, p.curToken.Col)
+		}
+	}
+	
+	return exp
+}
+
+func (p *Parser) parseCallArguments() []ast.CallArgument {
+	args := []ast.CallArgument{}
+
+	if p.peekTokenIs(token.RPAREN) {
+		p.nextToken()
+		return args
+	}
+
+	p.nextToken()
+	args = append(args, ast.CallArgument{Expression: p.parseExpression(LOWEST)})
+
+	for p.peekTokenIs(token.COMMA) {
+		p.nextToken()
+		p.nextToken()
+		args = append(args, ast.CallArgument{Expression: p.parseExpression(LOWEST)})
+	}
+
+	if !p.expectPeek(token.RPAREN) {
+		return nil
+	}
+
+	return args
 }

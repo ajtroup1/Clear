@@ -1,0 +1,70 @@
+{
+  "Statements": [
+    {
+      "Token": {
+        "Type": "FLOAT",
+        "Literal": "float",
+        "Line": 1,
+        "Col": 1
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "x",
+          "Line": 1,
+          "Col": 7
+        },
+        "value": "x",
+        "type": ""
+      },
+      "Value": {
+        "Token": {
+          "Type": "FLOAT",
+          "Literal": "1.2",
+          "Line": 1,
+          "Col": 11
+        },
+        "value": 1.2
+      },
+      "Type": "FLOAT"
+    },
+    {
+      "Token": {
+        "Type": "INT",
+        "Literal": "int",
+        "Line": 3,
+        "Col": 1
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "y",
+          "Line": 3,
+          "Col": 5
+        },
+        "value": "y",
+        "type": ""
+      },
+      "Value": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "x",
+          "Line": 3,
+          "Col": 13
+        },
+        "type": "INT",
+        "value": {
+          "Token": {
+            "Type": "",
+            "Literal": "",
+            "Line": 0,
+            "Col": 0
+          },
+          "value": 1.2
+        }
+      },
+      "Type": "INT"
+    }
+  ],
+  "Imports": []
+}

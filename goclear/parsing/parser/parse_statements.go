@@ -4,7 +4,6 @@ package parser
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/ajtroup1/goclear/lexing/token"
 	"github.com/ajtroup1/goclear/parsing/ast"
@@ -128,8 +127,8 @@ func (p *Parser) parseReassignStatement() *ast.ReassignStatement {
 	p.nextToken() // Move to the expression
 
 	stmt.Value = p.parseExpression(LOWEST)
-	stringType := strings.Split(stmt.Value.ToString(), " ")[0]
-	if p.symbols[stmt.Name.Value].Type != mapTokenTypeToDataType(token.TokenType(stringType)) {
+	if p.symbols[stmt.Name.Value].Type != stmt.Value.GetType() {
+		fmt.Printf("stmt.Value.GetType(): %s, symbol type: %s\n", p.symbols[stmt.Name.Value].Type, stmt.Value.GetType())
 		p.addError(fmt.Sprintf(
 			"type mismatch: cannot assign %s to %s for var '%s'", stmt.Value.GetType(), p.symbols[stmt.Name.Value].Type, stmt.Name.Value),
 			p.curToken.Line, p.curToken.Col)
@@ -210,63 +209,59 @@ func (p *Parser) parseWhileStatement() *ast.WhileStatement {
 }
 
 func (p *Parser) parseModuleStatement() *ast.ModuleStatement {
-    stmt := &ast.ModuleStatement{BaseNode: ast.BaseNode{Token: p.curToken}}
+	stmt := &ast.ModuleStatement{BaseNode: ast.BaseNode{Token: p.curToken}}
 
-    if !p.expectPeek(token.IDENT) {
-        return nil
-    }
+	if !p.expectPeek(token.IDENT) {
+		return nil
+	}
 
-		ident := &ast.Identifier{BaseNode: ast.BaseNode{Token: p.curToken}, Value: p.curToken.Literal, Type: ast.MODULE}
+	ident := &ast.Identifier{BaseNode: ast.BaseNode{Token: p.curToken}, Value: p.curToken.Literal, Type: ast.MODULE}
 
-    stmt.Name = ident
+	stmt.Name = ident
 
-    if !p.expectPeek(token.COLON) {
-        return nil
-    }
+	if !p.expectPeek(token.COLON) {
+		return nil
+	}
 
-    if p.peekTokenIs(token.ASTERISK) {
-        stmt.ImportAll = true
-        p.nextToken()
-    } else if p.peekTokenIs(token.LBRACKET) {
-        stmt.Imports = p.parseModuleImports()
-    } else {
-        p.addError("expected '*' or list of imports after module statement", p.peekToken.Line, p.peekToken.Col)
-        return nil
-    }
+	if p.peekTokenIs(token.ASTERISK) {
+		stmt.ImportAll = true
+		p.nextToken()
+	} else if p.peekTokenIs(token.LBRACKET) {
+		stmt.Imports = p.parseModuleImports()
+	} else {
+		p.addError("expected '*' or list of imports after module statement", p.peekToken.Line, p.peekToken.Col)
+		return nil
+	}
 
-    if p.peekTokenIs(token.SEMICOLON) {
-        p.nextToken()
-    }
+	if p.peekTokenIs(token.SEMICOLON) {
+		p.nextToken()
+	}
 
-		fmt.Printf("stmt: %v\n", stmt)
-
-    return stmt
+	return stmt
 }
 
 func (p *Parser) parseModuleImports() []*ast.Identifier {
-    var imports []*ast.Identifier
-    p.nextToken() // Skip '['
+	var imports []*ast.Identifier
+	p.nextToken() 
 
-    for !p.peekTokenIs(token.RBRACKET) {
-        if !p.peekTokenIs(token.IDENT) {
-            p.addError("expected identifier in imports list", p.peekToken.Line, p.peekToken.Col)
-            return nil
-        }
+	for !p.peekTokenIs(token.RBRACKET) {
+		if !p.peekTokenIs(token.IDENT) {
+			p.addError("expected identifier in imports list", p.peekToken.Line, p.peekToken.Col)
+			return nil
+		}
 
-				ident := &ast.Identifier{BaseNode: ast.BaseNode{Token: p.peekToken}, Value: p.peekToken.Literal, Type: ast.MODULEFUNCTION}
+		ident := &ast.Identifier{BaseNode: ast.BaseNode{Token: p.peekToken}, Value: p.peekToken.Literal, Type: ast.MODULEFUNCTION}
 
-        imports = append(imports, ident)
-        p.nextToken()
+		imports = append(imports, ident)
+		p.nextToken()
 
-        if p.peekTokenIs(token.COMMA) {
-            p.nextToken()
-        }
-    }
+		if p.peekTokenIs(token.COMMA) {
+			p.nextToken()
+		}
+	}
 
-		fmt.Printf("imports: %v\n", imports)
-
-    p.nextToken() // Skip ']'
-    return imports
+	p.nextToken() // Skip ']'
+	return imports
 }
 
 // Parses an expression and wraps it in an ExpressionStatement node

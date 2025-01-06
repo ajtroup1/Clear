@@ -10,15 +10,15 @@ import (
 type DataType string
 
 const (
-	UNKNOWN        DataType = "UNKNOWN"
-	INT            DataType = "INT"
-	FLOAT          DataType = "FLOAT"
-	STRING         DataType = "STRING"
-	CHAR           DataType = "CHAR"
-	BOOL           DataType = "BOOL"
-	VOID           DataType = "VOID"
-	FUNCTION       DataType = "FUNCTION"
-	MODULE         DataType = "MODULE"
+	UNKNOWN  DataType = "UNKNOWN"
+	INT      DataType = "INT"
+	FLOAT    DataType = "FLOAT"
+	STRING   DataType = "STRING"
+	CHAR     DataType = "CHAR"
+	BOOL     DataType = "BOOL"
+	VOID     DataType = "VOID"
+	FUNCTION DataType = "FUNCTION"
+	MODULE   DataType = "MODULE"
 	// MODULEFUNCTION is a special type used to represent a function imported from a module
 	// This is used to differentiate between functions defined in the current file and functions imported from a module
 	// Example: "mod math: Round" would be of type MODULEFUNCTION and it's symbol would look like:
@@ -47,8 +47,8 @@ type Expression interface {
 }
 
 type Program struct {
-	Statements []Statement
-	Imports    []*ModuleStatement
+	Statements []Statement        `json:"Statements"`
+	Imports    []*ModuleStatement `json:"Imports"`
 }
 
 func (p *Program) ToString() string {
@@ -76,7 +76,7 @@ func (bn *BaseNode) Position() (line, col int) {
 
 type BlockStatement struct {
 	BaseNode
-	Statements []Statement
+	Statements []Statement `json:"Statements"`
 }
 
 func (bs *BlockStatement) statement() {}
@@ -90,9 +90,9 @@ func (bs *BlockStatement) ToString() string {
 
 type AssignStatement struct {
 	BaseNode
-	Name  *Identifier
-	Value Expression
-	Type  DataType
+	Name  *Identifier `json:"Name"`
+	Value Expression  `json:"Value"`
+	Type  DataType    `json:"Type"`
 }
 
 func (as *AssignStatement) statement() {}
@@ -102,20 +102,20 @@ func (as *AssignStatement) ToString() string {
 
 type ReassignStatement struct {
 	BaseNode
-	Name  *Identifier
-	Value Expression
+	Name  *Identifier `json:"Name"`
+	Value Expression  `json:"Value"`
 }
 
 func (rs *ReassignStatement) statement() {}
 func (rs *ReassignStatement) ToString() string {
-	return fmt.Sprintf("REASSIGN (%s) %s = %v", rs.Name.Type, rs.Name.Value, rs.Value)
+	return fmt.Sprintf("REASSIGN (%s) %s = %v", rs.Name.Type, rs.Name.Value, rs.Value.ToString())
 }
 
 type ConstStatement struct {
 	BaseNode
-	Name  *Identifier
-	Value Expression
-	Type  DataType
+	Name  *Identifier `json:"Name"`
+	Value Expression  `json:"Value"`
+	Type  DataType    `json:"Type"`
 }
 
 func (cs *ConstStatement) statement() {}
@@ -125,17 +125,17 @@ func (cs *ConstStatement) ToString() string {
 
 type ReturnStatement struct {
 	BaseNode
-	Value Expression
+	Value Expression `json:"Value"` // The value to return
 }
 
 func (rs *ReturnStatement) statement() {}
 func (rs *ReturnStatement) ToString() string {
-	return fmt.Sprintf("RETURN %v", rs.Value)
+	return fmt.Sprintf("RETURN %v", rs.Value.ToString())
 }
 
 type ExpressionStatement struct {
 	BaseNode
-	Expression Expression
+	Expression Expression `json:"Expression"`
 }
 
 func (es *ExpressionStatement) statement() {}
@@ -145,8 +145,8 @@ func (es *ExpressionStatement) ToString() string {
 
 type WhileStatement struct {
 	BaseNode
-	Condition Expression
-	Body      *BlockStatement
+	Condition Expression      `json:"Condition"`
+	Body      *BlockStatement `json:"Body"`
 }
 
 func (ws *WhileStatement) statement() {}
@@ -156,15 +156,15 @@ func (ws *WhileStatement) ToString() string {
 
 type ForStatement struct {
 	BaseNode
-	Init      Statement
-	Condition Expression
-	Post      Expression
-	Body      *BlockStatement
+	Init      Statement       `json:"Init"`
+	Condition Expression      `json:"Condition"`
+	Post      Expression      `json:"Post"`
+	Body      *BlockStatement `json:"Body"`
 }
 
 func (fs *ForStatement) statement() {}
 func (fs *ForStatement) ToString() string {
-	return fmt.Sprintf("FOR %v %v %v %v", fs.Init, fs.Condition, fs.Post, fs.Body)
+	return fmt.Sprintf("FOR:\n\tInit: %v\n\tCondition: %v\n\tPost: %v\n\tBody: %v", fs.Init.ToString(), fs.Condition.ToString(), fs.Post.ToString(), fs.Body.ToString())
 }
 
 type BreakStatement struct {
@@ -187,13 +187,13 @@ func (cs *ContinueStatement) ToString() string {
 
 type ModuleStatement struct {
 	BaseNode
-	Name *Identifier
+	Name *Identifier `json:"Name"` // The name of the module
 	// Flag to determine if all functions should be imported
 	// Toggled to true by using '*': "mod math: *"
-	ImportAll bool
+	ImportAll bool `json:"ImportAll"`
 	// If not importing all, this will be a list of functions to import
 	// Contained within brackets and separated by commas: "mod math: [Round, Pow]"
-	Imports []*Identifier
+	Imports []*Identifier `json:"Imports"`
 }
 
 func (is *ModuleStatement) statement() {}
@@ -209,9 +209,9 @@ func (is *ModuleStatement) ToString() string {
 
 type ClassStatement struct {
 	BaseNode
-	Name       *Identifier
-	Properties []*PropertyStatement
-	Methods    []*FunctionLiteral
+	Name       *Identifier          `json:"Name"`
+	Properties []*PropertyStatement `json:"Properties"`
+	Methods    []*FunctionLiteral   `json:"Methods"`
 }
 
 func (cs *ClassStatement) statement() {}
@@ -221,9 +221,9 @@ func (cs *ClassStatement) ToString() string {
 
 type PropertyStatement struct {
 	BaseNode
-	Name  string
-	Type  DataType
-	Value interface{}
+	Name  string      `json:"Name"`
+	Type  DataType    `json:"Type"`
+	Value interface{} `json:"Value"`
 }
 
 func (ps *PropertyStatement) statement() {}
@@ -233,12 +233,12 @@ func (ps *PropertyStatement) ToString() string {
 
 // ===========
 // EXPRESSIONS
-// ===========
+// =========== 
 
 type Identifier struct {
 	BaseNode
-	Value string
-	Type  DataType
+	Value string   `json:"value"`
+	Type  DataType `json:"type"`
 }
 
 func (i *Identifier) expression() {}
@@ -251,7 +251,7 @@ func (i *Identifier) GetType() DataType {
 
 type IntegerLiteral struct {
 	BaseNode
-	Value int64
+	Value int64 `json:"value"`
 }
 
 func (i *IntegerLiteral) expression() {}
@@ -264,7 +264,7 @@ func (i *IntegerLiteral) GetType() DataType {
 
 type FloatLiteral struct {
 	BaseNode
-	Value float64
+	Value float64 `json:"value"`
 }
 
 func (f *FloatLiteral) expression() {}
@@ -277,7 +277,7 @@ func (f *FloatLiteral) GetType() DataType {
 
 type StringLiteral struct {
 	BaseNode
-	Value string
+	Value string `json:"value"`
 }
 
 func (s *StringLiteral) expression() {}
@@ -290,7 +290,7 @@ func (s *StringLiteral) GetType() DataType {
 
 type CharLiteral struct {
 	BaseNode
-	Value rune
+	Value rune `json:"value"`
 }
 
 func (c *CharLiteral) expression() {}
@@ -303,7 +303,7 @@ func (c *CharLiteral) GetType() DataType {
 
 type BooleanLiteral struct {
 	BaseNode
-	Value bool
+	Value bool `json:"value"`
 }
 
 func (b *BooleanLiteral) expression() {}
@@ -316,8 +316,8 @@ func (b *BooleanLiteral) GetType() DataType {
 
 type PrefixExpression struct {
 	BaseNode
-	Operator string
-	Right    Expression
+	Operator string     `json:"operator"`
+	Right    Expression `json:"right"`
 }
 
 func (pe *PrefixExpression) expression() {}
@@ -335,8 +335,8 @@ func (pe *PrefixExpression) GetType() DataType {
 
 type PostfixExpression struct {
 	BaseNode
-	Operator string
-	Left     Expression
+	Operator string     `json:"operator"`
+	Left     Expression `json:"left"`
 }
 
 func (pe *PostfixExpression) expression() {}
@@ -349,9 +349,9 @@ func (pe *PostfixExpression) GetType() DataType {
 
 type InfixExpression struct {
 	BaseNode
-	Operator string
-	Left     Expression
-	Right    Expression
+	Operator string     `json:"operator"`
+	Left     Expression `json:"left"`
+	Right    Expression `json:"right"`
 }
 
 func (ie *InfixExpression) expression() {}
@@ -369,9 +369,9 @@ func (ie *InfixExpression) GetType() DataType {
 
 type IfExpression struct {
 	BaseNode
-	Condition   Expression
-	Consequence *BlockStatement
-	Alternative *BlockStatement
+	Condition   Expression      `json:"condition"`
+	Consequence *BlockStatement `json:"consequence"`
+	Alternative *BlockStatement `json:"alternative,omitempty"`
 }
 
 func (ie *IfExpression) expression() {}
@@ -388,15 +388,19 @@ func (ie *IfExpression) GetType() DataType {
 
 type FunctionLiteral struct {
 	BaseNode
-	Name       *Identifier
-	Parameters []*Identifier
-	Body       *BlockStatement
-	ReturnType DataType
+	Name       *Identifier     `json:"name"`
+	Parameters []*Identifier   `json:"parameters"`
+	Body       *BlockStatement `json:"body"`
+	ReturnType DataType        `json:"returnType"`
 }
 
 func (fl *FunctionLiteral) expression() {}
 func (fl *FunctionLiteral) ToString() string {
-	return fmt.Sprintf("FUNCTION:\n\tReturn Type: %v\n\tParameters: %v\n\tBody: %v", fl.ReturnType, fl.Parameters, fl.Body)
+	paramString := ""
+	for _, param := range fl.Parameters {
+		paramString += param.ToString() + " "
+	}
+	return fmt.Sprintf("FUNCTION:\n\tReturn Type: %v\n\tParameters: %v\n\tBody: %v", fl.ReturnType, paramString, fl.Body.ToString())
 }
 func (fl *FunctionLiteral) GetType() DataType {
 	return fl.ReturnType
@@ -404,8 +408,8 @@ func (fl *FunctionLiteral) GetType() DataType {
 
 type CallExpression struct {
 	BaseNode
-	Function  *FunctionLiteral
-	Arguments []CallArgument
+	Function  *FunctionLiteral `json:"function"`
+	Arguments []CallArgument   `json:"arguments"`
 }
 
 func (ce *CallExpression) expression() {}
@@ -418,8 +422,8 @@ func (ce *CallExpression) GetType() DataType {
 
 type CallArgument struct {
 	BaseNode
-	Expression Expression
-	Type       DataType
+	Expression Expression `json:"expression"`
+	Type       DataType   `json:"type"`
 }
 
 func (ca *CallArgument) expression() {}
@@ -428,4 +432,19 @@ func (ca *CallArgument) ToString() string {
 }
 func (ca *CallArgument) GetType() DataType {
 	return ca.Type
+}
+
+type TypeCastExpression struct {
+	BaseNode
+	Type  DataType   `json:"type"`  // The target type (e.g., "int", "float").
+	Value Expression `json:"value"` // The expression being cast.
+}
+
+func (t *TypeCastExpression) expression()          {}
+func (t *TypeCastExpression) TokenLiteral() string { return t.Token.Literal }
+func (t *TypeCastExpression) ToString() string {
+	return fmt.Sprintf("%s(%s)", t.Type, t.Value.ToString())
+}
+func (t *TypeCastExpression) GetType() DataType {
+	return t.Type
 }

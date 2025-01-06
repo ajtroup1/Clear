@@ -39,6 +39,7 @@ var precedences = map[token.TokenType]int{
 	token.MINUS:    SUM,
 	token.SLASH:    PRODUCT,
 	token.ASTERISK: PRODUCT,
+	token.MODULUS:  PRODUCT,
 	token.LPAREN:   CALL,
 	token.LBRACKET: INDEX,
 	token.DOT:      MEMBER,
@@ -139,6 +140,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerInfix(token.NOT_EQ, p.parseInfixExpression)
 	p.registerInfix(token.LT, p.parseInfixExpression)
 	p.registerInfix(token.GT, p.parseInfixExpression)
+	p.registerInfix(token.MODULUS, p.parseInfixExpression)
 	p.registerInfix(token.LPAREN, p.parseCallExpression)
 	// p.registerInfix(token.LBRACKET, p.parseIndexExpression)
 	// p.registerInfix(token.DOT, p.parseMemberExpression)
@@ -211,7 +213,6 @@ func (p *Parser) peekPrecedence() int {
 
 // Return a corresponding AST data type for a given token type
 func mapTokenTypeToDataType(t token.TokenType) ast.DataType {
-	// fmt.Printf("t: %s\n", t)
 	switch t {
 	case token.INT:
 		return ast.INT
@@ -232,7 +233,7 @@ func mapTokenTypeToDataType(t token.TokenType) ast.DataType {
 	}
 }
 
-// Returns a bool indicating whether the current token is an AST data type
+// Returns a bool indicating whether the peek token is an AST data type
 func (p *Parser) isDataType() bool {
 	switch p.peekToken.Type {
 	case token.INT, token.FLOAT, token.STRING, token.CHAR, token.BOOL:

@@ -2,7 +2,7 @@
 
 - "Urgent"
   - Go though errors and make sure they return a specified error not just return nil
-    - Think of every case, simple
+    - Think of every case,
 
 - High Level
   - Make the parser object oriented
@@ -12,8 +12,11 @@
   - Documentation
   - Error handling and recovery can always be improved
   - Optional generation of logs
+  - Parse comments to have significance
+    - Notice how when you add a comment over a class property in Go and hover over it at a specific instance, it uses that comment as a description in the info box that is displayed
 
 - General Additions
+  - Type casting and automatic type casting inferences
   - Imports
     - Import other .clr files
       - Need to think about how to handle transferring data between files

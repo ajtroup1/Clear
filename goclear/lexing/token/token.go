@@ -61,6 +61,7 @@ const (
 	INC      = "INC"
 	DEC      = "DEC"
 	DOT      = "DOT"
+	MODULUS  = "MODULUS"
 
 	// Logical Operators
 	AND = "AND"

@@ -1,0 +1,13 @@
+/* PREDIFINED ARITHMETIC FUNCTINOS */
+
+
+fn Pow(base: float, exp: int) => float {
+  float result = 1.0;
+  
+  for (int i = 0; i < exp; i++) {
+    result = result * base;
+  }
+
+  return result;
+}
+

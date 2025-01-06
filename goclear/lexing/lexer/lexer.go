@@ -143,6 +143,10 @@ func (l *Lexer) NextToken() token.Token {
 		} else {
 			tok = token.Token{Type: token.GT, Literal: string(l.c), Line: l.line, Col: l.col}
 		}
+	case '.':
+		tok = token.Token{Type: token.DOT, Literal: string(l.c), Line: l.line, Col: l.col}
+	case '%':
+		tok = token.Token{Type: token.MODULUS, Literal: string(l.c), Line: l.line, Col: l.col}	
 	case ';':
 		tok = token.Token{Type: token.SEMICOLON, Literal: string(l.c), Line: l.line, Col: l.col}
 	case ',':

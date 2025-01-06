@@ -4,6 +4,7 @@ package parser
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/ajtroup1/goclear/lexing/token"
 	"github.com/ajtroup1/goclear/parsing/ast"
@@ -83,6 +84,10 @@ func (p *Parser) parseIdentifier() ast.Expression {
 }
 
 func (p *Parser) parseIntegerLiteral() ast.Expression {
+	if p.peekTokenIs(token.LPAREN) {
+		tcexp :=p.parseTypeCastExpression(p.curToken.Literal)
+		return tcexp
+	}
 	lit := &ast.IntegerLiteral{BaseNode: ast.BaseNode{Token: p.curToken}}
 
 	value, err := p.curToken.Int()
@@ -150,11 +155,11 @@ func (p *Parser) parseGroupedExpression() ast.Expression {
 
 func (p *Parser) parseIfExpression() ast.Expression {
 	expression := &ast.IfExpression{BaseNode: ast.BaseNode{Token: p.curToken}}
-
+	
 	if !p.expectPeek(token.LPAREN) {
 		return nil
 	}
-
+	
 	p.nextToken()
 	expression.Condition = p.parseExpression(LOWEST)
 
@@ -180,6 +185,7 @@ func (p *Parser) parseIfExpression() ast.Expression {
 }
 
 func (p *Parser) parseFunctionLiteral() ast.Expression {
+	fmt.Printf("symbols: %v\n", p.symbols)
 	lit := &ast.FunctionLiteral{BaseNode: ast.BaseNode{Token: p.curToken}}
 	p.nextToken()
 	lit.Name = p.parseIdentifier().(*ast.Identifier)
@@ -208,6 +214,7 @@ func (p *Parser) parseFunctionLiteral() ast.Expression {
 	}
 
 	lit.Body = p.parseBlockStatement()
+	// fmt.Printf("lit: %v\n", lit.ToString())
 
 	p.checkReturnTypeConsistency(lit)
 
@@ -244,6 +251,12 @@ func (p *Parser) parseFunctionParameters() []*ast.Identifier {
 
 	identifiers = append(identifiers, ident)
 
+	p.symbols[ident.Value] = Symbol{
+		Name:  ident.Value,
+		Type:  ident.Type,
+		Value: ident,
+	}
+
 	for p.peekTokenIs(token.COMMA) {
 		p.nextToken()
 		p.nextToken()
@@ -259,6 +272,12 @@ func (p *Parser) parseFunctionParameters() []*ast.Identifier {
 		ident.Type = mapTokenTypeToDataType(p.curToken.Type)
 
 		identifiers = append(identifiers, ident)
+
+		p.symbols[ident.Value] = Symbol{
+			Name:  ident.Value,
+			Type:  ident.Type,
+			Value: ident,
+		}
 	}
 
 	if !p.expectPeek(token.RPAREN) {
@@ -338,4 +357,86 @@ func (p *Parser) parseCallArguments() []ast.CallArgument {
 	}
 
 	return args
+}
+
+func (p *Parser) parseTypeCastExpression(targetType string) ast.Expression {
+	// Check for left parenthesis for type casting
+	if !p.expectPeek(token.LPAREN) {
+		return nil
+	}
+	p.nextToken()
+
+	// Look up the current type of the variable being casted
+	v := p.symbols[p.curToken.Literal]
+	dataType := v.Type
+
+	// Check if the cast is unnecessary
+	if dataType == ast.DataType(targetType) {
+		// TODO: Add warnings for unnecessary casts
+		p.addError(fmt.Sprintf("unnecessary cast from %s to %s", dataType, targetType), p.curToken.Line, p.curToken.Col)
+	}
+
+	targetType = strings.ToUpper(targetType)
+
+	// Handle different type casting scenarios
+	var castExpr ast.Expression
+	switch targetType {
+	case "INT":
+		if dataType == "FLOAT" {
+			// Handle casting from float to int (e.g., truncation or rounding)
+			castExpr = &ast.TypeCastExpression{
+				BaseNode: ast.BaseNode{Token: p.curToken},
+				Value:    &ast.FloatLiteral{Value: v.Value.(*ast.FloatLiteral).Value},
+				Type:     ast.DataType("INT"),
+			}
+		} else if dataType == "STRING" {
+			// Handle casting from string to int (e.g., string parsing)
+			castExpr = &ast.TypeCastExpression{
+				BaseNode: ast.BaseNode{Token: p.curToken},
+				Value:    &ast.StringLiteral{Value: v.Value.(string)},
+				Type:     ast.DataType("INT"),
+			}
+		}
+	case "float":
+		if dataType == "int" {
+			// Handle casting from int to float
+			castExpr = &ast.TypeCastExpression{
+				BaseNode: ast.BaseNode{Token: p.curToken},
+				Value:    &ast.IntegerLiteral{Value: v.Value.(int64)},
+				Type:     ast.DataType("float"),
+			}
+		}
+	case "string":
+		if dataType == "int" {
+			// Handle casting from int to string (common)
+			castExpr = &ast.TypeCastExpression{
+				BaseNode: ast.BaseNode{Token: p.curToken},
+				Value:    &ast.IntegerLiteral{Value: v.Value.(int64)},
+				Type:     ast.DataType("string"),
+			}
+		}
+		p.addError(fmt.Sprintf("unsupported cast from %s to %s", dataType, targetType), p.curToken.Line, p.curToken.Col)
+	}
+
+	if castExpr == nil {
+		castExpr = &ast.TypeCastExpression{
+			BaseNode: ast.BaseNode{Token: p.curToken},
+			Value:    nil,
+			Type:     ast.UNKNOWN,
+		}
+		p.addError(fmt.Sprintf("unsupported cast from %s to %s", dataType, targetType), p.curToken.Line, p.curToken.Col)
+		return castExpr
+	}
+
+	// Check for right parenthesis for type casting
+	if !p.expectPeek(token.RPAREN) {
+		return nil
+	}
+	p.nextToken()
+
+	fmt.Printf("castExpr: %v\n", castExpr)
+	fmt.Printf("currentToken: %v\n", p.curToken)
+
+	// Return the constructed type cast expression
+	return castExpr
 }

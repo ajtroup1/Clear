@@ -1,0 +1,17 @@
+{
+  "Statements": [
+    {
+      "Token": {
+        "Type": "RETURN",
+        "Literal": "return"
+      },
+      "ReturnValue": {
+        "Token": {
+          "Type": "INT",
+          "Literal": "0"
+        },
+        "Value": 0
+      }
+    }
+  ]
+}

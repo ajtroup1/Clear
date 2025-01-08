@@ -281,6 +281,46 @@ func TestParsingInfixExpressions(t *testing.T) {
 	}
 }
 
+func TestParsingPostfixExpressions(t *testing.T) {
+	tests := []struct {
+		input string
+		expectedOutput string
+	}{
+		{"x++", "x++"},
+		{"x--", "x--"},
+	}
+
+	for _, tt := range tests {
+		l := lexer.New(tt.input)
+		p := New(l)
+		program := p.ParseProgram()
+		checkParserErrors(t, p)
+
+		if len(program.Statements) != 1 {
+			t.Fatalf("program has not enough statements. got=%d",
+				len(program.Statements))
+		}
+
+		stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+		if !ok {
+			t.Fatalf("program.Statements[0] is not ast.ExpressionStatement. got=%T",
+				program.Statements[0])
+		}
+
+		postfix, ok := stmt.Expression.(*ast.PostfixExpression)
+		if !ok {
+			t.Fatalf("stmt is not ast.PostfixExpression. got=%T", stmt.Expression)
+		}
+		if postfix.Operator != tt.expectedOutput[1:] {
+			t.Fatalf("exp.Operator is not '%s'. got=%s",
+				tt.expectedOutput[1:], postfix.Operator)
+		}
+		if !testIdentifier(t, postfix.Left, tt.expectedOutput[:1]) {
+			return
+		}
+	}
+}
+
 func TestOperatorPrecedenceParsing(t *testing.T) {
 	tests := []struct {
 		input    string
@@ -716,44 +756,44 @@ func TestCallExpressionParameterParsing(t *testing.T) {
 }
 
 func TestArrayLiteralParsing(t *testing.T) {
-    tests := []struct {
-        input           string
-        expectedElements []string
-    }{
-        {
-            "[1, 2 * 2, 3 + 3]",
-            []string{"1", "(2 * 2)", "(3 + 3)"},
-        },
-    }
+	tests := []struct {
+		input            string
+		expectedElements []string
+	}{
+		{
+			"[1, 2 * 2, 3 + 3]",
+			[]string{"1", "(2 * 2)", "(3 + 3)"},
+		},
+	}
 
-    for _, tt := range tests {
-        l := lexer.New(tt.input)
-        p := New(l)
-        program := p.ParseProgram()
-        checkParserErrors(t, p)
+	for _, tt := range tests {
+		l := lexer.New(tt.input)
+		p := New(l)
+		program := p.ParseProgram()
+		checkParserErrors(t, p)
 
-        stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
-        if !ok {
-            t.Fatalf("program.Statements[0] is not ast.ExpressionStatement. got=%T",
-                program.Statements[0])
-        }
+		stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+		if !ok {
+			t.Fatalf("program.Statements[0] is not ast.ExpressionStatement. got=%T",
+				program.Statements[0])
+		}
 
-        array, ok := stmt.Expression.(*ast.ArrayLiteral)
-        if !ok {
-            t.Fatalf("stmt.Expression is not ast.ArrayLiteral. got=%T", stmt.Expression)
-        }
+		array, ok := stmt.Expression.(*ast.ArrayLiteral)
+		if !ok {
+			t.Fatalf("stmt.Expression is not ast.ArrayLiteral. got=%T", stmt.Expression)
+		}
 
-        if len(array.Elements) != len(tt.expectedElements) {
-            t.Fatalf("array.Elements has wrong length. want=%d, got=%d",
-                len(tt.expectedElements), len(array.Elements))
-        }
+		if len(array.Elements) != len(tt.expectedElements) {
+			t.Fatalf("array.Elements has wrong length. want=%d, got=%d",
+				len(tt.expectedElements), len(array.Elements))
+		}
 
-        for i, expectedElement := range tt.expectedElements {
-            if array.Elements[i].String() != expectedElement {
-                t.Errorf("element %d wrong. want=%q, got=%q", i, expectedElement, array.Elements[i].String())
-            }
-        }
-    }
+		for i, expectedElement := range tt.expectedElements {
+			if array.Elements[i].String() != expectedElement {
+				t.Errorf("element %d wrong. want=%q, got=%q", i, expectedElement, array.Elements[i].String())
+			}
+		}
+	}
 }
 
 func testLetStatement(t *testing.T, s ast.Statement, name string) bool {
@@ -889,14 +929,11 @@ func testBooleanLiteral(t *testing.T, exp ast.Expression, value bool) bool {
 }
 
 func checkParserErrors(t *testing.T, p *Parser) {
-	errors := p.Errors()
-	if len(errors) == 0 {
+	if len(p.errors) == 0 {
 		return
 	}
 
-	t.Errorf("parser has %d errors", len(errors))
-	for _, msg := range errors {
-		t.Errorf("parser error: %q", msg)
-	}
+	t.Errorf("parser has %d errors", len(p.errors))
+	fmt.Printf("%s", p.Errors())
 	t.FailNow()
 }

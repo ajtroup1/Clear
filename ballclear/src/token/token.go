@@ -24,6 +24,9 @@ const (
 	EQ     = "=="
 	NOT_EQ = "!="
 
+	INC = "++"
+	DEC = "--"
+
 	// Delimiters
 	COMMA     = ","
 	SEMICOLON = ";"
@@ -50,6 +53,8 @@ const (
 type Token struct {
 	Type    TokenType
 	Literal string
+	Line    int
+	Col     int
 }
 
 var keywords = map[string]TokenType{

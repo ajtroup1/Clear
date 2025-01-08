@@ -18,6 +18,7 @@ func main() {
 
 	if flag.NArg() > 0 {
 		filePath := flag.Arg(0)
+		fmt.Printf("Running file: %s\n", filePath)
 		runFile(filePath, *debug)
 	} else {
 		startREPL()
@@ -47,11 +48,9 @@ func runFile(filePath string, debug bool) {
 	l := lexer.New(string(content))
 	p := parser.New(l)
 	program := p.ParseProgram()
-	if len(p.Errors()) != 0 {
+	if p.Errors() != "" {
 		fmt.Println("Parser errors:")
-		for _, err := range p.Errors() {
-			fmt.Printf("\tParser::Error ---> %v\n", err)
-		}
+		fmt.Printf("  %v\n", p.Errors())
 		return
 	}
 

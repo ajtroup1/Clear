@@ -2,15 +2,54 @@
   "Statements": [
     {
       "Token": {
-        "Type": "RETURN",
-        "Literal": "return"
+        "Type": "LET",
+        "Literal": "let",
+        "Line": 1,
+        "Col": 1
       },
-      "ReturnValue": {
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "x",
+          "Line": 1,
+          "Col": 2
+        },
+        "Value": "x"
+      },
+      "Value": {
         "Token": {
           "Type": "INT",
-          "Literal": "0"
+          "Literal": "1",
+          "Line": 1,
+          "Col": 4
         },
-        "Value": 0
+        "Value": 1
+      }
+    },
+    {
+      "Token": {
+        "Type": "IDENT",
+        "Literal": "x",
+        "Line": 3,
+        "Col": 1
+      },
+      "Expression": {
+        "Token": {
+          "Type": "++",
+          "Literal": "++",
+          "Line": 3,
+          "Col": 1
+        },
+        "Left": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "x",
+            "Line": 3,
+            "Col": 1
+          },
+          "Value": "x"
+        },
+        "Operator": "++"
       }
     }
   ]

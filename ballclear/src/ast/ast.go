@@ -114,7 +114,9 @@ func (ws *WhileStatement) String() string {
 
 type ForStatement struct {
 	Token     token.Token // the 'for' token
+	Init      *LetStatement
 	Condition Expression
+	Post      Expression
 	Body      *BlockStatement
 }
 
@@ -124,7 +126,11 @@ func (fs *ForStatement) String() string {
 	var out bytes.Buffer
 
 	out.WriteString(fs.TokenLiteral() + " ")
+	out.WriteString(fs.Init.String())
+	out.WriteString("; ")
 	out.WriteString(fs.Condition.String())
+	out.WriteString("; ")
+	out.WriteString(fs.Post.String())
 	out.WriteString(" ")
 	out.WriteString(fs.Body.String())
 

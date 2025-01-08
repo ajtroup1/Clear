@@ -2,54 +2,143 @@
   "Statements": [
     {
       "Token": {
+        "Type": "FOR",
+        "Literal": "for",
+        "Line": 1,
+        "Col": 1
+      },
+      "Init": {
+        "Token": {
+          "Type": "LET",
+          "Literal": "let",
+          "Line": 1,
+          "Col": 2
+        },
+        "Name": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "i",
+            "Line": 1,
+            "Col": 3
+          },
+          "Value": "i"
+        },
+        "Value": {
+          "Token": {
+            "Type": "INT",
+            "Literal": "0",
+            "Line": 1,
+            "Col": 5
+          },
+          "Value": 0
+        }
+      },
+      "Condition": {
+        "Token": {
+          "Type": "\u003c",
+          "Literal": "\u003c",
+          "Line": 1,
+          "Col": 7
+        },
+        "Left": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "i",
+            "Line": 1,
+            "Col": 6
+          },
+          "Value": "i"
+        },
+        "Operator": "\u003c",
+        "Right": {
+          "Token": {
+            "Type": "INT",
+            "Literal": "10",
+            "Line": 1,
+            "Col": 8
+          },
+          "Value": 10
+        }
+      },
+      "Post": {
+        "Token": {
+          "Type": "++",
+          "Literal": "++",
+          "Line": 1,
+          "Col": 9
+        },
+        "Left": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "i",
+            "Line": 1,
+            "Col": 9
+          },
+          "Value": "i"
+        },
+        "Operator": "++"
+      },
+      "Body": {
+        "Token": {
+          "Type": "{",
+          "Literal": "{",
+          "Line": 1,
+          "Col": 10
+        },
+        "Statements": [
+          {
+            "Token": {
+              "Type": "IDENT",
+              "Literal": "x",
+              "Line": 2,
+              "Col": 3
+            },
+            "Expression": {
+              "Token": {
+                "Type": "++",
+                "Literal": "++",
+                "Line": 2,
+                "Col": 3
+              },
+              "Left": {
+                "Token": {
+                  "Type": "IDENT",
+                  "Literal": "x",
+                  "Line": 2,
+                  "Col": 3
+                },
+                "Value": "x"
+              },
+              "Operator": "++"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "Token": {
         "Type": "LET",
         "Literal": "let",
-        "Line": 1,
+        "Line": 5,
         "Col": 1
       },
       "Name": {
         "Token": {
           "Type": "IDENT",
-          "Literal": "x",
-          "Line": 1,
+          "Literal": "y",
+          "Line": 5,
           "Col": 2
         },
-        "Value": "x"
+        "Value": "y"
       },
       "Value": {
         "Token": {
           "Type": "INT",
-          "Literal": "1",
-          "Line": 1,
+          "Literal": "7",
+          "Line": 5,
           "Col": 4
         },
-        "Value": 1
-      }
-    },
-    {
-      "Token": {
-        "Type": "IDENT",
-        "Literal": "x",
-        "Line": 3,
-        "Col": 1
-      },
-      "Expression": {
-        "Token": {
-          "Type": "++",
-          "Literal": "++",
-          "Line": 3,
-          "Col": 1
-        },
-        "Left": {
-          "Token": {
-            "Type": "IDENT",
-            "Literal": "x",
-            "Line": 3,
-            "Col": 1
-          },
-          "Value": "x"
-        },
-        "Operator": "++"
+        "Value": 7
       }
     }
   ]

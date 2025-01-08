@@ -122,6 +122,62 @@ func TestWhileStatements(t *testing.T) {
 	}
 }
 
+func TestForStatements(t *testing.T) {
+	tests := []struct {
+		input             string
+		expectedInit      string
+		expectedCondition string
+		expectedPost      string
+		expectedBody      string
+	}{
+		{"for (let i = 0; i < 10; i++) { i }", "i = 0", "i < 10", "i++", "i"},
+		{"for (let i = 0; i < 10; i++) { i + 1 }", "i = 0", "i < 10", "i++", "(i + 1)"},
+	}
+
+	for _, tt := range tests {
+		l := lexer.New(tt.input)
+		p := New(l)
+		program := p.ParseProgram()
+		checkParserErrors(t, p)
+
+		if len(program.Statements) != 1 {
+			t.Fatalf("program.Statements does not contain 1 statements. got=%d",
+				len(program.Statements))
+		}
+
+		stmt := program.Statements[0]
+		forStmt, ok := stmt.(*ast.ForStatement)
+		if !ok {
+			t.Fatalf("stmt not *ast.ForStatement. got=%T", stmt)
+		}
+
+		if forStmt.TokenLiteral() != "for" {
+			t.Fatalf("forStmt.TokenLiteral not 'for', got %q",
+				forStmt.TokenLiteral())
+		}
+
+		if forStmt.Init.String() != tt.expectedInit {
+			t.Errorf("forStmt.Init.String() not %s. got=%s",
+				tt.expectedInit, forStmt.Init.String())
+		}
+
+		if forStmt.Condition.String() != tt.expectedCondition {
+			t.Errorf("forStmt.Condition.String() not %s. got=%s",
+				tt.expectedCondition, forStmt.Condition.String())
+		}
+
+		if forStmt.Post.String() != tt.expectedPost {
+			t.Errorf("forStmt.Post.String() not %s. got=%s",
+				tt.expectedPost, forStmt.Post.String())
+		}
+
+		if forStmt.Body.String() != tt.expectedBody {
+			t.Errorf("forStmt.Body.String() not %s. got=%s",
+				tt.expectedBody, forStmt.Body.String())
+		}
+	}
+}
+
 func TestIdentifierExpression(t *testing.T) {
 	input := "foobar;"
 

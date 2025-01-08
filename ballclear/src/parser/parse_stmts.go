@@ -1,6 +1,8 @@
 package parser
 
 import (
+	"fmt"
+
 	"github.com/ajtroup1/clear/src/ast"
 	"github.com/ajtroup1/clear/src/token"
 )
@@ -13,6 +15,10 @@ func (p *Parser) parseStatement() ast.Statement {
 		return p.parseReturnStatement()
 	case token.WHILE:
 		return p.parseWhileStatement()
+	case token.FOR:
+		return p.parseForStatement()
+	case token.LBRACE:
+		return p.parseBlockStatement()
 	default:
 		return p.parseExpressionStatement()
 	}
@@ -67,6 +73,52 @@ func (p *Parser) parseWhileStatement() *ast.WhileStatement {
 		p.nextToken()
 		stmt.Body = p.parseBlockStatement()
 	}
+
+	return stmt
+}
+
+func (p *Parser) parseForStatement() *ast.ForStatement {
+	stmt := &ast.ForStatement{Token: p.curToken}
+
+	p.nextToken()
+
+	if p.peekTokenIs(token.LPAREN) {
+		p.nextToken()
+	}
+
+	if !p.expectPeek(token.LET) {
+		return nil
+	}
+	stmt.Init = p.parseLetStatement()
+
+	
+	if !p.expectCurrent(token.SEMICOLON) {
+		return nil
+	}
+	
+	stmt.Condition = p.parseExpression(LOWEST)
+	
+	if !p.expectPeek(token.SEMICOLON) {
+		return nil
+	}
+	
+	p.nextToken()
+	stmt.Post = p.parseExpression(LOWEST)
+
+	
+	if p.peekTokenIs(token.RPAREN) {
+		p.nextToken()
+	}
+
+	if !p.expectPeek(token.LBRACE) {
+		return nil
+	}
+
+	stmt.Body = p.parseBlockStatement()
+
+	fmt.Printf("For Statement: %s\n", stmt.String())
+
+	fmt.Printf("current token: %s\n", p.curToken.Literal)
 
 	return stmt
 }

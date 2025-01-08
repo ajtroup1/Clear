@@ -3,6 +3,7 @@ High-Level Wants:
 - Import statements
 
 General Additions & Ideas:
+- String literal?
 - Array
 - Map
 - Loops

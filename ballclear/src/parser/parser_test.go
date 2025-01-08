@@ -715,6 +715,47 @@ func TestCallExpressionParameterParsing(t *testing.T) {
 	}
 }
 
+func TestArrayLiteralParsing(t *testing.T) {
+    tests := []struct {
+        input           string
+        expectedElements []string
+    }{
+        {
+            "[1, 2 * 2, 3 + 3]",
+            []string{"1", "(2 * 2)", "(3 + 3)"},
+        },
+    }
+
+    for _, tt := range tests {
+        l := lexer.New(tt.input)
+        p := New(l)
+        program := p.ParseProgram()
+        checkParserErrors(t, p)
+
+        stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+        if !ok {
+            t.Fatalf("program.Statements[0] is not ast.ExpressionStatement. got=%T",
+                program.Statements[0])
+        }
+
+        array, ok := stmt.Expression.(*ast.ArrayLiteral)
+        if !ok {
+            t.Fatalf("stmt.Expression is not ast.ArrayLiteral. got=%T", stmt.Expression)
+        }
+
+        if len(array.Elements) != len(tt.expectedElements) {
+            t.Fatalf("array.Elements has wrong length. want=%d, got=%d",
+                len(tt.expectedElements), len(array.Elements))
+        }
+
+        for i, expectedElement := range tt.expectedElements {
+            if array.Elements[i].String() != expectedElement {
+                t.Errorf("element %d wrong. want=%q, got=%q", i, expectedElement, array.Elements[i].String())
+            }
+        }
+    }
+}
+
 func testLetStatement(t *testing.T, s ast.Statement, name string) bool {
 	if s.TokenLiteral() != "let" {
 		t.Errorf("s.TokenLiteral not 'let'. got=%q", s.TokenLiteral())

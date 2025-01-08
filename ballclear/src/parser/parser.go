@@ -64,6 +64,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.LPAREN, p.parseGroupedExpression)
 	p.registerPrefix(token.IF, p.parseIfExpression)
 	p.registerPrefix(token.FUNCTION, p.parseFunctionLiteral)
+	p.registerPrefix(token.LBRACKET, p.parseArrayLiteral)
 
 	p.infixParseFns = make(map[token.TokenType]infixParseFn)
 	p.registerInfix(token.PLUS, p.parseInfixExpression)
@@ -438,6 +439,33 @@ func (p *Parser) parseCallArguments() []ast.Expression {
 	}
 
 	return args
+}
+
+func (p *Parser) parseArrayLiteral() ast.Expression {
+	lit := &ast.ArrayLiteral{Token: p.curToken}
+
+	// If the next token is a right bracket, it is an have an empty array
+	if p.peekTokenIs(token.RBRACKET) {
+		p.nextToken()
+		return lit
+	}
+
+	p.nextToken()
+
+	lit.Elements = append(lit.Elements, p.parseExpression(LOWEST))
+
+	for p.peekTokenIs(token.COMMA) {
+		p.nextToken()
+		p.nextToken()
+		lit.Elements = append(lit.Elements, p.parseExpression(LOWEST))
+	}
+
+	if !p.expectPeek(token.RBRACKET) {
+		p.errors = append(p.errors, "expected ']' at the end of array literal")
+		return nil
+	}
+
+	return lit
 }
 
 func (p *Parser) registerPrefix(tokenType token.TokenType, fn prefixParseFn) {

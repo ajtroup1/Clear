@@ -94,9 +94,9 @@ func (rs *ReturnStatement) String() string {
 }
 
 type WhileStatement struct {
-	Token       token.Token // the 'while' token
-	Condition   Expression
-	Body        *BlockStatement
+	Token     token.Token // the 'while' token
+	Condition Expression
+	Body      *BlockStatement
 }
 
 func (ws *WhileStatement) statementNode()       {}
@@ -113,9 +113,9 @@ func (ws *WhileStatement) String() string {
 }
 
 type ForStatement struct {
-	Token       token.Token // the 'for' token
-	Condition   Expression
-	Body        *BlockStatement
+	Token     token.Token // the 'for' token
+	Condition Expression
+	Body      *BlockStatement
 }
 
 func (fs *ForStatement) statementNode()       {}
@@ -301,5 +301,43 @@ func (ce *CallExpression) String() string {
 	out.WriteString(strings.Join(args, ", "))
 	out.WriteString(")")
 
+	return out.String()
+}
+
+type ArrayLiteral struct {
+	Token    token.Token
+	Elements []Expression
+}
+
+func (al *ArrayLiteral) expressionNode()      {}
+func (al *ArrayLiteral) TokenLiteral() string { return al.Token.Literal }
+func (al *ArrayLiteral) String() string {
+	var out bytes.Buffer
+	elements := []string{}
+	for _, e := range al.Elements {
+
+		elements = append(elements, e.String())
+	}
+	out.WriteString("[")
+	out.WriteString(strings.Join(elements, ", "))
+	out.WriteString("]")
+	return out.String()
+}
+
+type IndexExpression struct {
+	Token token.Token // The '[' token
+	Left  Expression
+	Index Expression
+}
+
+func (ie *IndexExpression) expressionNode()      {}
+func (ie *IndexExpression) TokenLiteral() string { return ie.Token.Literal }
+func (ie *IndexExpression) String() string {
+	var out bytes.Buffer
+	out.WriteString("(")
+	out.WriteString(ie.Left.String())
+	out.WriteString("[")
+	out.WriteString(ie.Index.String())
+	out.WriteString("])")
 	return out.String()
 }

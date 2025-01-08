@@ -4,10 +4,7 @@ High-Level Wants:
 
 General Additions & Ideas:
 - String literal?
-- Array
 - Map
-- Loops
-  - For
 - Switch
 
 Quick (hopefully) Fixes & Considerations:

@@ -130,8 +130,8 @@ func TestForStatements(t *testing.T) {
 		expectedPost      string
 		expectedBody      string
 	}{
-		{"for (let i = 0; i < 10; i++) { i }", "i = 0", "i < 10", "i++", "i"},
-		{"for (let i = 0; i < 10; i++) { i + 1 }", "i = 0", "i < 10", "i++", "(i + 1)"},
+		{"for (let i = 0; i < 10; i++) { i }", "let i = 0;", "(i < 10)", "(i++)", "i"},
+		{"for (let i = 0; i < 10; i++) { i + 1 }", "let i = 0;", "(i < 10)", "(i++)", "(i + 1)"},
 	}
 
 	for _, tt := range tests {
@@ -339,7 +339,7 @@ func TestParsingInfixExpressions(t *testing.T) {
 
 func TestParsingPostfixExpressions(t *testing.T) {
 	tests := []struct {
-		input string
+		input          string
 		expectedOutput string
 	}{
 		{"x++", "x++"},

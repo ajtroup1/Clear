@@ -88,23 +88,102 @@
         "Statements": [
           {
             "Token": {
+              "Type": "IF",
+              "Literal": "if",
+              "Line": 2,
+              "Col": 3
+            },
+            "Expression": {
+              "Token": {
+                "Type": "IF",
+                "Literal": "if",
+                "Line": 2,
+                "Col": 3
+              },
+              "Condition": {
+                "Token": {
+                  "Type": "==",
+                  "Literal": "==",
+                  "Line": 2,
+                  "Col": 4
+                },
+                "Left": {
+                  "Token": {
+                    "Type": "IDENT",
+                    "Literal": "x",
+                    "Line": 2,
+                    "Col": 4
+                  },
+                  "Value": "x"
+                },
+                "Operator": "==",
+                "Right": {
+                  "Token": {
+                    "Type": "INT",
+                    "Literal": "5",
+                    "Line": 2,
+                    "Col": 4
+                  },
+                  "Value": 5
+                }
+              },
+              "Consequence": {
+                "Token": {
+                  "Type": "{",
+                  "Literal": "{",
+                  "Line": 2,
+                  "Col": 5
+                },
+                "Statements": [
+                  {
+                    "Token": {
+                      "Type": "BREAK",
+                      "Literal": "break",
+                      "Line": 3,
+                      "Col": 5
+                    }
+                  }
+                ]
+              },
+              "Alternative": {
+                "Token": {
+                  "Type": "{",
+                  "Literal": "{",
+                  "Line": 4,
+                  "Col": 5
+                },
+                "Statements": [
+                  {
+                    "Token": {
+                      "Type": "CONTINUE",
+                      "Literal": "continue",
+                      "Line": 5,
+                      "Col": 5
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "Token": {
               "Type": "IDENT",
               "Literal": "x",
-              "Line": 2,
+              "Line": 7,
               "Col": 3
             },
             "Expression": {
               "Token": {
                 "Type": "++",
                 "Literal": "++",
-                "Line": 2,
+                "Line": 7,
                 "Col": 3
               },
               "Left": {
                 "Token": {
                   "Type": "IDENT",
                   "Literal": "x",
-                  "Line": 2,
+                  "Line": 7,
                   "Col": 3
                 },
                 "Value": "x"
@@ -119,14 +198,14 @@
       "Token": {
         "Type": "LET",
         "Literal": "let",
-        "Line": 5,
+        "Line": 10,
         "Col": 1
       },
       "Name": {
         "Token": {
           "Type": "IDENT",
           "Literal": "y",
-          "Line": 5,
+          "Line": 10,
           "Col": 2
         },
         "Value": "y"
@@ -135,7 +214,7 @@
         "Token": {
           "Type": "INT",
           "Literal": "7",
-          "Line": 5,
+          "Line": 10,
           "Col": 4
         },
         "Value": 7

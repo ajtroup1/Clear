@@ -1,8 +1,6 @@
 package parser
 
 import (
-	"fmt"
-
 	"github.com/ajtroup1/clear/src/ast"
 	"github.com/ajtroup1/clear/src/token"
 )
@@ -17,6 +15,10 @@ func (p *Parser) parseStatement() ast.Statement {
 		return p.parseWhileStatement()
 	case token.FOR:
 		return p.parseForStatement()
+	case token.BREAK:
+		return p.parseBreakStatement()
+	case token.CONTINUE:
+		return p.parseContinueStatement()
 	case token.LBRACE:
 		return p.parseBlockStatement()
 	default:
@@ -116,9 +118,25 @@ func (p *Parser) parseForStatement() *ast.ForStatement {
 
 	stmt.Body = p.parseBlockStatement()
 
-	fmt.Printf("For Statement: %s\n", stmt.String())
+	return stmt
+}
 
-	fmt.Printf("current token: %s\n", p.curToken.Literal)
+func (p *Parser) parseBreakStatement() *ast.BreakStatement {
+	stmt := &ast.BreakStatement{Token: p.curToken}
+
+	if p.peekTokenIs(token.SEMICOLON) {
+		p.nextToken()
+	}
+
+	return stmt
+}
+
+func (p *Parser) parseContinueStatement() *ast.ContinueStatement {
+	stmt := &ast.ContinueStatement{Token: p.curToken}
+
+	if p.peekTokenIs(token.SEMICOLON) {
+		p.nextToken()
+	}
 
 	return stmt
 }

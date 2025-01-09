@@ -162,6 +162,7 @@ func (p *Parser) parseFunctionLiteral() ast.Expression {
 	lit := &ast.FunctionLiteral{Token: p.curToken}
 
 	if !p.expectPeek(token.LPAREN) {
+		fmt.Printf("peekToken: %s\n", p.peekToken.Literal)
 		return nil
 	}
 

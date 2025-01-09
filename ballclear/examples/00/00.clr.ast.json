@@ -2,79 +2,118 @@
   "Statements": [
     {
       "Token": {
-        "Type": "MODULE",
-        "Literal": "module",
+        "Type": "LET",
+        "Literal": "let",
         "Line": 1,
         "Col": 1
       },
       "Name": {
         "Token": {
           "Type": "IDENT",
-          "Literal": "math",
+          "Literal": "x",
           "Line": 1,
           "Col": 2
         },
-        "Value": "math"
+        "Value": "x"
       },
-      "ImportAll": false,
-      "Imports": [
-        {
-          "Token": {
-            "Type": "IDENT",
-            "Literal": "Pow",
-            "Line": 1,
-            "Col": 3
-          },
-          "Value": "Pow"
-        },
-        {
-          "Token": {
-            "Type": "IDENT",
-            "Literal": "Round",
-            "Line": 1,
-            "Col": 4
-          },
-          "Value": "Round"
-        }
-      ]
-    },
-    {
-      "Token": {
-        "Type": "MODULE",
-        "Literal": "module",
-        "Line": 2,
-        "Col": 1
-      },
-      "Name": {
+      "Value": {
         "Token": {
-          "Type": "IDENT",
-          "Literal": "strings",
-          "Line": 2,
-          "Col": 2
+          "Type": "INT",
+          "Literal": "7",
+          "Line": 1,
+          "Col": 4
         },
-        "Value": "strings"
-      },
-      "ImportAll": true,
-      "Imports": null
+        "Value": 7
+      }
     },
     {
       "Token": {
-        "Type": "MODULE",
-        "Literal": "module",
+        "Type": "LET",
+        "Literal": "let",
         "Line": 3,
         "Col": 1
       },
       "Name": {
         "Token": {
           "Type": "IDENT",
-          "Literal": "cast",
+          "Literal": "y",
           "Line": 3,
           "Col": 2
         },
-        "Value": "cast"
+        "Value": "y"
       },
-      "ImportAll": false,
-      "Imports": null
+      "Value": null
+    },
+    {
+      "Token": {
+        "Type": "IF",
+        "Literal": "if",
+        "Line": 5,
+        "Col": 1
+      },
+      "Expression": {
+        "Token": {
+          "Type": "IF",
+          "Literal": "if",
+          "Line": 5,
+          "Col": 1
+        },
+        "Condition": {
+          "Token": {
+            "Type": "==",
+            "Literal": "==",
+            "Line": 5,
+            "Col": 3
+          },
+          "Left": {
+            "Token": {
+              "Type": "IDENT",
+              "Literal": "x",
+              "Line": 5,
+              "Col": 2
+            },
+            "Value": "x"
+          },
+          "Operator": "==",
+          "Right": {
+            "Token": {
+              "Type": "INT",
+              "Literal": "12",
+              "Line": 5,
+              "Col": 4
+            },
+            "Value": 12
+          }
+        },
+        "Consequence": {
+          "Token": {
+            "Type": "{",
+            "Literal": "{",
+            "Line": 5,
+            "Col": 5
+          },
+          "Statements": [
+            {
+              "Token": {
+                "Type": "RETURN",
+                "Literal": "return",
+                "Line": 6,
+                "Col": 3
+              },
+              "ReturnValue": {
+                "Token": {
+                  "Type": "IDENT",
+                  "Literal": "x",
+                  "Line": 6,
+                  "Col": 4
+                },
+                "Value": "x"
+              }
+            }
+          ]
+        },
+        "Alternative": null
+      }
     }
   ]
 }

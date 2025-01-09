@@ -15,6 +15,8 @@ func (p *Parser) parseStatement() ast.Statement {
 		return p.parseLetStatement()
 	case token.RETURN:
 		return p.parseReturnStatement()
+	case token.FUNCTION:
+		return p.parseFunctionStatement()
 	case token.WHILE:
 		return p.parseWhileStatement()
 	case token.FOR:
@@ -100,7 +102,15 @@ func (p *Parser) parseLetStatement() *ast.LetStatement {
 
 	stmt.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 
-	if !p.expectPeek(token.ASSIGN) {
+	if !p.peekTokenIs(token.ASSIGN) {
+		if p.peekTokenIs(token.SEMICOLON) {
+			p.nextToken()
+		}
+		return stmt
+	} else if p.peekTokenIs(token.ASSIGN) {
+		p.nextToken()
+	} else {
+		// !
 		return nil
 	}
 
@@ -124,6 +134,29 @@ func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
 
 	if p.peekTokenIs(token.SEMICOLON) {
 		p.nextToken()
+	}
+
+	return stmt
+}
+
+func (p *Parser) parseFunctionStatement() *ast.FunctionStatement {
+	stmt := &ast.FunctionStatement{Token: p.curToken}
+
+	if !p.expectPeek(token.IDENT) {
+		return nil
+	}
+
+	stmt.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+
+	if !p.expectPeek(token.LPAREN) {
+		return nil
+	}
+
+	stmt.Parameters = p.parseFunctionParameters()
+
+	if p.peekTokenIs(token.LBRACE) {
+		p.nextToken()
+		stmt.Body = p.parseBlockStatement()
 	}
 
 	return stmt

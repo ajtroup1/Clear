@@ -1,2 +1,7 @@
-module math: [Pow, Round];
-module strings: *;
+let x = 7;
+
+let y;
+
+if (x == 12) {
+  return x;
+}

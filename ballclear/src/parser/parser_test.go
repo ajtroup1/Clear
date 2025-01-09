@@ -178,6 +178,63 @@ func TestForStatements(t *testing.T) {
 	}
 }
 
+func TestModuleStatement(t *testing.T) {
+	tests := []struct {
+		input             string
+		expectedName      string
+		expectedImportAll bool
+		expectedImports	  []string
+	}{
+		{"module strings: *;", "strings", true, nil},
+		{"module math: [Round, Pow]", "math", false, []string{"Round", "Pow"}},
+	}
+
+	for _, tt := range tests {
+		l := lexer.New(tt.input)
+		p := New(l)
+		program := p.ParseProgram()
+		checkParserErrors(t, p)
+
+		if len(program.Statements) != 1 {
+			t.Fatalf("program.Statements does not contain 1 statements. got=%d",
+				len(program.Statements))
+		}
+
+		stmt := program.Statements[0]
+		moduleStmt, ok := stmt.(*ast.ModuleStatement)
+		if !ok {
+			t.Fatalf("stmt not *ast.ModuleStatement. got=%T", stmt)
+		}
+
+		if moduleStmt.TokenLiteral() != "module" {
+			t.Fatalf("moduleStmt.TokenLiteral not 'module', got %q",
+				moduleStmt.TokenLiteral())
+		}
+
+		if moduleStmt.Name.Value != tt.expectedName {
+			t.Errorf("moduleStmt.Name.Value not %s. got=%s",
+				tt.expectedName, moduleStmt.Name.Value)
+		}
+
+		if moduleStmt.ImportAll != tt.expectedImportAll {
+			t.Errorf("moduleStmt.ImportAll not %t. got=%t",
+				tt.expectedImportAll, moduleStmt.ImportAll)
+		}
+
+		if len(moduleStmt.Imports) != len(tt.expectedImports) {
+			t.Fatalf("moduleStmt.Imports has not enough imports. got=%d",
+				len(moduleStmt.Imports))
+		}
+
+		for i, importStmt := range moduleStmt.Imports {
+			if importStmt.Value != tt.expectedImports[i] {
+				t.Errorf("moduleStmt.Imports[%d] not %s. got=%s",
+					i, tt.expectedImports[i], importStmt.Value)
+			}
+		}
+	}
+}
+
 func TestIdentifierExpression(t *testing.T) {
 	input := "foobar;"
 

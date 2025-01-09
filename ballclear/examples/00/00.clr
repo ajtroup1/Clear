@@ -1,10 +1,2 @@
-for (let i = 0; i < 10; i++) {
-  if (x==5) {
-    break;
-  } else {
-    continue;
-  }
-  x++;
-}
-
-let y = 7;
+module math: [Pow, Round];
+module strings: *;

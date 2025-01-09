@@ -1,12 +1,16 @@
 package parser
 
 import (
+	"fmt"
+
 	"github.com/ajtroup1/clear/src/ast"
 	"github.com/ajtroup1/clear/src/token"
 )
 
 func (p *Parser) parseStatement() ast.Statement {
 	switch p.curToken.Type {
+	case token.MODULE:
+		return p.parseModuleStatement()
 	case token.LET:
 		return p.parseLetStatement()
 	case token.RETURN:
@@ -24,6 +28,67 @@ func (p *Parser) parseStatement() ast.Statement {
 	default:
 		return p.parseExpressionStatement()
 	}
+}
+
+func (p *Parser) parseModuleStatement() *ast.ModuleStatement {
+	stmt := &ast.ModuleStatement{Token: p.curToken}
+
+	if !p.expectPeek(token.IDENT) {
+		return nil
+	}
+	stmt.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+
+	if !p.expectPeek(token.COLON) {
+		return nil
+	}
+
+	if p.peekTokenIs(token.ASTERISK) {
+		stmt.ImportAll = true
+		p.nextToken() 
+		if p.peekTokenIs(token.SEMICOLON) {
+			p.nextToken()
+		}
+		return stmt
+	}
+
+	if !p.expectPeek(token.LBRACKET) {
+		return nil
+	}
+
+	if p.peekTokenIs(token.RBRACKET) {
+		fmt.Println("Warning: Empty import list for module", stmt.Name.Value)
+		p.nextToken() 
+		if p.peekTokenIs(token.SEMICOLON) {
+			p.nextToken() 
+		}
+		return stmt
+	}
+
+	for !p.peekTokenIs(token.RBRACKET) {
+		if p.peekTokenIs(token.EOF) {
+			p.errors = append(p.errors, ParserError{Token: p.peekToken, Msg: "expected ']' to close import list"})
+			return nil
+		}
+
+		if p.peekTokenIs(token.COMMA) {
+			p.nextToken() 
+			continue
+		}
+
+		imp := &ast.Identifier{Token: p.peekToken, Value: p.peekToken.Literal}
+		stmt.Imports = append(stmt.Imports, imp)
+		p.nextToken()
+	}
+
+	if !p.expectPeek(token.RBRACKET) {
+		return nil
+	}
+
+	if p.peekTokenIs(token.SEMICOLON) {
+		p.nextToken()
+	}
+
+	return stmt
 }
 
 func (p *Parser) parseLetStatement() *ast.LetStatement {

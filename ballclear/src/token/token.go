@@ -30,6 +30,7 @@ const (
 	// Delimiters
 	COMMA     = ","
 	SEMICOLON = ";"
+	COLON     = ":"
 
 	LPAREN   = "("
 	RPAREN   = ")"
@@ -50,6 +51,7 @@ const (
 	FOR      = "FOR"
 	CONTINUE = "CONTINUE"
 	BREAK    = "BREAK"
+	MODULE   = "MODULE"
 )
 
 type Token struct {
@@ -60,17 +62,19 @@ type Token struct {
 }
 
 var keywords = map[string]TokenType{
-	"fn":     FUNCTION,
-	"let":    LET,
-	"true":   TRUE,
-	"false":  FALSE,
-	"if":     IF,
-	"else":   ELSE,
-	"return": RETURN,
-	"while":  WHILE,
-	"for":    FOR,
+	"fn":       FUNCTION,
+	"let":      LET,
+	"true":     TRUE,
+	"false":    FALSE,
+	"if":       IF,
+	"else":     ELSE,
+	"return":   RETURN,
+	"while":    WHILE,
+	"for":      FOR,
 	"continue": CONTINUE,
-	"break": BREAK,
+	"break":    BREAK,
+	"module":   MODULE,
+	"mod":      MODULE,
 }
 
 func LookupIdent(ident string) TokenType {

@@ -322,6 +322,44 @@ func TestIdentifierExpression(t *testing.T) {
 	}
 }
 
+func TestStringLiteralExpression(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{`"hello world";`, "hello world"},
+	}
+
+	for _, tt := range tests {
+		l := lexer.New(tt.input)
+		p := New(l)
+		program := p.ParseProgram()
+		checkParserErrors(t, p)
+
+		if len(program.Statements) != 1 {
+			t.Fatalf("program has not enough statements. got=%d",
+				len(program.Statements))
+		}
+		stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+		if !ok {
+			t.Fatalf("program.Statements[0] is not ast.ExpressionStatement. got=%T",
+				program.Statements[0])
+		}
+
+		str, ok := stmt.Expression.(*ast.StringLiteral)
+		if !ok {
+			t.Fatalf("exp not *ast.StringLiteral. got=%T", stmt.Expression)
+		}
+		if str.Value != tt.expected {
+			t.Errorf("str.Value not %s. got=%s", tt.expected, str.Value)
+		}
+		if str.TokenLiteral() != tt.expected {
+			t.Errorf("str.TokenLiteral not %s. got=%s", tt.expected,
+				str.TokenLiteral())
+		}
+	}
+}
+
 func TestIntegerLiteralExpression(t *testing.T) {
 	input := "5;"
 

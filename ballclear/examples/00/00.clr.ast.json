@@ -18,101 +18,12 @@
       },
       "Value": {
         "Token": {
-          "Type": "INT",
-          "Literal": "7",
+          "Type": "STRING",
+          "Literal": "s",
           "Line": 1,
           "Col": 4
         },
-        "Value": 7
-      }
-    },
-    {
-      "Token": {
-        "Type": "LET",
-        "Literal": "let",
-        "Line": 3,
-        "Col": 1
-      },
-      "Name": {
-        "Token": {
-          "Type": "IDENT",
-          "Literal": "y",
-          "Line": 3,
-          "Col": 2
-        },
-        "Value": "y"
-      },
-      "Value": null
-    },
-    {
-      "Token": {
-        "Type": "IF",
-        "Literal": "if",
-        "Line": 5,
-        "Col": 1
-      },
-      "Expression": {
-        "Token": {
-          "Type": "IF",
-          "Literal": "if",
-          "Line": 5,
-          "Col": 1
-        },
-        "Condition": {
-          "Token": {
-            "Type": "==",
-            "Literal": "==",
-            "Line": 5,
-            "Col": 3
-          },
-          "Left": {
-            "Token": {
-              "Type": "IDENT",
-              "Literal": "x",
-              "Line": 5,
-              "Col": 2
-            },
-            "Value": "x"
-          },
-          "Operator": "==",
-          "Right": {
-            "Token": {
-              "Type": "INT",
-              "Literal": "12",
-              "Line": 5,
-              "Col": 4
-            },
-            "Value": 12
-          }
-        },
-        "Consequence": {
-          "Token": {
-            "Type": "{",
-            "Literal": "{",
-            "Line": 5,
-            "Col": 5
-          },
-          "Statements": [
-            {
-              "Token": {
-                "Type": "RETURN",
-                "Literal": "return",
-                "Line": 6,
-                "Col": 3
-              },
-              "ReturnValue": {
-                "Token": {
-                  "Type": "IDENT",
-                  "Literal": "x",
-                  "Line": 6,
-                  "Col": 4
-                },
-                "Value": "x"
-              }
-            }
-          ]
-        },
-        "Alternative": null
+        "Value": "s"
       }
     }
   ]

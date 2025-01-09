@@ -17,6 +17,7 @@ func TestLetStatements(t *testing.T) {
 		{"let x = 5;", "x", 5},
 		{"let y = true;", "y", true},
 		{"let foobar = y;", "foobar", "y"},
+		{"let x;", "x", nil},
 	}
 
 	for _, tt := range tests {
@@ -992,7 +993,6 @@ func TestIndexExpression(t *testing.T) {
 			t.Errorf("exp.Index is not %s. got=%s", tt.expectedIndex, exp.Index.String())
 		}
 	}
-
 }
 
 func testLetStatement(t *testing.T, s ast.Statement, name string) bool {
@@ -1051,6 +1051,10 @@ func testLiteralExpression(
 	expected interface{},
 ) bool {
 	switch v := expected.(type) {
+	case nil: // This case allows nil assignment as expressions / expected value
+		if exp == nil {
+			return true
+		}
 	case int:
 		return testIntegerLiteral(t, exp, int64(v))
 	case int64:

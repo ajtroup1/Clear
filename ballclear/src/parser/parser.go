@@ -30,6 +30,7 @@ var precedences = map[token.TokenType]int{
 	token.SLASH:    PRODUCT,
 	token.ASTERISK: PRODUCT,
 	token.LPAREN:   CALL,
+	token.LBRACKET: CALL,
 	token.INC:      PREFIX,
 	token.DEC:      PREFIX,
 }
@@ -81,6 +82,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerInfix(token.LT, p.parseInfixExpression)
 	p.registerInfix(token.GT, p.parseInfixExpression)
 	p.registerInfix(token.LPAREN, p.parseCallExpression)
+	p.registerInfix(token.LBRACKET, p.parseIndexExpression)
 
 	p.postfixParseFns = make(map[token.TokenType]postfixParseFn)
 	p.registerPostfix(token.INC, p.parsePostfixExpression)
@@ -125,8 +127,6 @@ func (p *Parser) expectCurrent(t token.TokenType) bool {
 		return false
 	}
 }
-
-
 
 type ParserError struct {
 	Token token.Token

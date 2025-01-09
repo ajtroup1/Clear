@@ -166,7 +166,6 @@ func (p *Parser) parseFunctionLiteral() ast.Expression {
 	lit := &ast.FunctionLiteral{Token: p.curToken}
 
 	if !p.expectPeek(token.LPAREN) {
-		fmt.Printf("peekToken: %s\n", p.peekToken.Literal)
 		return nil
 	}
 
@@ -241,7 +240,6 @@ func (p *Parser) parseCallArguments() []ast.Expression {
 func (p *Parser) parseArrayLiteral() ast.Expression {
 	lit := &ast.ArrayLiteral{Token: p.curToken}
 
-	// If the next token is a right bracket, it is an have an empty array
 	if p.peekTokenIs(token.RBRACKET) {
 		p.nextToken()
 		return lit

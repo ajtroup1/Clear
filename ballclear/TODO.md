@@ -4,8 +4,6 @@ High-Level Wants:
 - Can always read thru the code and error handle further
 
 General Additions & Ideas:
-- Index expressions (with arrays)
-- String literal?
 - Map
 - Switch
 

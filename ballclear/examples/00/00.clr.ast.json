@@ -16,7 +16,15 @@
         },
         "Value": "x"
       },
-      "Value": null
+      "Value": {
+        "Token": {
+          "Type": "INT",
+          "Literal": "12",
+          "Line": 1,
+          "Col": 4
+        },
+        "Value": 12
+      }
     }
   ]
 }

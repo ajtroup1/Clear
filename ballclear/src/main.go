@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/user"
 
+	"github.com/ajtroup1/clear/src/evaluator"
 	"github.com/ajtroup1/clear/src/lexer"
 	"github.com/ajtroup1/clear/src/parser"
 	"github.com/ajtroup1/clear/src/repl"
@@ -51,6 +52,13 @@ func runFile(filePath string, debug bool) {
 	if p.Errors() != "" {
 		fmt.Println("Parser errors:")
 		fmt.Printf("  %v\n", p.Errors())
+		return
+	}
+
+	fmt.Println("***************")
+	eval := evaluator.Eval(program)
+	if eval != nil {
+		fmt.Printf("Evaluation result: %v\n", eval.Inspect())
 		return
 	}
 

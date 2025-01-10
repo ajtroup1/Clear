@@ -38,5 +38,5 @@ func Start(in io.Reader, out io.Writer) {
 
 func printParserErrors(out io.Writer, err string) {
 	io.WriteString(out, " parser errors:\n")
-	io.WriteString(out, ""+err)
+	io.WriteString(out, "" + err)
 }

@@ -55,7 +55,6 @@ func runFile(filePath string, debug bool) {
 		return
 	}
 
-	fmt.Println("***************")
 	eval := evaluator.Eval(program)
 	if eval != nil {
 		fmt.Printf("Evaluation result: %v\n", eval.Inspect())

@@ -18,12 +18,109 @@
       },
       "Value": {
         "Token": {
-          "Type": "INT",
-          "Literal": "12",
+          "Type": "IF",
+          "Literal": "if",
           "Line": 1,
           "Col": 4
         },
-        "Value": 12
+        "Condition": {
+          "Token": {
+            "Type": "\u003e",
+            "Literal": "\u003e",
+            "Line": 1,
+            "Col": 6
+          },
+          "Left": {
+            "Token": {
+              "Type": "INT",
+              "Literal": "1",
+              "Line": 1,
+              "Col": 5
+            },
+            "Value": 1
+          },
+          "Operator": "\u003e",
+          "Right": {
+            "Token": {
+              "Type": "INT",
+              "Literal": "2",
+              "Line": 1,
+              "Col": 7
+            },
+            "Value": 2
+          }
+        },
+        "Consequence": {
+          "Token": {
+            "Type": "{",
+            "Literal": "{",
+            "Line": 1,
+            "Col": 8
+          },
+          "Statements": [
+            {
+              "Token": {
+                "Type": "INT",
+                "Literal": "1",
+                "Line": 2,
+                "Col": 3
+              },
+              "Expression": {
+                "Token": {
+                  "Type": "INT",
+                  "Literal": "1",
+                  "Line": 2,
+                  "Col": 3
+                },
+                "Value": 1
+              }
+            }
+          ]
+        },
+        "Alternative": {
+          "Token": {
+            "Type": "{",
+            "Literal": "{",
+            "Line": 3,
+            "Col": 3
+          },
+          "Statements": [
+            {
+              "Token": {
+                "Type": "INT",
+                "Literal": "0",
+                "Line": 4,
+                "Col": 3
+              },
+              "Expression": {
+                "Token": {
+                  "Type": "INT",
+                  "Literal": "0",
+                  "Line": 4,
+                  "Col": 3
+                },
+                "Value": 0
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "Token": {
+        "Type": "IDENT",
+        "Literal": "x",
+        "Line": 7,
+        "Col": 1
+      },
+      "Expression": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "x",
+          "Line": 7,
+          "Col": 1
+        },
+        "Value": "x"
       }
     }
   ]

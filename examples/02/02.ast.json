@@ -3,7 +3,7 @@
     {
       "Token": {
         "Type": "IDENT",
-        "Literal": "print"
+        "Literal": "println"
       },
       "Expression": {
         "Token": {
@@ -13,9 +13,9 @@
         "Function": {
           "Token": {
             "Type": "IDENT",
-            "Literal": "print"
+            "Literal": "println"
           },
-          "Value": "print"
+          "Value": "println"
         },
         "Arguments": [
           {
@@ -24,6 +24,34 @@
               "Literal": "Hello World"
             },
             "Value": "Hello World"
+          }
+        ]
+      }
+    },
+    {
+      "Token": {
+        "Type": "IDENT",
+        "Literal": "println"
+      },
+      "Expression": {
+        "Token": {
+          "Type": "(",
+          "Literal": "("
+        },
+        "Function": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "println"
+          },
+          "Value": "println"
+        },
+        "Arguments": [
+          {
+            "Token": {
+              "Type": "STRING",
+              "Literal": "test"
+            },
+            "Value": "test"
           }
         ]
       }

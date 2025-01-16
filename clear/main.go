@@ -92,5 +92,5 @@ func runScript(filepath string, debug bool) {
 	env := object.NewEnvironment()
 	evaluated := evaluator.Eval(program, env)
 
-	fmt.Printf("Evaluated: %s\n", evaluated.Inspect())
+	fmt.Printf("\n----------\nProgram returned: %s\n----------\n", evaluated.Inspect())
 }

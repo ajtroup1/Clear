@@ -1,0 +1,3 @@
+let hash_map = { "Language": "Clear", "Version": 2, "Finished": false }
+
+hash_map["Language"]

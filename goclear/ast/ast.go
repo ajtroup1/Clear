@@ -22,8 +22,8 @@ import (
 
 // The base Node interface
 // Every node must be able to:
-// 	- Return its token's literal value
-// 	- Return a string representation of itself (aka ToString())
+//   - Return its token's literal value
+//   - Return a string representation of itself (aka ToString())
 type Node interface {
 	TokenLiteral() string
 	String() string
@@ -58,7 +58,7 @@ func (p *Program) TokenLiteral() string {
 	}
 }
 
-// Since all statements implement the String() method, just call 
+// Since all statements implement the String() method, just call
 // that on all Statements in the Program node
 func (p *Program) String() string {
 	var out bytes.Buffer
@@ -122,7 +122,7 @@ func (rs *ReturnStatement) String() string {
 	return out.String()
 }
 
-// Since lone expressions cannot be enveloped in the Program's 
+// Since lone expressions cannot be enveloped in the Program's
 // Statements slice, we must wrap them in an ExpressionStatement
 type ExpressionStatement struct {
 	Token      token.Token // the first token of the expression
@@ -141,10 +141,11 @@ func (es *ExpressionStatement) String() string {
 // Simply wrap a slice of statements in a block
 // Useful for if-else statements, loops, functions, ...
 // { <--- Usually indicates the start of a block of statements
-// 	let x = 7;
-// 	let y = 8;
-// 	return x + y;
-// }
+//
+//		let x = 7;
+//		let y = 8;
+//		return x + y;
+//	}
 type BlockStatement struct {
 	Token      token.Token // the { token
 	Statements []Statement
@@ -325,6 +326,28 @@ func (ce *CallExpression) String() string {
 	out.WriteString("(")
 	out.WriteString(strings.Join(args, ", "))
 	out.WriteString(")")
+
+	return out.String()
+}
+
+type ArrayLiteral struct {
+	Token    token.Token // The '[' token
+	Elements []Expression
+}
+
+func (al *ArrayLiteral) expressionNode()      {}
+func (al *ArrayLiteral) TokenLiteral() string { return al.Token.Literal }
+func (al *ArrayLiteral) String() string {
+	var out bytes.Buffer
+
+	elements := []string{}
+	for _, el := range al.Elements {
+		elements = append(elements, el.String())
+	}
+
+	out.WriteString("[")
+	out.WriteString(strings.Join(elements, ", "))
+	out.WriteString("]")
 
 	return out.String()
 }

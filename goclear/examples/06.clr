@@ -1,9 +1,0 @@
-int x = 10;
-bool condition = true;
-
-while (contition == true) {
-  if (x == 5) {
-    condition = false;
-  }
-  x--;
-}

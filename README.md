@@ -15,7 +15,7 @@ I've been using numerous resources such as:
 - The classic Crafting Interpreters
 - My project `GoDocs`, which operates similarly to Doxygen or Rust's documentation generator
   - Maybe the most I've learned during a project
-  - Helped me realize that Parsers are simple organizers that arrange information in a hierarchal, object-oriented manner
+  - Helped me realize that Parsers can be simple organizers that arrange information in a hierarchal, object-oriented manner
   - AST visualizers also help illustrate this point
 
 Forever Clear

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
@@ -56,6 +57,7 @@ func runScript(filepath string, debug bool) {
 		fmt.Printf("Executing \"%s\"\n", filepath)
 	}
 
+	// Read the source file
 	bytes, err := os.ReadFile(filepath)
 	if err != nil {
 		fmt.Printf("Error reading file: %s\n", err)
@@ -66,8 +68,28 @@ func runScript(filepath string, debug bool) {
 	lexer := lexer.New(src)
 	parser := parser.New(lexer)
 	program := parser.ParseProgram()
-	env := object.NewEnvironment()
 
+	if debug {
+		// Generate JSON representation of the parse tree
+		parseTreeJSON, err := json.MarshalIndent(program, "", "  ")
+		if err != nil {
+			fmt.Printf("Error generating parse tree JSON: %s\n", err)
+			os.Exit(1)
+		}
+
+		// Construct the output file path
+		jsonFilePath := strings.TrimSuffix(filepath, ".clr") + ".ast.json"
+
+		err = os.WriteFile(jsonFilePath, parseTreeJSON, 0644)
+		if err != nil {
+			fmt.Printf("Error writing parse tree JSON to file: %s\n", err)
+			os.Exit(1)
+		}
+
+		fmt.Printf("Parse tree JSON dumped to: %s\n", jsonFilePath)
+	}
+
+	env := object.NewEnvironment()
 	evaluated := evaluator.Eval(program, env)
 
 	fmt.Printf("Evaluated: %s\n", evaluated.Inspect())

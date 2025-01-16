@@ -1,0 +1,45 @@
+{
+  "Statements": [
+    {
+      "Token": {
+        "Type": "IDENT",
+        "Literal": "print"
+      },
+      "Expression": {
+        "Token": {
+          "Type": "(",
+          "Literal": "("
+        },
+        "Function": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "print"
+          },
+          "Value": "print"
+        },
+        "Arguments": [
+          {
+            "Token": {
+              "Type": "STRING",
+              "Literal": "Hello World"
+            },
+            "Value": "Hello World"
+          }
+        ]
+      }
+    },
+    {
+      "Token": {
+        "Type": "RETURN",
+        "Literal": "return"
+      },
+      "ReturnValue": {
+        "Token": {
+          "Type": "INT",
+          "Literal": "0"
+        },
+        "Value": 0
+      }
+    }
+  ]
+}

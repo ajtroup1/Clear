@@ -1,6 +1,8 @@
 package evaluator
 
 import (
+	"fmt"
+
 	"github.com/ajtroup1/clear/object"
 )
 
@@ -23,6 +25,8 @@ var builtins = map[string]*object.Builtin{
 			}
 		},
 	},
+
+	// ARRAY FUNCTIONS
 	"first": &object.Builtin{
 		Fn: func(args ...object.Object) object.Object {
 			if len(args) != 1 {
@@ -95,6 +99,23 @@ var builtins = map[string]*object.Builtin{
 			copy(newElements, arr.Elements)
 			newElements[len(newElements)-1] = args[1]
 			return &object.Array{Elements: newElements}
+		},
+	},
+	// TODO: POP
+
+	// I/O FUNCTIONS
+	"print": &object.Builtin{
+		Fn: func(args ...object.Object) object.Object {
+			output := ""
+			for i, arg := range args {
+				if i == len(args)-1 {
+					output += arg.Inspect()
+				} else {
+					output += arg.Inspect() + " "
+				}
+			}
+			fmt.Println(output)
+			return NULL
 		},
 	},
 }

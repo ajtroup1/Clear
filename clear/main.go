@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/ajtroup1/clear/evaluator"
+	"github.com/ajtroup1/clear/modules"
 	"github.com/ajtroup1/clear/object"
 	"github.com/ajtroup1/clear/parser"
 
@@ -94,6 +95,7 @@ func runScript(filepath string, debug bool) {
 	}
 
 	env := object.NewEnvironment()
+	modules.Register(env)
 	evaluated := evaluator.Eval(program, env)
 
 	fmt.Printf("\n----------\nProgram returned: %s\n----------\n", evaluated.Inspect())

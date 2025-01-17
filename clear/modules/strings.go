@@ -1,0 +1,85 @@
+package modules
+
+import (
+	"fmt"
+
+	"github.com/ajtroup1/clear/object"
+)
+
+var StringsBuiltins = map[string]*object.Builtin{
+	"len": &object.Builtin{
+		Fn: func(args ...object.Object) object.Object {
+			if len(args) != 1 {
+				return &object.Error{Message: fmt.Sprintf("wrong number of arguments. got=%d, want=1", len(args))}
+			}
+			switch arg := args[0].(type) {
+			case *object.Array:
+				return &object.Integer{Value: int64(len(arg.Elements))}
+
+			case *object.String:
+				return &object.Integer{Value: int64(len(arg.Value))}
+			default:
+				return &object.Error{Message: fmt.Sprintf("argument to `len` not supported, got type ", arg.Type())}
+			}
+		},
+	},
+
+	"concat": &object.Builtin{
+		Fn: func(args ...object.Object) object.Object {
+			if len(args) < 2 {
+				return &object.Error{Message: fmt.Sprintf("wrong number of arguments. got=%d, want >= 2", len(args))}
+			}
+
+			for _, arg := range args {
+				if arg.Type() != object.STRING_OBJ {
+					return &object.Error{
+						Message: fmt.Sprintf("arguments to `concat` must be STRING, received a %s from '%v'", arg.Type(), arg.Inspect()),
+					}
+				}
+			}
+
+			var output string
+			for _, arg := range args {
+				strArg := arg.(*object.String)
+				output += strArg.Value
+			}
+
+			return &object.String{Value: output}
+		},
+	},
+
+	"concatDelim": &object.Builtin{
+		Fn: func(args ...object.Object) object.Object {
+			if len(args) < 2 {
+				return &object.Error{Message: fmt.Sprintf("wrong number of arguments. got=%d, want >= 2", len(args))}
+			}
+
+			delimArg := args[0]
+			if delimArg.Type() != object.STRING_OBJ {
+				return &object.Error{
+					Message: fmt.Sprintf("delimiter must be a STRING, received a %s from '%v'", delimArg.Type(), delimArg.Inspect()),
+				}
+			}
+			delimiter := delimArg.(*object.String).Value
+
+			for _, arg := range args[1:] {
+				if arg.Type() != object.STRING_OBJ {
+					return &object.Error{
+						Message: fmt.Sprintf("arguments to `concatDelim` must be STRING, received a %s from '%v'", arg.Type(), arg.Inspect()),
+					}
+				}
+			}
+
+			var output string
+			for i, arg := range args[1:] {
+				strArg := arg.(*object.String) 
+				output += strArg.Value
+				if i < len(args[1:])-1 { 
+					output += delimiter
+				}
+			}
+
+			return &object.String{Value: output}
+		},
+	},
+}

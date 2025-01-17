@@ -1,4 +1,5 @@
 {
+  "NoStatements": false,
   "Statements": [
     {
       "Token": {
@@ -69,5 +70,6 @@
         "Value": 0
       }
     }
-  ]
+  ],
+  "Modules": null
 }

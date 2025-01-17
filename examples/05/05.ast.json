@@ -1,0 +1,81 @@
+{
+  "NoStatements": false,
+  "Statements": [
+    {
+      "Token": {
+        "Type": "IF",
+        "Literal": "if"
+      },
+      "Expression": {
+        "Token": {
+          "Type": "IF",
+          "Literal": "if"
+        },
+        "Condition": {
+          "Token": {
+            "Type": "\u003e",
+            "Literal": "\u003e"
+          },
+          "Left": {
+            "Token": {
+              "Type": "INT",
+              "Literal": "10"
+            },
+            "Value": 10
+          },
+          "Operator": "\u003e",
+          "Right": {
+            "Token": {
+              "Type": "INT",
+              "Literal": "2"
+            },
+            "Value": 2
+          }
+        },
+        "Consequence": {
+          "Token": {
+            "Type": "{",
+            "Literal": "{"
+          },
+          "Statements": [
+            {
+              "Token": {
+                "Type": "RETURN",
+                "Literal": "return"
+              },
+              "ReturnValue": {
+                "Token": {
+                  "Type": "INT",
+                  "Literal": "1"
+                },
+                "Value": 1
+              }
+            }
+          ]
+        },
+        "Alternative": {
+          "Token": {
+            "Type": "{",
+            "Literal": "{"
+          },
+          "Statements": [
+            {
+              "Token": {
+                "Type": "INT",
+                "Literal": "0"
+              },
+              "Expression": {
+                "Token": {
+                  "Type": "INT",
+                  "Literal": "0"
+                },
+                "Value": 0
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "Modules": null
+}

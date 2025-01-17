@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/ajtroup1/clear/lexer"
+	"github.com/ajtroup1/clear/modules"
 	"github.com/ajtroup1/clear/object"
 	"github.com/ajtroup1/clear/parser"
 )
@@ -446,6 +447,7 @@ func testEval(input string) object.Object {
 	p := parser.New(l)
 	program := p.ParseProgram()
 	env := object.NewEnvironment()
+	modules.Register(env)
 
 	return Eval(program, env)
 }

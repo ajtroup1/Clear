@@ -7,6 +7,7 @@ import (
 
 	"github.com/ajtroup1/clear/evaluator"
 	"github.com/ajtroup1/clear/lexer"
+	"github.com/ajtroup1/clear/modules"
 	"github.com/ajtroup1/clear/object"
 	"github.com/ajtroup1/clear/parser"
 )
@@ -16,6 +17,7 @@ const PROMPT = ">> "
 func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
 	env := object.NewEnvironment()
+	modules.Register(env)
 
 	for {
 		fmt.Printf(PROMPT)
@@ -30,7 +32,7 @@ func Start(in io.Reader, out io.Writer) {
 
 		program := p.ParseProgram()
 		if len(p.Errors()) != 0 {
-			printParserErrors(out, p.Errors())
+			printParserErrors(out, p.Errors(), program.String())
 			continue
 		}
 
@@ -55,9 +57,10 @@ const MONKEY_FACE = `            __,__
            '-----'
 `
 
-func printParserErrors(out io.Writer, errors []string) {
+func printParserErrors(out io.Writer, errors []string, line string) {
 	io.WriteString(out, MONKEY_FACE)
 	io.WriteString(out, "Woops! We ran into some monkey business here!\n")
+	io.WriteString(out, " line: "+line+"\n")
 	io.WriteString(out, " parser errors:\n")
 	for _, msg := range errors {
 		io.WriteString(out, "\t"+msg+"\n")

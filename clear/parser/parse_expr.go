@@ -31,7 +31,26 @@ func (p *Parser) parseExpression(precedence int) ast.Expression {
 }
 
 func (p *Parser) parseIdentifier() ast.Expression {
+	if p.peekTokenIs(token.DOT) {
+		return p.parseModuleAccess()
+	}
 	return &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+}
+
+func (p *Parser) parseModuleAccess() ast.Expression {
+	var val string
+	val += p.curToken.Literal
+	fmt.Printf("ident: %v\n", val)
+	p.nextToken()
+	if !p.peekTokenIs(token.IDENT) {
+		msg := fmt.Sprintf("expected next token to be IDENT, got %v instead", p.peekToken.Type)
+		p.errors = append(p.errors, msg)
+		return nil
+	}
+	p.nextToken()
+	fmt.Printf("current token: %v\n", p.curToken.Literal)
+	access := &ast.Identifier{Token: p.curToken, Value: val + "." + p.curToken.Literal}
+	return access
 }
 
 func (p *Parser) parseIntegerLiteral() ast.Expression {

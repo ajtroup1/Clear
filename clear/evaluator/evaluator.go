@@ -2,6 +2,7 @@ package evaluator
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/ajtroup1/clear/ast"
 	"github.com/ajtroup1/clear/object"
@@ -43,17 +44,17 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 			return val
 		}
 		env.Set(node.Name.Value, val)
-
-	// Eval Expressions
+		
+		// Eval Expressions
 	case *ast.IntegerLiteral:
 		return &object.Integer{Value: node.Value}
-
+		
 	case *ast.FloatLiteral:
 		return &object.Float{Value: node.Value}
-
+		
 	case *ast.Boolean:
 		return nativeBoolToBooleanObject(node.Value)
-
+		
 	case *ast.StringLiteral:
 		return &object.String{Value: node.Value}
 
@@ -63,33 +64,35 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 			return right
 		}
 		return evalPrefixExpression(node.Operator, right)
-
+		
 	case *ast.InfixExpression:
 		left := Eval(node.Left, env)
 		if isError(left) {
 			return left
 		}
-
+		
 		right := Eval(node.Right, env)
 		if isError(right) {
 			return right
 		}
-
+		
 		return evalInfixExpression(node.Operator, left, right)
-
+		
 	case *ast.IfExpression:
 		return evalIfExpression(node, env)
-
+		
 	case *ast.Identifier:
 		return evalIdentifier(node, env)
-
+		
 	case *ast.FunctionLiteral:
 		params := node.Parameters
 		body := node.Body
 		return &object.Function{Parameters: params, Env: env, Body: body}
-
+		
 	case *ast.CallExpression:
 		function := Eval(node.Function, env)
+		fmt.Printf("func %v\n", function)
+		fmt.Println("******")
 		if isError(function) {
 			return function
 		}
@@ -160,9 +163,42 @@ func evalHashIndexExpression(hash, index object.Object) object.Object {
 	return pair.Value
 }
 
+func evalModuleStatement(stmt *ast.ModuleStatement, env *object.Environment) object.Object {
+	module, exists := env.GetModule(stmt.Name.Value)
+	if !exists {
+		return newError("module not found: %s", stmt.Name.Value)
+	}
+
+	// fmt.Printf("//env module: %v\n", env.Modules)
+	
+	if stmt.ImportAll {
+		for name, fn := range module {
+			env.Set(name, fn)
+		}
+	} else {
+		for _, importName := range stmt.Imports {
+			fn, exists := module[importName.Value]
+			if !exists {
+				return newError("function %s not found in module %s", importName.Value, stmt.Name.Value)
+			}
+			env.Set(importName.Value, fn)
+			// fmt.Printf("env module: %v\n", env.Modules)
+		}
+	}
+
+	return nil
+}
+
 // Simply iterate over all statements in the program and evaluate them
 func evalProgram(program *ast.Program, env *object.Environment) object.Object {
 	var result object.Object
+
+	for _, stmt := range program.Modules {
+		result = evalModuleStatement(stmt, env)
+		if isError(result) {
+			return result
+		}
+	}
 
 	for _, statement := range program.Statements {
 		result = Eval(statement, env)
@@ -325,13 +361,26 @@ func evalIdentifier(
 	node *ast.Identifier,
 	env *object.Environment,
 ) object.Object {
+	fmt.Printf("env %+v\n", env)
 	if val, ok := env.Get(node.Value); ok {
 		return val
 	}
-	if builtin, ok := builtins[node.Value]; ok {
-		return builtin
+	fmt.Println("!!!!!")
+
+	parts := strings.Split(node.Value, ".") 
+	fmt.Printf("parts: %v\n", parts)
+	if len(parts) == 2 {
+		moduleName, functionName := parts[0], parts[1]
+		if module, exists := env.Modules[moduleName]; exists {
+			if builtin, found := module[functionName]; found {
+				return builtin
+			}
+			return newError("function not found in module '%s': %s", moduleName, functionName)
+		}
+		return newError("module not found: %s", moduleName)
 	}
-	return newError("identifier not found: " + node.Value)
+
+	return newError("identifier not found: %s", node.Value)
 }
 
 func isTruthy(obj object.Object) bool {

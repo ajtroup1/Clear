@@ -21,3 +21,5 @@
   1. Comments
 
 ### Quick Fixes
+  1. Nil pointer dereference upon no return value specified
+    - Default return 0 or something?

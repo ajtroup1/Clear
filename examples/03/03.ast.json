@@ -7,6 +7,54 @@
         "Literal": "]"
       },
       "Expression": null
+    },
+    {
+      "Token": {
+        "Type": "LET",
+        "Literal": "let"
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "myString"
+        },
+        "Value": "myString"
+      },
+      "Value": {
+        "Token": {
+          "Type": "STRING",
+          "Literal": "String"
+        },
+        "Value": "String"
+      }
+    },
+    {
+      "Token": {
+        "Type": "IDENT",
+        "Literal": "strings"
+      },
+      "Expression": {
+        "Token": {
+          "Type": "(",
+          "Literal": "("
+        },
+        "Function": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "len"
+          },
+          "Value": "strings.len"
+        },
+        "Arguments": [
+          {
+            "Token": {
+              "Type": "IDENT",
+              "Literal": "myString"
+            },
+            "Value": "myString"
+          }
+        ]
+      }
     }
   ],
   "Modules": [
@@ -18,25 +66,18 @@
       "Name": {
         "Token": {
           "Type": "IDENT",
-          "Literal": "math"
+          "Literal": "strings"
         },
-        "Value": "math"
+        "Value": "strings"
       },
       "ImportAll": false,
       "Imports": [
         {
           "Token": {
             "Type": "IDENT",
-            "Literal": "Round"
+            "Literal": "concat"
           },
-          "Value": "Round"
-        },
-        {
-          "Token": {
-            "Type": "IDENT",
-            "Literal": "Pow"
-          },
-          "Value": "Pow"
+          "Value": "concat"
         }
       ]
     }

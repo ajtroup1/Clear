@@ -68,6 +68,10 @@ func runScript(filepath string, debug bool) {
 	lexer := lexer.New(src)
 	parser := parser.New(lexer)
 	program := parser.ParseProgram()
+	if program.NoStatements {
+		fmt.Println("No valid statements in the program")
+		os.Exit(1)
+	}
 
 	if debug {
 		// Generate JSON representation of the parse tree

@@ -1,8 +1,6 @@
 package parser
 
 import (
-	"fmt"
-
 	"github.com/ajtroup1/clear/ast"
 	"github.com/ajtroup1/clear/token"
 )
@@ -59,7 +57,6 @@ func (p *Parser) parseModuleStatement() *ast.ModuleStatement {
 		
 		if p.peekTokenIs(token.COMMA) {
 			p.nextToken()
-			fmt.Printf("current token: %s\n", p.curToken.Literal)
 		}
 	}
 

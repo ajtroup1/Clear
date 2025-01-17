@@ -45,7 +45,10 @@ type Expression interface {
 // Any program simply consists of a series of statements,
 // no matter how complex those statements become
 type Program struct {
+	NoStatements bool
+
 	Statements []Statement
+	Modules    []*ModuleStatement
 }
 
 // Just return the literal value of the first statement
@@ -225,6 +228,15 @@ type IntegerLiteral struct {
 func (il *IntegerLiteral) expressionNode()      {}
 func (il *IntegerLiteral) TokenLiteral() string { return il.Token.Literal }
 func (il *IntegerLiteral) String() string       { return il.Token.Literal }
+
+type FloatLiteral struct {
+	Token token.Token
+	Value float64
+}
+
+func (fl *FloatLiteral) expressionNode()      {}
+func (fl *FloatLiteral) TokenLiteral() string { return fl.Token.Literal }
+func (fl *FloatLiteral) String() string       { return fl.Token.Literal }
 
 type StringLiteral struct {
 	Token token.Token

@@ -1,5 +1,15 @@
 {
+  "NoStatements": false,
   "Statements": [
+    {
+      "Token": {
+        "Type": "]",
+        "Literal": "]"
+      },
+      "Expression": null
+    }
+  ],
+  "Modules": [
     {
       "Token": {
         "Type": "MOD",
@@ -29,13 +39,6 @@
           "Value": "Pow"
         }
       ]
-    },
-    {
-      "Token": {
-        "Type": "]",
-        "Literal": "]"
-      },
-      "Expression": null
     }
   ]
 }

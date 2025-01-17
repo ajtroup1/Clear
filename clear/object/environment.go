@@ -14,6 +14,7 @@ func NewEnvironment() *Environment {
 type Environment struct {
 	store map[string]Object
 	outer *Environment
+	modules map[string]map[string]*Builtin
 }
 
 func (e *Environment) Get(name string) (Object, bool) {

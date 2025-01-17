@@ -1,6 +1,8 @@
 package lexer
 
-import "github.com/ajtroup1/clear/token"
+import (
+	"github.com/ajtroup1/clear/token"
+)
 
 type Lexer struct {
 	input        string
@@ -82,7 +84,11 @@ func (l *Lexer) NextToken() token.Token {
 			return tok
 		} else if isDigit(l.ch) {
 			tok.Type = token.INT
-			tok.Literal = l.readNumber()
+			lit, isFLoat := l.readNumber()
+			if isFLoat {
+				tok.Type = token.FLOAT
+			}
+			tok.Literal = lit
 			return tok
 		} else {
 			tok = newToken(token.ILLEGAL, l.ch)
@@ -125,12 +131,21 @@ func (l *Lexer) readIdentifier() string {
 	return l.input[position:l.position]
 }
 
-func (l *Lexer) readNumber() string {
+func (l *Lexer) readNumber() (string, bool) {
+	isFloat := false
 	position := l.position
 	for isDigit(l.ch) {
 		l.readChar()
 	}
-	return l.input[position:l.position]
+
+	if l.ch == '.' {
+		isFloat = true
+		l.readChar()
+		for isDigit(l.ch) {
+			l.readChar()
+		}
+	}
+	return l.input[position:l.position], isFloat
 }
 
 func (l *Lexer) readString() string {

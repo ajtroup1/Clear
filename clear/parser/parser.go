@@ -59,6 +59,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.prefixParseFns = make(map[token.TokenType]prefixParseFn)
 	p.registerPrefix(token.IDENT, p.parseIdentifier)
 	p.registerPrefix(token.INT, p.parseIntegerLiteral)
+	p.registerPrefix(token.FLOAT, p.parseFloatLiteral)
 	p.registerPrefix(token.STRING, p.parseStringLiteral)
 	p.registerPrefix(token.BANG, p.parsePrefixExpression)
 	p.registerPrefix(token.MINUS, p.parsePrefixExpression)
@@ -131,14 +132,46 @@ func (p *Parser) ParseProgram() *ast.Program {
 	program := &ast.Program{}
 	program.Statements = []ast.Statement{}
 
+	// First, parse all statements
 	for !p.curTokenIs(token.EOF) {
 		stmt := p.parseStatement()
+
+		// Only add valid statements to the list
 		if stmt != nil {
 			program.Statements = append(program.Statements, stmt)
 		}
+
+		// Move to next token
 		p.nextToken()
 	}
 
+	// Separate out module statements (import statements)
+	var filteredStatements []ast.Statement
+
+	for _, stmt := range program.Statements {
+		if module, ok := stmt.(*ast.ModuleStatement); ok {
+			// Append the module to the Modules slice
+			program.Modules = append(program.Modules, module)
+		} else {
+			// Add non-module statements to filteredStatements
+			filteredStatements = append(filteredStatements, stmt)
+		}
+	}
+
+	// Update Statements with only non-module statements
+	program.Statements = filteredStatements
+
+	if len(program.Statements) == 1 {
+		if stmt, ok := program.Statements[0].(*ast.ExpressionStatement); ok &&  stmt.Expression == nil {
+			program.NoStatements = true
+		}
+	}
+	
+	if len(program.Statements) == 0 {
+		program.NoStatements = true
+	}
+
+	// Return the parsed program
 	return program
 }
 

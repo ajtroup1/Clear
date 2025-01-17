@@ -73,6 +73,37 @@ func (p *Program) String() string {
 // -------------------------
 // # STATEMENT NODES
 
+type ModuleStatement struct {
+	Token     token.Token // the 'module' token
+	Name      *Identifier
+	ImportAll bool
+	Imports   []*Identifier
+}
+
+func (ms *ModuleStatement) statementNode()       {}
+func (ms *ModuleStatement) TokenLiteral() string { return ms.Token.Literal }
+func (ms *ModuleStatement) String() string {
+	var out bytes.Buffer
+
+	out.WriteString(ms.TokenLiteral() + " ")
+	out.WriteString(ms.Name.String())
+	out.WriteString(" ")
+
+	if ms.ImportAll {
+		out.WriteString("*")
+	} else {
+		imports := []string{}
+		for _, i := range ms.Imports {
+			imports = append(imports, i.String())
+		}
+		out.WriteString(strings.Join(imports, ", "))
+	}
+
+	out.WriteString(";")
+
+	return out.String()
+}
+
 // Statement used to assign variables to an expression
 // let x = 7;
 type LetStatement struct {

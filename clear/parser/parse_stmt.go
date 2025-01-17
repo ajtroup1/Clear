@@ -1,12 +1,16 @@
 package parser
 
 import (
+	"fmt"
+
 	"github.com/ajtroup1/clear/ast"
 	"github.com/ajtroup1/clear/token"
 )
 
 func (p *Parser) parseStatement() ast.Statement {
 	switch p.curToken.Type {
+	case token.MOD:
+		return p.parseModuleStatement()
 	case token.LET:
 		return p.parseLetStatement()
 	case token.RETURN:
@@ -14,6 +18,52 @@ func (p *Parser) parseStatement() ast.Statement {
 	default:
 		return p.parseExpressionStatement()
 	}
+}
+
+func (p *Parser) parseModuleStatement() *ast.ModuleStatement {
+	stmt := &ast.ModuleStatement{Token: p.curToken}
+
+	if !p.expectPeek(token.IDENT) {
+		return nil
+	}
+
+	
+	stmt.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+	
+	if !p.expectPeek(token.COLON) {
+		return nil
+	}
+	
+	if p.peekTokenIs(token.ASTERISK) {
+		stmt.ImportAll = true
+		return stmt
+	}
+	
+	if !p.expectPeek(token.LBRACKET) {
+		return nil
+	}
+	
+	if p.peekTokenIs(token.RBRACKET) {
+		// TODO: Warning for empty import list
+		return stmt
+	}
+	
+	for !p.peekTokenIs(token.RBRACKET) {
+		if !p.expectPeek(token.IDENT) {
+			return nil
+		}
+		
+		ident := &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+		
+		stmt.Imports = append(stmt.Imports, ident)
+		
+		if p.peekTokenIs(token.COMMA) {
+			p.nextToken()
+			fmt.Printf("current token: %s\n", p.curToken.Literal)
+		}
+	}
+
+	return stmt
 }
 
 func (p *Parser) parseLetStatement() *ast.LetStatement {

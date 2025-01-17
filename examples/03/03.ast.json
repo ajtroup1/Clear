@@ -1,0 +1,41 @@
+{
+  "Statements": [
+    {
+      "Token": {
+        "Type": "MOD",
+        "Literal": "mod"
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "math"
+        },
+        "Value": "math"
+      },
+      "ImportAll": false,
+      "Imports": [
+        {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "Round"
+          },
+          "Value": "Round"
+        },
+        {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "Pow"
+          },
+          "Value": "Pow"
+        }
+      ]
+    },
+    {
+      "Token": {
+        "Type": "]",
+        "Literal": "]"
+      },
+      "Expression": null
+    }
+  ]
+}

@@ -3,6 +3,20 @@
   "Statements": [
     {
       "Token": {
+        "Type": "]",
+        "Literal": "]"
+      },
+      "Expression": null
+    },
+    {
+      "Token": {
+        "Type": "]",
+        "Literal": "]"
+      },
+      "Expression": null
+    },
+    {
+      "Token": {
         "Type": "LET",
         "Literal": "let"
       },
@@ -449,5 +463,66 @@
       }
     }
   ],
-  "Modules": null
+  "Modules": [
+    {
+      "Token": {
+        "Type": "MOD",
+        "Literal": "mod"
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "strings"
+        },
+        "Value": "strings"
+      },
+      "ImportAll": false,
+      "Imports": [
+        {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "len"
+          },
+          "Value": "len"
+        }
+      ]
+    },
+    {
+      "Token": {
+        "Type": "MOD",
+        "Literal": "mod"
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "arrays"
+        },
+        "Value": "arrays"
+      },
+      "ImportAll": false,
+      "Imports": [
+        {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "first"
+          },
+          "Value": "first"
+        },
+        {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "rest"
+          },
+          "Value": "rest"
+        },
+        {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "push"
+          },
+          "Value": "push"
+        }
+      ]
+    }
+  ]
 }

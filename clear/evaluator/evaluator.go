@@ -91,8 +91,6 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		
 	case *ast.CallExpression:
 		function := Eval(node.Function, env)
-		fmt.Printf("func %v\n", function)
-		fmt.Println("******")
 		if isError(function) {
 			return function
 		}
@@ -361,14 +359,11 @@ func evalIdentifier(
 	node *ast.Identifier,
 	env *object.Environment,
 ) object.Object {
-	fmt.Printf("env %+v\n", env)
 	if val, ok := env.Get(node.Value); ok {
 		return val
 	}
-	fmt.Println("!!!!!")
 
 	parts := strings.Split(node.Value, ".") 
-	fmt.Printf("parts: %v\n", parts)
 	if len(parts) == 2 {
 		moduleName, functionName := parts[0], parts[1]
 		if module, exists := env.Modules[moduleName]; exists {

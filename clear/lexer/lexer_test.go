@@ -3,6 +3,7 @@ package lexer
 import (
 	"testing"
 
+	"github.com/ajtroup1/clear/logger"
 	"github.com/ajtroup1/clear/token"
 )
 
@@ -125,7 +126,9 @@ if (5 < 10) {
 		{token.EOF, ""},
 	}
 
-	l := New(input)
+	log := logger.NewLogger()
+
+	l := New(input, log, false)
 
 	for i, tt := range tests {
 		tok := l.NextToken()

@@ -59,6 +59,10 @@ func (p *Parser) parseModuleStatement() *ast.ModuleStatement {
 		}
 	}
 
+	if !p.expectPeek(token.RBRACKET) {
+		return nil
+	}
+
 	return stmt
 }
 

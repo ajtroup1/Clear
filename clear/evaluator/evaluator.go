@@ -5,8 +5,23 @@ import (
 	"strings"
 
 	"github.com/ajtroup1/clear/ast"
+	"github.com/ajtroup1/clear/logger"
 	"github.com/ajtroup1/clear/object"
 )
+
+var (
+	Logger *logger.Logger
+	Debug bool
+)
+
+func Init(l *logger.Logger, debug bool) {
+	Logger = l
+	Debug = debug
+
+	if Debug {
+		Logger.DefineSection("Evaluation", "evaluation description here")
+	}
+}
 
 // Define a const to easily access object types throughout the evaluator
 var (

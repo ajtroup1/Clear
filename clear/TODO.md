@@ -16,12 +16,11 @@
       - Errors AND warnings
       - Colored and well formatted messaged
       - Store line content to be able to point to the correct area
+  4. Built-in testing suite:
+      - Automated testing framework / prebuilt
 
 ### General Additions
-  1. Comments
   2. For Statements
-  3. Built-in test suite
-      - Go's builtin test suite is so nice, so something like that would be cool
 
 ### Quick Fixes
   1. Nil pointer dereference upon no return value specified

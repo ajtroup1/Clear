@@ -6,6 +6,7 @@ import (
 
 	"github.com/ajtroup1/clear/evaluator"
 	"github.com/ajtroup1/clear/lexer"
+	"github.com/ajtroup1/clear/logger"
 	"github.com/ajtroup1/clear/object"
 	"github.com/ajtroup1/clear/parser"
 )
@@ -107,8 +108,9 @@ func TestMathBuiltins(t *testing.T) {
 
 func testEval(input string) object.Object {
 	fmt.Print()
-	l := lexer.New(input)
-	p := parser.New(l)
+	log := logger.NewLogger()
+	l := lexer.New(input, log, false)
+	p := parser.New(l, log, false)
 	program := p.ParseProgram()
 	env := object.NewEnvironment()
 	Register(env)

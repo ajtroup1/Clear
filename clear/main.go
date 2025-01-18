@@ -6,10 +6,12 @@ import (
 	"fmt"
 	"os"
 	"os/user"
+	"path/filepath"
 	"strings"
 
 	"github.com/ajtroup1/clear/errors"
 	"github.com/ajtroup1/clear/evaluator"
+	"github.com/ajtroup1/clear/logger"
 	"github.com/ajtroup1/clear/modules"
 	"github.com/ajtroup1/clear/object"
 	"github.com/ajtroup1/clear/parser"
@@ -27,14 +29,14 @@ func main() {
 	args := flag.Args()
 
 	if len(args) > 0 {
-		filepath := args[0]
+		filePath := args[0]
 
-		if !strings.HasSuffix(filepath, ".clr") {
+		if !strings.HasSuffix(filePath, ".clr") {
 			fmt.Println("Error: Invalid file type. Please provide a .clr file")
 			os.Exit(1)
 		}
 
-		runScript(filepath, debug)
+		runScript(filePath, debug)
 	} else if len(args) == 0 {
 		startRepl()
 	} else {
@@ -54,21 +56,29 @@ func startRepl() {
 	repl.Start(os.Stdin, os.Stdout)
 }
 
-func runScript(filepath string, debug bool) {
+func runScript(filePath string, debug bool) {
 	if debug {
-		fmt.Printf("Executing \"%s\"\n", filepath)
+		fmt.Printf("Executing \"%s\"\n", filePath)
 	}
 
 	// Read the source file
-	bytes, err := os.ReadFile(filepath)
+	bytes, err := os.ReadFile(filePath)
 	if err != nil {
 		fmt.Printf("Error reading file: %s\n", err)
 		os.Exit(1)
 	}
 
+	log := logger.NewLogger()
+
+	fileName := filepath.Base(filePath)
+
+	if debug {
+		log.InitText(fileName)
+	}
+
 	src := string(bytes)
-	lexer := lexer.New(src)
-	parser := parser.New(lexer)
+	lexer := lexer.New(src, log, debug)
+	parser := parser.New(lexer, log, debug)
 	program := parser.ParseProgram()
 	if program.NoStatements {
 		fmt.Println("No valid statements in the program")
@@ -84,19 +94,20 @@ func runScript(filepath string, debug bool) {
 		}
 
 		// Construct the output file path
-		jsonFilePath := strings.TrimSuffix(filepath, ".clr") + ".ast.json"
+		jsonfilePath := strings.TrimSuffix(filePath, ".clr") + ".ast.json"
 
-		err = os.WriteFile(jsonFilePath, parseTreeJSON, 0644)
+		err = os.WriteFile(jsonfilePath, parseTreeJSON, 0644)
 		if err != nil {
 			fmt.Printf("Error writing parse tree JSON to file: %s\n", err)
 			os.Exit(1)
 		}
 
-		fmt.Printf("Parse tree JSON dumped to: %s\n", jsonFilePath)
+		fmt.Printf("Parse tree JSON dumped to: %s\n", jsonfilePath)
 	}
 
 	env := object.NewEnvironment()
 	modules.Register(env)
+	evaluator.Init(log, debug)
 	evaluated := evaluator.Eval(program, env)
 
 	if errors.HasErrors(lexer.Errors, parser.Errors) {
@@ -110,4 +121,11 @@ func runScript(filepath string, debug bool) {
 	}
 
 	fmt.Printf("\nProgram returned: %s\n\n", evaluated.Inspect())
+
+	if debug {
+		logfilePath := strings.TrimSuffix(filePath, ".clr") + ".log.md"
+
+		log.WriteFile(logfilePath)
+		fmt.Printf("Log dumped to: %s\n", logfilePath)
+	}
 }

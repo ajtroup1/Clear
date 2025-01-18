@@ -8,6 +8,7 @@ import (
 	"github.com/ajtroup1/clear/errors"
 	"github.com/ajtroup1/clear/evaluator"
 	"github.com/ajtroup1/clear/lexer"
+	"github.com/ajtroup1/clear/logger"
 	"github.com/ajtroup1/clear/modules"
 	"github.com/ajtroup1/clear/object"
 	"github.com/ajtroup1/clear/parser"
@@ -21,15 +22,17 @@ func Start(in io.Reader, out io.Writer) {
 	modules.Register(env)
 
 	for {
-		fmt.Printf(PROMPT)
+		fmt.Print(PROMPT)
 		scanned := scanner.Scan()
 		if !scanned {
 			return
 		}
 
+		log := logger.NewLogger()
+
 		line := scanner.Text()
-		l := lexer.New(line)
-		p := parser.New(l)
+		l := lexer.New(line, log, false)
+		p := parser.New(l, log, false)
 
 		program := p.ParseProgram()
 		if len(p.Errors) != 0 {

@@ -3,47 +3,43 @@
   "Statements": [
     {
       "Token": {
-        "Type": "]",
-        "Literal": "]"
-      },
-      "Expression": null
-    },
-    {
-      "Token": {
-        "Type": "]",
-        "Literal": "]"
-      },
-      "Expression": null
-    },
-    {
-      "Token": {
         "Type": "LET",
-        "Literal": "let"
+        "Literal": "let",
+        "Line": 4,
+        "Col": 1
       },
       "Name": {
         "Token": {
           "Type": "IDENT",
-          "Literal": "map"
+          "Literal": "map",
+          "Line": 4,
+          "Col": 5
         },
         "Value": "map"
       },
       "Value": {
         "Token": {
           "Type": "FUNCTION",
-          "Literal": "fn"
+          "Literal": "fn",
+          "Line": 4,
+          "Col": 11
         },
         "Parameters": [
           {
             "Token": {
               "Type": "IDENT",
-              "Literal": "arr"
+              "Literal": "arr",
+              "Line": 4,
+              "Col": 14
             },
             "Value": "arr"
           },
           {
             "Token": {
               "Type": "IDENT",
-              "Literal": "f"
+              "Literal": "f",
+              "Line": 4,
+              "Col": 19
             },
             "Value": "f"
           }
@@ -51,38 +47,50 @@
         "Body": {
           "Token": {
             "Type": "{",
-            "Literal": "{"
+            "Literal": "{",
+            "Line": 4,
+            "Col": 22
           },
           "Statements": [
             {
               "Token": {
                 "Type": "LET",
-                "Literal": "let"
+                "Literal": "let",
+                "Line": 5,
+                "Col": 3
               },
               "Name": {
                 "Token": {
                   "Type": "IDENT",
-                  "Literal": "iter"
+                  "Literal": "iter",
+                  "Line": 5,
+                  "Col": 7
                 },
                 "Value": "iter"
               },
               "Value": {
                 "Token": {
                   "Type": "FUNCTION",
-                  "Literal": "fn"
+                  "Literal": "fn",
+                  "Line": 5,
+                  "Col": 14
                 },
                 "Parameters": [
                   {
                     "Token": {
                       "Type": "IDENT",
-                      "Literal": "arr"
+                      "Literal": "arr",
+                      "Line": 5,
+                      "Col": 17
                     },
                     "Value": "arr"
                   },
                   {
                     "Token": {
                       "Type": "IDENT",
-                      "Literal": "accumulated"
+                      "Literal": "accumulated",
+                      "Line": 5,
+                      "Col": 22
                     },
                     "Value": "accumulated"
                   }
@@ -90,33 +98,45 @@
                 "Body": {
                   "Token": {
                     "Type": "{",
-                    "Literal": "{"
+                    "Literal": "{",
+                    "Line": 5,
+                    "Col": 35
                   },
                   "Statements": [
                     {
                       "Token": {
                         "Type": "IF",
-                        "Literal": "if"
+                        "Literal": "if",
+                        "Line": 6,
+                        "Col": 5
                       },
                       "Expression": {
                         "Token": {
                           "Type": "IF",
-                          "Literal": "if"
+                          "Literal": "if",
+                          "Line": 6,
+                          "Col": 5
                         },
                         "Condition": {
                           "Token": {
                             "Type": "==",
-                            "Literal": "=="
+                            "Literal": "==",
+                            "Line": 0,
+                            "Col": 0
                           },
                           "Left": {
                             "Token": {
                               "Type": "(",
-                              "Literal": "("
+                              "Literal": "(",
+                              "Line": 6,
+                              "Col": 12
                             },
                             "Function": {
                               "Token": {
                                 "Type": "IDENT",
-                                "Literal": "len"
+                                "Literal": "len",
+                                "Line": 6,
+                                "Col": 9
                               },
                               "Value": "len"
                             },
@@ -124,7 +144,9 @@
                               {
                                 "Token": {
                                   "Type": "IDENT",
-                                  "Literal": "arr"
+                                  "Literal": "arr",
+                                  "Line": 6,
+                                  "Col": 13
                                 },
                                 "Value": "arr"
                               }
@@ -134,7 +156,9 @@
                           "Right": {
                             "Token": {
                               "Type": "INT",
-                              "Literal": "0"
+                              "Literal": "0",
+                              "Line": 6,
+                              "Col": 21
                             },
                             "Value": 0
                           }
@@ -142,18 +166,24 @@
                         "Consequence": {
                           "Token": {
                             "Type": "{",
-                            "Literal": "{"
+                            "Literal": "{",
+                            "Line": 6,
+                            "Col": 24
                           },
                           "Statements": [
                             {
                               "Token": {
                                 "Type": "IDENT",
-                                "Literal": "accumulated"
+                                "Literal": "accumulated",
+                                "Line": 7,
+                                "Col": 7
                               },
                               "Expression": {
                                 "Token": {
                                   "Type": "IDENT",
-                                  "Literal": "accumulated"
+                                  "Literal": "accumulated",
+                                  "Line": 7,
+                                  "Col": 7
                                 },
                                 "Value": "accumulated"
                               }
@@ -163,23 +193,31 @@
                         "Alternative": {
                           "Token": {
                             "Type": "{",
-                            "Literal": "{"
+                            "Literal": "{",
+                            "Line": 8,
+                            "Col": 12
                           },
                           "Statements": [
                             {
                               "Token": {
                                 "Type": "IDENT",
-                                "Literal": "iter"
+                                "Literal": "iter",
+                                "Line": 9,
+                                "Col": 7
                               },
                               "Expression": {
                                 "Token": {
                                   "Type": "(",
-                                  "Literal": "("
+                                  "Literal": "(",
+                                  "Line": 9,
+                                  "Col": 11
                                 },
                                 "Function": {
                                   "Token": {
                                     "Type": "IDENT",
-                                    "Literal": "iter"
+                                    "Literal": "iter",
+                                    "Line": 9,
+                                    "Col": 7
                                   },
                                   "Value": "iter"
                                 },
@@ -187,12 +225,16 @@
                                   {
                                     "Token": {
                                       "Type": "(",
-                                      "Literal": "("
+                                      "Literal": "(",
+                                      "Line": 9,
+                                      "Col": 16
                                     },
                                     "Function": {
                                       "Token": {
                                         "Type": "IDENT",
-                                        "Literal": "rest"
+                                        "Literal": "rest",
+                                        "Line": 9,
+                                        "Col": 12
                                       },
                                       "Value": "rest"
                                     },
@@ -200,7 +242,9 @@
                                       {
                                         "Token": {
                                           "Type": "IDENT",
-                                          "Literal": "arr"
+                                          "Literal": "arr",
+                                          "Line": 9,
+                                          "Col": 17
                                         },
                                         "Value": "arr"
                                       }
@@ -209,12 +253,16 @@
                                   {
                                     "Token": {
                                       "Type": "(",
-                                      "Literal": "("
+                                      "Literal": "(",
+                                      "Line": 9,
+                                      "Col": 27
                                     },
                                     "Function": {
                                       "Token": {
                                         "Type": "IDENT",
-                                        "Literal": "push"
+                                        "Literal": "push",
+                                        "Line": 9,
+                                        "Col": 23
                                       },
                                       "Value": "push"
                                     },
@@ -222,19 +270,25 @@
                                       {
                                         "Token": {
                                           "Type": "IDENT",
-                                          "Literal": "accumulated"
+                                          "Literal": "accumulated",
+                                          "Line": 9,
+                                          "Col": 28
                                         },
                                         "Value": "accumulated"
                                       },
                                       {
                                         "Token": {
                                           "Type": "(",
-                                          "Literal": "("
+                                          "Literal": "(",
+                                          "Line": 9,
+                                          "Col": 42
                                         },
                                         "Function": {
                                           "Token": {
                                             "Type": "IDENT",
-                                            "Literal": "f"
+                                            "Literal": "f",
+                                            "Line": 9,
+                                            "Col": 41
                                           },
                                           "Value": "f"
                                         },
@@ -242,12 +296,16 @@
                                           {
                                             "Token": {
                                               "Type": "(",
-                                              "Literal": "("
+                                              "Literal": "(",
+                                              "Line": 9,
+                                              "Col": 48
                                             },
                                             "Function": {
                                               "Token": {
                                                 "Type": "IDENT",
-                                                "Literal": "first"
+                                                "Literal": "first",
+                                                "Line": 9,
+                                                "Col": 43
                                               },
                                               "Value": "first"
                                             },
@@ -255,7 +313,9 @@
                                               {
                                                 "Token": {
                                                   "Type": "IDENT",
-                                                  "Literal": "arr"
+                                                  "Literal": "arr",
+                                                  "Line": 9,
+                                                  "Col": 49
                                                 },
                                                 "Value": "arr"
                                               }
@@ -279,17 +339,23 @@
             {
               "Token": {
                 "Type": "IDENT",
-                "Literal": "iter"
+                "Literal": "iter",
+                "Line": 12,
+                "Col": 3
               },
               "Expression": {
                 "Token": {
                   "Type": "(",
-                  "Literal": "("
+                  "Literal": "(",
+                  "Line": 12,
+                  "Col": 7
                 },
                 "Function": {
                   "Token": {
                     "Type": "IDENT",
-                    "Literal": "iter"
+                    "Literal": "iter",
+                    "Line": 12,
+                    "Col": 3
                   },
                   "Value": "iter"
                 },
@@ -297,14 +363,18 @@
                   {
                     "Token": {
                       "Type": "IDENT",
-                      "Literal": "arr"
+                      "Literal": "arr",
+                      "Line": 12,
+                      "Col": 8
                     },
                     "Value": "arr"
                   },
                   {
                     "Token": {
                       "Type": "[",
-                      "Literal": "["
+                      "Literal": "[",
+                      "Line": 12,
+                      "Col": 13
                     },
                     "Elements": []
                   }
@@ -318,46 +388,60 @@
     {
       "Token": {
         "Type": "LET",
-        "Literal": "let"
+        "Literal": "let",
+        "Line": 15,
+        "Col": 1
       },
       "Name": {
         "Token": {
           "Type": "IDENT",
-          "Literal": "a"
+          "Literal": "a",
+          "Line": 15,
+          "Col": 5
         },
         "Value": "a"
       },
       "Value": {
         "Token": {
           "Type": "[",
-          "Literal": "["
+          "Literal": "[",
+          "Line": 15,
+          "Col": 9
         },
         "Elements": [
           {
             "Token": {
               "Type": "INT",
-              "Literal": "1"
+              "Literal": "1",
+              "Line": 15,
+              "Col": 10
             },
             "Value": 1
           },
           {
             "Token": {
               "Type": "INT",
-              "Literal": "2"
+              "Literal": "2",
+              "Line": 15,
+              "Col": 13
             },
             "Value": 2
           },
           {
             "Token": {
               "Type": "INT",
-              "Literal": "3"
+              "Literal": "3",
+              "Line": 15,
+              "Col": 16
             },
             "Value": 3
           },
           {
             "Token": {
               "Type": "INT",
-              "Literal": "4"
+              "Literal": "4",
+              "Line": 15,
+              "Col": 19
             },
             "Value": 4
           }
@@ -367,25 +451,33 @@
     {
       "Token": {
         "Type": "LET",
-        "Literal": "let"
+        "Literal": "let",
+        "Line": 16,
+        "Col": 1
       },
       "Name": {
         "Token": {
           "Type": "IDENT",
-          "Literal": "double"
+          "Literal": "double",
+          "Line": 16,
+          "Col": 5
         },
         "Value": "double"
       },
       "Value": {
         "Token": {
           "Type": "FUNCTION",
-          "Literal": "fn"
+          "Literal": "fn",
+          "Line": 16,
+          "Col": 14
         },
         "Parameters": [
           {
             "Token": {
               "Type": "IDENT",
-              "Literal": "x"
+              "Literal": "x",
+              "Line": 16,
+              "Col": 17
             },
             "Value": "x"
           }
@@ -393,23 +485,31 @@
         "Body": {
           "Token": {
             "Type": "{",
-            "Literal": "{"
+            "Literal": "{",
+            "Line": 16,
+            "Col": 20
           },
           "Statements": [
             {
               "Token": {
                 "Type": "IDENT",
-                "Literal": "x"
+                "Literal": "x",
+                "Line": 16,
+                "Col": 22
               },
               "Expression": {
                 "Token": {
                   "Type": "*",
-                  "Literal": "*"
+                  "Literal": "*",
+                  "Line": 16,
+                  "Col": 24
                 },
                 "Left": {
                   "Token": {
                     "Type": "IDENT",
-                    "Literal": "x"
+                    "Literal": "x",
+                    "Line": 16,
+                    "Col": 22
                   },
                   "Value": "x"
                 },
@@ -417,7 +517,9 @@
                 "Right": {
                   "Token": {
                     "Type": "INT",
-                    "Literal": "2"
+                    "Literal": "2",
+                    "Line": 16,
+                    "Col": 26
                   },
                   "Value": 2
                 }
@@ -430,17 +532,23 @@
     {
       "Token": {
         "Type": "IDENT",
-        "Literal": "map"
+        "Literal": "map",
+        "Line": 17,
+        "Col": 1
       },
       "Expression": {
         "Token": {
           "Type": "(",
-          "Literal": "("
+          "Literal": "(",
+          "Line": 17,
+          "Col": 4
         },
         "Function": {
           "Token": {
             "Type": "IDENT",
-            "Literal": "map"
+            "Literal": "map",
+            "Line": 17,
+            "Col": 1
           },
           "Value": "map"
         },
@@ -448,14 +556,18 @@
           {
             "Token": {
               "Type": "IDENT",
-              "Literal": "a"
+              "Literal": "a",
+              "Line": 17,
+              "Col": 5
             },
             "Value": "a"
           },
           {
             "Token": {
               "Type": "IDENT",
-              "Literal": "double"
+              "Literal": "double",
+              "Line": 17,
+              "Col": 8
             },
             "Value": "double"
           }
@@ -467,12 +579,16 @@
     {
       "Token": {
         "Type": "MOD",
-        "Literal": "mod"
+        "Literal": "mod",
+        "Line": 1,
+        "Col": 1
       },
       "Name": {
         "Token": {
           "Type": "IDENT",
-          "Literal": "strings"
+          "Literal": "strings",
+          "Line": 1,
+          "Col": 5
         },
         "Value": "strings"
       },
@@ -481,7 +597,9 @@
         {
           "Token": {
             "Type": "IDENT",
-            "Literal": "len"
+            "Literal": "len",
+            "Line": 1,
+            "Col": 16
           },
           "Value": "len"
         }
@@ -490,12 +608,16 @@
     {
       "Token": {
         "Type": "MOD",
-        "Literal": "mod"
+        "Literal": "mod",
+        "Line": 2,
+        "Col": 1
       },
       "Name": {
         "Token": {
           "Type": "IDENT",
-          "Literal": "arrays"
+          "Literal": "arrays",
+          "Line": 2,
+          "Col": 5
         },
         "Value": "arrays"
       },
@@ -504,21 +626,27 @@
         {
           "Token": {
             "Type": "IDENT",
-            "Literal": "first"
+            "Literal": "first",
+            "Line": 2,
+            "Col": 15
           },
           "Value": "first"
         },
         {
           "Token": {
             "Type": "IDENT",
-            "Literal": "rest"
+            "Literal": "rest",
+            "Line": 2,
+            "Col": 22
           },
           "Value": "rest"
         },
         {
           "Token": {
             "Type": "IDENT",
-            "Literal": "push"
+            "Literal": "push",
+            "Line": 2,
+            "Col": 28
           },
           "Value": "push"
         }

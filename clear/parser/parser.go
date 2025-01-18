@@ -6,6 +6,7 @@ import (
 	"github.com/ajtroup1/clear/ast"
 	"github.com/ajtroup1/clear/errors"
 	"github.com/ajtroup1/clear/lexer"
+	"github.com/ajtroup1/clear/logger"
 	"github.com/ajtroup1/clear/token"
 )
 
@@ -44,6 +45,9 @@ type Parser struct {
 	l      *lexer.Lexer
 	Errors []errors.Error
 
+	log   *logger.Logger
+	debug bool
+
 	curToken  token.Token
 	peekToken token.Token
 
@@ -51,10 +55,16 @@ type Parser struct {
 	infixParseFns  map[token.TokenType]infixParseFn
 }
 
-func New(l *lexer.Lexer) *Parser {
+func New(l *lexer.Lexer, log *logger.Logger, debug bool) *Parser {
 	p := &Parser{
 		l:      l,
 		Errors: []errors.Error{},
+		log:    log,
+		debug:  debug,
+	}
+
+	if debug {
+		p.log.DefineSection("Parsing", "parsing description here")
 	}
 
 	p.prefixParseFns = make(map[token.TokenType]prefixParseFn)

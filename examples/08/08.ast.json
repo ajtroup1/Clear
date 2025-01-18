@@ -6,7 +6,7 @@
         "Type": "*",
         "Literal": "*",
         "Line": 1,
-        "Col": 12
+        "Col": 11
       },
       "Expression": null
     },
@@ -14,22 +14,22 @@
       "Token": {
         "Type": "IDENT",
         "Literal": "pow",
-        "Line": 0,
-        "Col": 0
+        "Line": 3,
+        "Col": 6
       },
       "Expression": {
         "Token": {
           "Type": "(",
           "Literal": "(",
           "Line": 3,
-          "Col": 10
+          "Col": 9
         },
         "Function": {
           "Token": {
             "Type": "IDENT",
             "Literal": "pow",
-            "Line": 0,
-            "Col": 0
+            "Line": 3,
+            "Col": 6
           },
           "Value": "pow"
         },
@@ -38,8 +38,8 @@
             "Token": {
               "Type": "INT",
               "Literal": "5",
-              "Line": 0,
-              "Col": 0
+              "Line": 3,
+              "Col": 10
             },
             "Value": 5
           },
@@ -47,8 +47,8 @@
             "Token": {
               "Type": "INT",
               "Literal": "3",
-              "Line": 0,
-              "Col": 0
+              "Line": 3,
+              "Col": 13
             },
             "Value": 3
           }
@@ -61,15 +61,15 @@
       "Token": {
         "Type": "MOD",
         "Literal": "mod",
-        "Line": 0,
-        "Col": 0
+        "Line": 1,
+        "Col": 1
       },
       "Name": {
         "Token": {
           "Type": "IDENT",
           "Literal": "math",
-          "Line": 0,
-          "Col": 0
+          "Line": 1,
+          "Col": 5
         },
         "Value": "math"
       },

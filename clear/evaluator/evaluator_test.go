@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/ajtroup1/clear/lexer"
+	"github.com/ajtroup1/clear/logger"
 	"github.com/ajtroup1/clear/modules"
 	"github.com/ajtroup1/clear/object"
 	"github.com/ajtroup1/clear/parser"
@@ -412,8 +413,9 @@ func TestArrayIndexExpressions(t *testing.T) {
 }
 
 func testEval(input string) object.Object {
-	l := lexer.New(input)
-	p := parser.New(l)
+	log := logger.NewLogger()
+	l := lexer.New(input, log, false)
+	p := parser.New(l, log, false)
 	program := p.ParseProgram()
 	env := object.NewEnvironment()
 	modules.Register(env)

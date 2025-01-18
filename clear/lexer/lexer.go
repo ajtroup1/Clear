@@ -2,22 +2,29 @@ package lexer
 
 import (
 	"github.com/ajtroup1/clear/errors"
+	"github.com/ajtroup1/clear/logger"
 	"github.com/ajtroup1/clear/token"
 )
 
 type Lexer struct {
-	input         string
-	position      int  // current position in input (points to current char)
-	readPosition  int  // current reading position in input (after current char)
-	ch            byte // current char under examination
-	line          int
-	col           int
+	input        string
+	position     int  // current position in input (points to current char)
+	readPosition int  // current reading position in input (after current char)
+	ch           byte // current char under examination
+	line         int
+	col          int
+
+	log   *logger.Logger
+	debug bool
 
 	Errors []errors.Error
 }
 
-func New(input string) *Lexer {
-	l := &Lexer{input: input, line: 1, col: 0, Errors: []errors.Error{}}
+func New(input string, lo *logger.Logger, debug bool) *Lexer {
+	l := &Lexer{input: input, line: 1, col: 0, Errors: []errors.Error{}, log: lo, debug: debug}
+	if debug {
+		l.log.DefineSection("Lexical Analysis / Lexing / Tokenization", "lexing description here")
+	}
 	l.readChar()
 	return l
 }
@@ -93,7 +100,7 @@ func (l *Lexer) NextToken() token.Token {
 			tok.Literal = l.readIdentifier()
 			tok.Type = token.LookupIdent(tok.Literal)
 			tok.Line = l.line
-			tok.Col = l.col-len(tok.Literal)
+			tok.Col = l.col - len(tok.Literal)
 			return tok
 		} else if isDigit(l.ch) {
 			tok.Type = token.INT
@@ -103,7 +110,7 @@ func (l *Lexer) NextToken() token.Token {
 			}
 			tok.Literal = lit
 			tok.Line = l.line
-			tok.Col = l.col-len(tok.Literal)
+			tok.Col = l.col - len(tok.Literal)
 			return tok
 		} else {
 			err := errors.New("illegal character '"+string(l.ch)+"'", l.line, l.col, "lexer", "not implemented", false)

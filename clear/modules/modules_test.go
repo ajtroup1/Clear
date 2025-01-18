@@ -109,6 +109,8 @@ func TestStringsBuiltins(t *testing.T) {
 		{"mod strings: [concatDelim]; strings.concatDelim(\", \", \"Hello\", \"World\", \"How\", \"Are\", \"You\");", "Hello, World, How, Are, You"},
 		{"mod strings: [split]; strings.split(\"Hello, World\", \", \");", []string{"Hello", "World"}},
 		{"mod strings: [split]; strings.split(\"Hello, World, How, Are, You\", \", \");", []string{"Hello", "World", "How", "Are", "You"}},
+		{"mod strings: [upper]: mod arrays: [len]; let str = \"hello, world\"; strings.upper(str);", "HELLO, WORLD"},
+		{"mod strings: [lower]: mod arrays: [len]; let str = \"HELLO, WORLD\"; strings.lower(str);", "hello, world"},
 	}
 
 	for _, tt := range tests {

@@ -111,4 +111,36 @@ var StringsBuiltins = map[string]*object.Builtin{
 			return array
 		},
 	},
+
+	"lower": &object.Builtin{
+		Fn: func(args ...object.Object) object.Object {
+			if len(args) != 1 {
+				return &object.Error{Message: fmt.Sprintf("wrong number of arguments. got=%d, want=1", len(args))}
+			}
+
+			if args[0].Type() != object.STRING_OBJ {
+				return &object.Error{Message: fmt.Sprintf("argument must be STRING, got %s", args[0].Type())}
+			}
+
+			strArg := args[0].(*object.String)
+			return &object.String{Value: strings.ToLower(strArg.Value)}
+		},
+	},
+
+	"upper": &object.Builtin{
+		Fn: func(args ...object.Object) object.Object {
+			if len(args) != 1 {
+				return &object.Error{Message: fmt.Sprintf("wrong number of arguments. got=%d, want=1", len(args))}
+			}
+
+			if args[0].Type() != object.STRING_OBJ {
+				return &object.Error{Message: fmt.Sprintf("argument must be STRING, got %s", args[0].Type())}
+			}
+
+			strArg := args[0].(*object.String)
+			return &object.String{Value: strings.ToUpper(strArg.Value)}
+		},
+	},
+
+	// TODO: replace, trim (family)
 }

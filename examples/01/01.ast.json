@@ -1,0 +1,39 @@
+{
+  "NoStatements": false,
+  "Statements": [
+    {
+      "Token": {
+        "Type": "LET",
+        "Literal": "let"
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "x"
+        },
+        "Value": "x"
+      },
+      "Value": {
+        "Token": {
+          "Type": "INT",
+          "Literal": "7"
+        },
+        "Value": 7
+      }
+    },
+    {
+      "Token": {
+        "Type": "RETURN",
+        "Literal": "return"
+      },
+      "ReturnValue": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "x"
+        },
+        "Value": "x"
+      }
+    }
+  ],
+  "Modules": null
+}

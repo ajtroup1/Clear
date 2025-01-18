@@ -7,7 +7,7 @@ This repo contains tinkering on interpreters and compilers
 If I care about one of the subfolders that exists in this repo, than hopefully it should have a corresponding `README.md` file to explain what's going on there
 
 
-I've been using numerous resources such as:
+I've been using multiple resources such as:
 - Writing an Interpreter in Go by `Thorston Ball`
 - Writing a Compiler in Go also by `Thorston Ball`
 - `Tyler Laceby`'s series on parsing with the Pikachu on the cover

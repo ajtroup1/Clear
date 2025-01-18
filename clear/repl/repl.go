@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/ajtroup1/clear/errors"
 	"github.com/ajtroup1/clear/evaluator"
 	"github.com/ajtroup1/clear/lexer"
 	"github.com/ajtroup1/clear/modules"
@@ -31,8 +32,8 @@ func Start(in io.Reader, out io.Writer) {
 		p := parser.New(l)
 
 		program := p.ParseProgram()
-		if len(p.Errors()) != 0 {
-			printParserErrors(out, p.Errors(), program.String())
+		if len(p.Errors) != 0 {
+			printParserErrors(out, p.Errors, program.String())
 			continue
 		}
 
@@ -57,12 +58,12 @@ const MONKEY_FACE = `            __,__
            '-----'
 `
 
-func printParserErrors(out io.Writer, errors []string, line string) {
+func printParserErrors(out io.Writer, errors []errors.Error, line string) {
 	io.WriteString(out, MONKEY_FACE)
 	io.WriteString(out, "Woops! We ran into some monkey business here!\n")
 	io.WriteString(out, " line: "+line+"\n")
 	io.WriteString(out, " parser errors:\n")
-	for _, msg := range errors {
-		io.WriteString(out, "\t"+msg+"\n")
+	for _, err := range errors {
+		io.WriteString(out, "\t"+err.Message+"\n")
 	}
 }

@@ -8,6 +8,7 @@ import (
 	"os/user"
 	"strings"
 
+	"github.com/ajtroup1/clear/errors"
 	"github.com/ajtroup1/clear/evaluator"
 	"github.com/ajtroup1/clear/modules"
 	"github.com/ajtroup1/clear/object"
@@ -97,6 +98,16 @@ func runScript(filepath string, debug bool) {
 	env := object.NewEnvironment()
 	modules.Register(env)
 	evaluated := evaluator.Eval(program, env)
+
+	if errors.HasErrors(lexer.Errors, parser.Errors) {
+		fmt.Print(errors.ReportErrors(lexer.Errors, parser.Errors))
+		os.Exit(1)
+	}
+
+	if evaluated != nil && evaluated.Type() == object.ERROR_OBJ {
+		fmt.Print(errors.ReportEvaluationError(evaluated.(*object.Error)))
+		os.Exit(1)
+	}
 
 	fmt.Printf("\n----------\nProgram returned: %s\n----------\n", evaluated.Inspect())
 }

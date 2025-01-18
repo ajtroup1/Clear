@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/ajtroup1/clear/ast"
+	"github.com/ajtroup1/clear/errors"
 	"github.com/ajtroup1/clear/token"
 )
 
@@ -43,7 +44,14 @@ func (p *Parser) parseModuleAccess() ast.Expression {
 	p.nextToken()
 	if !p.peekTokenIs(token.IDENT) {
 		msg := fmt.Sprintf("expected next token to be IDENT, got %v instead", p.peekToken.Type)
-		p.errors = append(p.errors, msg)
+		err := errors.Error{
+			Message: msg,
+			Line:    p.peekToken.Line,
+			Col:     p.peekToken.Col,
+			Stage:   "Parsing",
+			Context: p.peekToken.Literal,
+		}
+		p.Errors = append(p.Errors, err)
 		return nil
 	}
 	p.nextToken()
@@ -57,7 +65,14 @@ func (p *Parser) parseIntegerLiteral() ast.Expression {
 	value, err := strconv.ParseInt(p.curToken.Literal, 0, 64)
 	if err != nil {
 		msg := fmt.Sprintf("could not parse %q as integer", p.curToken.Literal)
-		p.errors = append(p.errors, msg)
+		err := errors.Error{
+			Message: msg,
+			Line:    p.curToken.Line,
+			Col:     p.curToken.Col,
+			Stage:   "Parsing",
+			Context: p.curToken.Literal,
+		}
+		p.Errors = append(p.Errors, err)
 		return nil
 	}
 
@@ -72,7 +87,15 @@ func (p *Parser) parseFloatLiteral() ast.Expression {
 	value, err := strconv.ParseFloat(p.curToken.Literal, 64)
 	if err != nil {
 		msg := fmt.Sprintf("could not parse %q as float", p.curToken.Literal)
-		p.errors = append(p.errors, msg)
+		err := errors.Error{
+			Message: msg,
+			Line:    p.curToken.Line,
+			Col:     p.curToken.Col,
+			Stage:   "Parsing",
+			Context: p.curToken.Literal,
+		}
+
+		p.Errors = append(p.Errors, err)
 		return nil
 	}
 

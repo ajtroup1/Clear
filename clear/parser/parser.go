@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/ajtroup1/clear/ast"
+	"github.com/ajtroup1/clear/errors"
 	"github.com/ajtroup1/clear/lexer"
 	"github.com/ajtroup1/clear/token"
 )
@@ -41,7 +42,7 @@ type (
 
 type Parser struct {
 	l      *lexer.Lexer
-	errors []string
+	Errors []errors.Error
 
 	curToken  token.Token
 	peekToken token.Token
@@ -53,7 +54,7 @@ type Parser struct {
 func New(l *lexer.Lexer) *Parser {
 	p := &Parser{
 		l:      l,
-		errors: []string{},
+		Errors: []errors.Error{},
 	}
 
 	p.prefixParseFns = make(map[token.TokenType]prefixParseFn)
@@ -113,19 +114,54 @@ func (p *Parser) expectPeek(t token.TokenType) bool {
 	}
 }
 
-func (p *Parser) Errors() []string {
-	return p.errors
-}
-
 func (p *Parser) peekError(t token.TokenType) {
 	msg := fmt.Sprintf("expected next token to be %s, got %s instead",
 		t, p.peekToken.Type)
-	p.errors = append(p.errors, msg)
+	err := errors.Error{
+		Message: msg,
+		Line:    p.peekToken.Line,
+		Col:     p.peekToken.Col,
+		Stage:   "Parsing",
+		Context: p.peekToken.Literal,
+	}
+	p.Errors = append(p.Errors, err)
 }
 
 func (p *Parser) noPrefixParseFnError(t token.TokenType) {
+	if t == token.ILLEGAL {
+		// Illegal tokens are reported by the lexer
+		return
+	}
+	if isStatement(t) {
+		msg := fmt.Sprintf("'%s' statement not allowed as expression", t)
+		err := errors.Error{
+			Message: msg,
+			Line:    p.curToken.Line,
+			Col:     p.curToken.Col,
+			Stage:   "Parsing",
+			Context: p.curToken.Literal,
+		}
+		p.Errors = append(p.Errors, err)
+		return
+	}
+
 	msg := fmt.Sprintf("no prefix parse function for %s found", t)
-	p.errors = append(p.errors, msg)
+	err := errors.Error{
+		Message: msg,
+		Line:    p.curToken.Line,
+		Col:     p.curToken.Col,
+		Stage:   "Parsing",
+		Context: p.curToken.Literal,
+	}
+	p.Errors = append(p.Errors, err)
+}
+
+func isStatement(t token.TokenType) bool {
+	switch t {
+	case token.LET, token.RETURN, token.MOD:
+		return true
+	}
+	return false
 }
 
 func (p *Parser) ParseProgram() *ast.Program {

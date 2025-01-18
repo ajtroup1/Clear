@@ -109,5 +109,5 @@ func runScript(filepath string, debug bool) {
 		os.Exit(1)
 	}
 
-	fmt.Printf("\n----------\nProgram returned: %s\n----------\n", evaluated.Inspect())
+	fmt.Printf("\nProgram returned: %s\n\n", evaluated.Inspect())
 }

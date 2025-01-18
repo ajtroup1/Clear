@@ -31,56 +31,84 @@ const (
 type Object interface {
 	Type() ObjectType
 	Inspect() string
+	Line() int
+	Col() int
+}
+
+type Position struct {
+	Line int
+	Col  int
 }
 
 type Integer struct {
+	Position
 	Value int64
 }
 
 func (i *Integer) Type() ObjectType { return INTEGER_OBJ }
 func (i *Integer) Inspect() string  { return fmt.Sprintf("%d", i.Value) }
+func (i *Integer) Line() int        { return i.Position.Line }
+func (i *Integer) Col() int         { return i.Position.Col }
 
 type Float struct {
+	Position
 	Value float64
 }
 
 func (f *Float) Type() ObjectType { return FLOAT_OBJ }
 func (f *Float) Inspect() string  { return fmt.Sprintf("%f", f.Value) }
+func (f *Float) Line() int        { return f.Position.Line }
+func (f *Float) Col() int         { return f.Position.Col }
 
 type Boolean struct {
+	Position
 	Value bool
 }
 
 func (b *Boolean) Type() ObjectType { return BOOLEAN_OBJ }
 func (b *Boolean) Inspect() string  { return fmt.Sprintf("%t", b.Value) }
+func (b *Boolean) Line() int        { return b.Position.Line }
+func (b *Boolean) Col() int         { return b.Position.Col }
 
 type String struct {
+	Position
 	Value string
 }
 
 func (s *String) Type() ObjectType { return STRING_OBJ }
 func (s *String) Inspect() string  { return s.Value }
+func (s *String) Line() int        { return s.Position.Line }
+func (s *String) Col() int         { return s.Position.Col }
 
 type Null struct{}
 
 func (n *Null) Type() ObjectType { return NULL_OBJ }
 func (n *Null) Inspect() string  { return "null" }
+func (n *Null) Line() int        { return 0 }
+func (n *Null) Col() int         { return 0 }
 
 type ReturnValue struct {
+	Position
 	Value Object
 }
 
 func (rv *ReturnValue) Type() ObjectType { return RETURN_VALUE_OBJ }
 func (rv *ReturnValue) Inspect() string  { return rv.Value.Inspect() }
+func (rv *ReturnValue) Line() int        { return rv.Position.Line }
+func (rv *ReturnValue) Col() int         { return rv.Position.Col }
 
 type Error struct {
+	Position
 	Message string
 }
 
 func (e *Error) Type() ObjectType { return ERROR_OBJ }
 func (e *Error) Inspect() string  { return "ERROR: " + e.Message }
+func (e *Error) Line() int        { return e.Position.Line }
+func (e *Error) Col() int         { return e.Position.Col }
 
 type Function struct {
+	Position
 	Parameters []*ast.Identifier
 	Body       *ast.BlockStatement
 	Env        *Environment
@@ -104,17 +132,23 @@ func (f *Function) Inspect() string {
 
 	return out.String()
 }
+func (f *Function) Line() int { return f.Position.Line }
+func (f *Function) Col() int  { return f.Position.Col }
 
 type BuiltinFunction func(args ...Object) Object
 
 type Builtin struct {
+	Position
 	Fn BuiltinFunction
 }
 
 func (b *Builtin) Type() ObjectType { return BUILTIN_OBJ }
 func (b *Builtin) Inspect() string  { return "builtin function" }
+func (b *Builtin) Line() int        { return b.Position.Line }
+func (b *Builtin) Col() int         { return b.Position.Col }
 
 type Array struct {
+	Position
 	Elements []Object
 }
 
@@ -133,6 +167,8 @@ func (ao *Array) Inspect() string {
 
 	return out.String()
 }
+func (ao *Array) Line() int { return ao.Position.Line }
+func (ao *Array) Col() int  { return ao.Position.Col }
 
 type HashKey struct {
 	Type  ObjectType
@@ -162,6 +198,7 @@ type HashPair struct {
 	Value Object
 }
 type Hash struct {
+	Position
 	Pairs map[HashKey]HashPair
 }
 
@@ -178,6 +215,8 @@ func (h *Hash) Inspect() string {
 	out.WriteString("}")
 	return out.String()
 }
+func (h *Hash) Line() int { return h.Position.Line }
+func (h *Hash) Col() int  { return h.Position.Col }
 
 type Hashable interface {
 	HashKey() HashKey

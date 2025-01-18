@@ -1,5 +1,7 @@
 let x = 7;
 
-let y = bob;
+let y = x;
+
+x = y;
 
 x

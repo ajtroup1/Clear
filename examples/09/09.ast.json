@@ -46,11 +46,11 @@
       "Value": {
         "Token": {
           "Type": "IDENT",
-          "Literal": "bob",
+          "Literal": "x",
           "Line": 3,
           "Col": 9
         },
-        "Value": "bob"
+        "Value": "x"
       }
     },
     {
@@ -60,11 +60,37 @@
         "Line": 5,
         "Col": 1
       },
-      "Expression": {
+      "Name": {
         "Token": {
           "Type": "IDENT",
           "Literal": "x",
           "Line": 5,
+          "Col": 1
+        },
+        "Value": "x"
+      },
+      "Value": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "y",
+          "Line": 5,
+          "Col": 5
+        },
+        "Value": "y"
+      }
+    },
+    {
+      "Token": {
+        "Type": "IDENT",
+        "Literal": "x",
+        "Line": 7,
+        "Col": 1
+      },
+      "Expression": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "x",
+          "Line": 7,
           "Col": 1
         },
         "Value": "x"

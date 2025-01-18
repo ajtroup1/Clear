@@ -50,8 +50,8 @@ func ReportErrors(lexErrors, parseErrors []Error) string {
 
 func ReportEvaluationError(err *object.Error) string {
 	var out string
-	out += RED + "Program evaluatation resulted in errors\n"
-	out += fmt.Sprintf("\nEvaluation::Error ---> %s\n"+CLEAR, err.Message)
+	out += RED + "Program evaluatation resulted in an error\n"
+	out += fmt.Sprintf("\nEvaluation::Error [line: %d, col: %d] ---> %s\n"+CLEAR, err.Position.Line, err.Position.Col, err.Message)
 	return out
 }
 

@@ -1,6 +1,8 @@
 package parser
 
 import (
+	"fmt"
+
 	"github.com/ajtroup1/clear/ast"
 	"github.com/ajtroup1/clear/token"
 )
@@ -14,7 +16,7 @@ func (p *Parser) parseStatement() ast.Statement {
 	case token.RETURN:
 		return p.parseReturnStatement()
 	default:
-		return p.parseExpressionStatement()
+		return p.parseExpressionOrAssignStatement()
 	}
 }
 
@@ -25,36 +27,35 @@ func (p *Parser) parseModuleStatement() *ast.ModuleStatement {
 		return nil
 	}
 
-	
 	stmt.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
-	
+
 	if !p.expectPeek(token.COLON) {
 		return nil
 	}
-	
+
 	if p.peekTokenIs(token.ASTERISK) {
 		stmt.ImportAll = true
 		return stmt
 	}
-	
+
 	if !p.expectPeek(token.LBRACKET) {
 		return nil
 	}
-	
+
 	if p.peekTokenIs(token.RBRACKET) {
 		// TODO: Warning for empty import list
 		return stmt
 	}
-	
+
 	for !p.peekTokenIs(token.RBRACKET) {
 		if !p.expectPeek(token.IDENT) {
 			return nil
 		}
-		
+
 		ident := &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
-		
+
 		stmt.Imports = append(stmt.Imports, ident)
-		
+
 		if p.peekTokenIs(token.COMMA) {
 			p.nextToken()
 		}
@@ -93,6 +94,34 @@ func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
 	p.nextToken()
 
 	stmt.ReturnValue = p.parseExpression(LOWEST)
+
+	if p.peekTokenIs(token.SEMICOLON) {
+		p.nextToken()
+	}
+
+	return stmt
+}
+
+func (p *Parser) parseExpressionOrAssignStatement() ast.Statement {
+	ident := p.parseIdentifier()
+	if p.peekTokenIs(token.ASSIGN) {
+		if id, ok := ident.(*ast.Identifier); ok {
+			return p.parseAssignStatement(id)
+		}
+	}
+
+	// fmt.Printf("current token: %s\n", p.curToken.Literal)
+	return p.parseExpressionStatement()
+}
+
+func (p *Parser) parseAssignStatement(ident *ast.Identifier) *ast.AssignStatement {
+	stmt := &ast.AssignStatement{Token: p.curToken, Name: ident}
+	
+	p.nextToken()
+	p.nextToken()
+	fmt.Printf("current token: %s\n", p.curToken.Literal)
+
+	stmt.Value = p.parseExpression(LOWEST)
 
 	if p.peekTokenIs(token.SEMICOLON) {
 		p.nextToken()

@@ -6,6 +6,7 @@ import (
 
 	"github.com/ajtroup1/clear/ast"
 	"github.com/ajtroup1/clear/lexer"
+	"github.com/ajtroup1/clear/token"
 )
 
 func TestLetStatements(t *testing.T) {
@@ -40,6 +41,64 @@ func TestLetStatements(t *testing.T) {
 			return
 		}
 	}
+}
+
+func TestAssignStatements(t *testing.T) {
+	tests := []struct {
+		input              string
+		expectedIdentifier string
+		expectedValue      interface{}
+	}{
+		{"let x = 5; x = 2;", "x", 2},
+		{"let y = true; y = false;", "y", false},
+		{"let x = 7; x = x + 3;", "x", &ast.InfixExpression{
+			Token:    token.Token{Type: token.PLUS, Literal: "+"},
+			Left:     &ast.Identifier{Token: token.Token{Type: token.IDENT, Literal: "x"}, Value: "x"},
+			Operator: "+",
+			Right:    &ast.IntegerLiteral{Token: token.Token{Type: token.INT, Literal: "3"}, Value: 3},
+		}},
+	}
+
+	for _, tt := range tests {
+		l := lexer.New(tt.input)
+		p := New(l)
+		program := p.ParseProgram()
+		checkParserErrors(t, p)
+
+		if len(program.Statements) != 2 {
+			t.Fatalf("program.Statements does not contain 2 statements. got=%d", len(program.Statements))
+		}
+
+		stmt := program.Statements[1]
+		if !testAssignStatement(t, stmt, tt.expectedIdentifier) {
+			return
+		}
+
+		val := stmt.(*ast.AssignStatement).Value
+		if !testLiteralExpression(t, val, tt.expectedValue) {
+			return
+		}
+	}
+}
+
+func testAssignStatement(t *testing.T, s ast.Statement, name string) bool {
+	assignStmt, ok := s.(*ast.AssignStatement)
+	if !ok {
+		t.Errorf("s not *ast.AssignStatement. got=%T", s)
+		return false
+	}
+
+	if assignStmt.Name.Value != name {
+		t.Errorf("assignStmt.Name.Value not '%s'. got=%s", name, assignStmt.Name.Value)
+		return false
+	}
+
+	if assignStmt.Name.TokenLiteral() != name {
+		t.Errorf("s.Name not '%s'. got=%s", name, assignStmt.Name.TokenLiteral())
+		return false
+	}
+
+	return true
 }
 
 func TestReturnStatements(t *testing.T) {
@@ -868,6 +927,25 @@ func testInfixExpression(t *testing.T, exp ast.Expression, left interface{},
 	return true
 }
 
+func testPrefixExpression(t *testing.T, exp ast.Expression, operator string, right interface{}) bool {
+	opExp, ok := exp.(*ast.PrefixExpression)
+	if !ok {
+		t.Errorf("exp is not ast.PrefixExpression. got=%T(%s)", exp, exp)
+		return false
+	}
+
+	if opExp.Operator != operator {
+		t.Errorf("exp.Operator is not '%s'. got=%q", operator, opExp.Operator)
+		return false
+	}
+
+	if !testLiteralExpression(t, opExp.Right, right) {
+		return false
+	}
+
+	return true
+}
+
 func testLiteralExpression(
 	t *testing.T,
 	exp ast.Expression,
@@ -882,9 +960,36 @@ func testLiteralExpression(
 		return testIdentifier(t, exp, v)
 	case bool:
 		return testBooleanLiteral(t, exp, v)
+	case *ast.Identifier:
+		return testIdentifier(t, exp, v.Value)
+	case *ast.IntegerLiteral:
+		return testIntegerLiteral(t, exp, v.Value)
+
+	case *ast.InfixExpression:
+		infix, ok := exp.(*ast.InfixExpression)
+		if !ok {
+			t.Errorf("exp not *ast.InfixExpression. got=%T", exp)
+			return false
+		}
+
+		if infix.Operator != v.Operator {
+			t.Errorf("infix.Operator not %s. got=%s", v.Operator, infix.Operator)
+			return false
+		}
+
+		if !testLiteralExpression(t, infix.Left, v.Left) {
+			return false
+		}
+
+		if !testLiteralExpression(t, infix.Right, v.Right) {
+			return false
+		}
+
+		return true
+	default:
+		t.Errorf("type of exp not handled. got=%T", exp)
+		return false
 	}
-	t.Errorf("type of exp not handled. got=%T", exp)
-	return false
 }
 
 func testIntegerLiteral(t *testing.T, il ast.Expression, value int64) bool {

@@ -19,7 +19,7 @@ var StringsBuiltins = map[string]*object.Builtin{
 			case *object.String:
 				return &object.Integer{Value: int64(len(arg.Value))}
 			default:
-				return &object.Error{Message: fmt.Sprintf("argument to `len` not supported, got type ", arg.Type())}
+				return &object.Error{Message: fmt.Sprintf("argument to `len` not supported, got type %s", arg.Type())}
 			}
 		},
 	},

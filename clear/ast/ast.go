@@ -133,8 +133,26 @@ func (ls *LetStatement) String() string {
 	return out.String()
 }
 
+type AssignStatement struct {
+	Token token.Token
+	Name  *Identifier
+	Value Expression
+}
+
+func (as *AssignStatement) statementNode()       {}
+func (as *AssignStatement) TokenLiteral() string { return as.Token.Literal }
+func (as *AssignStatement) String() string {
+	var out bytes.Buffer
+
+	out.WriteString(as.Name.String())
+	out.WriteString(" = ")
+	out.WriteString(as.Value.String())
+	out.WriteString(";")
+
+	return out.String()
+}
+
 // Statement used to return a value from a function
-// ? To also return a value from the program?
 type ReturnStatement struct {
 	Token       token.Token // the 'return' token
 	ReturnValue Expression

@@ -85,6 +85,27 @@ func TestArraysBuiltins(t *testing.T) {
 			"mod arrays: [rest]; let arr = [[1, 2], [3, 4], [5, 6]]; arrays.rest(arr);",
 			[][]int{{3, 4}, {5, 6}},
 		},
+		// Test if len works with both arrays and strings
+		{
+			"mod arrays: [len]: mod strings: [len]; let arr = [1, 2, 3]; let str = \"Hello\"; arrays.len(arr) + strings.len(str);",
+			8,
+		},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input)
+		testExpectedObject(t, evaluated, tt.expected)
+	}
+}
+
+func TestStringsBuiltins(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected interface{}
+	}{
+		{"mod strings: [len]; strings.len(\"Hello, World!\");", 13},
+		{"mod strings: [concat]; strings.concat(\"Hello\", \"World\");", "HelloWorld"},
+		{"mod strings: [concatDelim]; strings.concatDelim(\", \", \"Hello\", \"World\");", "Hello, World"},
 	}
 
 	for _, tt := range tests {

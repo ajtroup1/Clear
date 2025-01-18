@@ -1,0 +1,7 @@
+mod strings: [len, concat];
+mod arrays: [len];
+
+let arr = [1, 2, 3];
+let str = concat("Hello", " ", "World!");
+
+arrays.len(arr) + strings.len(str);

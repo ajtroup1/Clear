@@ -19,6 +19,7 @@
 
 ### General Additions
   1. Comments
+  2. For Statements
 
 ### Quick Fixes
   1. Nil pointer dereference upon no return value specified

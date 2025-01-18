@@ -15,9 +15,10 @@ func TestArraysBuiltins(t *testing.T) {
 		expected interface{}
 	}{
 		{"mod arrays: [len]; let arr = [1, 2, 3]; arrays.len(arr);", 3},
-		{"let arr = [1, 2, 3]; arrays.push(arr, 4);", []int{1, 2, 3, 4}},
-		{"let arr = [\"Dog\", \"Cat\", \"Fish\"]; arrays.pop(arr);", "Fish"},
-		{`let mathFunc = fn(x) { 
+		{"mod arrays: [push]; let arr = [1, 2, 3]; arrays.push(arr, 4);", []int{1, 2, 3, 4}},
+		{"mod arrays: [pop]; let arr = [\"Dog\", \"Cat\", \"Fish\"]; arrays.pop(arr);", "Fish"},
+		{`mod arrays: [first];
+			let mathFunc = fn(x) { 
 				x = x * 2; 
 				x = (x - 7) * 2; 
 				x = x * x + x; 
@@ -25,11 +26,65 @@ func TestArraysBuiltins(t *testing.T) {
 			}; 
 			let arr = [mathFunc(7), 2, 3]; 
 			arrays.first(arr);
-			`, 
+			`,
 			210,
 		},
-		{"let arr = [1, 2, 3]; arrays.last(arr);", 3},
-		{"let arr = [1, 2, 3]; arrays.rest(arr);", []int{2, 3}},
+		{"mod arrays: [last]; let arr = [1, 2, 3]; arrays.last(arr);", 3},
+		{"mod arrays: [rest]; let arr = [1, 2, 3]; arrays.rest(arr);", []int{2, 3}},
+		// Testing arrays with a large number of elements
+		{
+			"mod arrays: [len]; let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; arrays.len(arr);",
+			10,
+		},
+		// Pushing elements to an array repeatedly to test large array functionality
+		{
+			"mod arrays: [push, len]; let arr = [1]; arrays.push(arr, 2); arrays.push(arr, 3); arrays.push(arr, 4); arrays.push(arr, 5); arrays.push(arr, 6); arrays.push(arr, 7); arrays.push(arr, 8); arrays.push(arr, 9); arrays.push(arr, 10); arrays.len(arr);",
+			10,
+		},
+		// Testing pop on a large array
+		{
+			"mod arrays: [pop, len]; let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; arrays.pop(arr); arrays.len(arr);",
+			9,
+		},
+		// Test pop until empty
+		{
+			"mod arrays: [pop, len]; let arr = [1, 2, 3]; arrays.pop(arr); arrays.pop(arr); arrays.pop(arr); arrays.len(arr);",
+			0,
+		},
+		// Test first and last with large array
+		{
+			"mod arrays: [first, last]; let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; arrays.first(arr);",
+			1,
+		},
+		{
+			"mod arrays: [first, last]; let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; arrays.last(arr);",
+			10,
+		},
+		// Testing rest with a large array
+		{
+			"mod arrays: [rest]; let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; arrays.rest(arr);",
+			[]int{2, 3, 4, 5, 6, 7, 8, 9, 10},
+		},
+		// Testing push with a nested array
+		{
+			"mod arrays: [push, len]; let arr = [[1, 2], [3, 4]]; arrays.push(arr, [5, 6]); arrays.len(arr);",
+			3,
+		},
+		// Test if `first` works correctly for a nested array
+		{
+			"mod arrays: [first]; let arr = [[1, 2], [3, 4], [5, 6]]; arrays.first(arr);",
+			[]int{1, 2},
+		},
+		// Test if `last` works correctly for a nested array
+		{
+			"mod arrays: [last]; let arr = [[1, 2], [3, 4], [5, 6]]; arrays.last(arr);",
+			[]int{5, 6},
+		},
+		// Test rest with a nested array
+		{
+			"mod arrays: [rest]; let arr = [[1, 2], [3, 4], [5, 6]]; arrays.rest(arr);",
+			[][]int{{3, 4}, {5, 6}},
+		},
 	}
 
 	for _, tt := range tests {

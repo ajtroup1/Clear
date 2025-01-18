@@ -1,8 +1,6 @@
 package parser
 
 import (
-	"fmt"
-
 	"github.com/ajtroup1/clear/ast"
 	"github.com/ajtroup1/clear/token"
 )
@@ -119,7 +117,7 @@ func (p *Parser) parseAssignStatement(ident *ast.Identifier) *ast.AssignStatemen
 	
 	p.nextToken()
 	p.nextToken()
-	fmt.Printf("current token: %s\n", p.curToken.Literal)
+	// fmt.Printf("current token: %s\n", p.curToken.Literal)
 
 	stmt.Value = p.parseExpression(LOWEST)
 

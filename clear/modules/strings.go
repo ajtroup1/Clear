@@ -2,6 +2,7 @@ package modules
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/ajtroup1/clear/object"
 )
@@ -80,6 +81,34 @@ var StringsBuiltins = map[string]*object.Builtin{
 			}
 
 			return &object.String{Value: output}
+		},
+	},
+
+	"split": &object.Builtin{
+		Fn: func(args ...object.Object) object.Object {
+			if len(args) != 2 {
+				return &object.Error{Message: fmt.Sprintf("wrong number of arguments. got=%d, want=2", len(args))}
+			}
+
+			if args[0].Type() != object.STRING_OBJ {
+				return &object.Error{Message: fmt.Sprintf("first argument must be STRING, got %s", args[0].Type())}
+			}
+
+			if args[1].Type() != object.STRING_OBJ {
+				return &object.Error{Message: fmt.Sprintf("second argument must be STRING, got %s", args[1].Type())}
+			}
+
+			strArg := args[0].(*object.String)
+			delimiterArg := args[1].(*object.String)
+
+			parts := strings.Split(strArg.Value, delimiterArg.Value)
+
+			array := &object.Array{}
+			for _, part := range parts {
+				array.Elements = append(array.Elements, &object.String{Value: part})
+			}
+
+			return array
 		},
 	},
 }

@@ -119,4 +119,29 @@ var ArraysBuiltins = map[string]*object.Builtin{
 			return arr.Elements[length-1]
 		},
 	},
+
+	"reverse": &object.Builtin{
+		Fn: func(args ...object.Object) object.Object {
+			if len(args) != 1 {
+				return &object.Error{Message: "wrong number of arguments"}
+			}
+
+			if args[0].Type() != object.ARRAY_OBJ {
+				return &object.Error{Message: "first argument must be ARRAY"}
+			}
+
+			arr := args[0].(*object.Array)
+			length := len(arr.Elements)
+			if length == 0 {
+				return arr
+			}
+
+			newElements := make([]object.Object, length)
+			for i, el := range arr.Elements {
+				newElements[length-i-1] = el
+			}
+
+			return &object.Array{Elements: newElements}
+		},
+	},
 }

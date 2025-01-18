@@ -44,7 +44,7 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 			return val
 		}
 		env.Set(node.Name.Value, val)
-	
+
 	case *ast.AssignStatement:
 		val := Eval(node.Value, env)
 		if isError(val) {
@@ -56,13 +56,13 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		// Eval Expressions
 	case *ast.IntegerLiteral:
 		return &object.Integer{Value: node.Value}
-		
+
 	case *ast.FloatLiteral:
 		return &object.Float{Value: node.Value}
-		
+
 	case *ast.Boolean:
 		return nativeBoolToBooleanObject(node.Value)
-		
+
 	case *ast.StringLiteral:
 		return &object.String{Value: node.Value}
 
@@ -72,31 +72,31 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 			return right
 		}
 		return evalPrefixExpression(node.Operator, right)
-		
+
 	case *ast.InfixExpression:
 		left := Eval(node.Left, env)
 		if isError(left) {
 			return left
 		}
-		
+
 		right := Eval(node.Right, env)
 		if isError(right) {
 			return right
 		}
-		
+
 		return evalInfixExpression(node.Operator, left, right)
-		
+
 	case *ast.IfExpression:
 		return evalIfExpression(node, env)
-		
+
 	case *ast.Identifier:
 		return evalIdentifier(node, env)
-		
+
 	case *ast.FunctionLiteral:
 		params := node.Parameters
 		body := node.Body
 		return &object.Function{Parameters: params, Env: env, Body: body}
-		
+
 	case *ast.CallExpression:
 		function := Eval(node.Function, env)
 		if isError(function) {
@@ -176,7 +176,7 @@ func evalModuleStatement(stmt *ast.ModuleStatement, env *object.Environment) obj
 	}
 
 	// fmt.Printf("//env module: %v\n", env.Modules)
-	
+
 	if stmt.ImportAll {
 		for name, fn := range module {
 			env.Set(name, fn)
@@ -307,12 +307,20 @@ func evalBangOperatorExpression(right object.Object) object.Object {
 }
 
 func evalMinusPrefixOperatorExpression(right object.Object) object.Object {
-	if right.Type() != object.INTEGER_OBJ {
+	if right.Type() != object.INTEGER_OBJ && right.Type() != object.FLOAT_OBJ {
 		return newError("unknown operator: -%s", right.Type())
 	}
+	
+	if right.Type() == object.INTEGER_OBJ {
+		value := right.(*object.Integer).Value
+		return &object.Integer{Value: -value}
+	}
+	if right.Type() == object.FLOAT_OBJ {
+		value := right.(*object.Float).Value
+		return &object.Float{Value: -value}
+	}
 
-	value := right.(*object.Integer).Value
-	return &object.Integer{Value: -value}
+	return newError("unknown operator: -%s", right.Type())
 }
 
 func evalIntegerInfixExpression(
@@ -371,7 +379,7 @@ func evalIdentifier(
 		return val
 	}
 
-	parts := strings.Split(node.Value, ".") 
+	parts := strings.Split(node.Value, ".")
 	if len(parts) == 2 {
 		moduleName, functionName := parts[0], parts[1]
 		if module, exists := env.Modules[moduleName]; exists {

@@ -13,8 +13,8 @@ func NewEnvironment() *Environment {
 }
 
 type Environment struct {
-	store map[string]Object
-	outer *Environment
+	store   map[string]Object
+	outer   *Environment
 	Modules map[string]map[string]*Builtin
 }
 

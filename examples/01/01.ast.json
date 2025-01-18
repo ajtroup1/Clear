@@ -3,6 +3,13 @@
   "Statements": [
     {
       "Token": {
+        "Type": "",
+        "Literal": ""
+      },
+      "Expression": null
+    },
+    {
+      "Token": {
         "Type": "LET",
         "Literal": "let"
       },
@@ -23,15 +30,63 @@
     },
     {
       "Token": {
-        "Type": "RETURN",
-        "Literal": "return"
+        "Type": "IDENT",
+        "Literal": "x"
       },
-      "ReturnValue": {
+      "Name": {
         "Token": {
           "Type": "IDENT",
           "Literal": "x"
         },
         "Value": "x"
+      },
+      "Value": {
+        "Token": {
+          "Type": "+",
+          "Literal": "+"
+        },
+        "Left": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "x"
+          },
+          "Value": "x"
+        },
+        "Operator": "+",
+        "Right": {
+          "Token": {
+            "Type": "INT",
+            "Literal": "10"
+          },
+          "Value": 10
+        }
+      }
+    },
+    {
+      "Token": {
+        "Type": "RETURN",
+        "Literal": "return"
+      },
+      "ReturnValue": {
+        "Token": {
+          "Type": "+",
+          "Literal": "+"
+        },
+        "Left": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "x"
+          },
+          "Value": "x"
+        },
+        "Operator": "+",
+        "Right": {
+          "Token": {
+            "Type": "INT",
+            "Literal": "3"
+          },
+          "Value": 3
+        }
       }
     }
   ],

@@ -1,0 +1,64 @@
+{
+  "NoStatements": false,
+  "Statements": [
+    {
+      "Token": {
+        "Type": "*",
+        "Literal": "*"
+      },
+      "Expression": null
+    },
+    {
+      "Token": {
+        "Type": "IDENT",
+        "Literal": "pow"
+      },
+      "Expression": {
+        "Token": {
+          "Type": "(",
+          "Literal": "("
+        },
+        "Function": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "pow"
+          },
+          "Value": "pow"
+        },
+        "Arguments": [
+          {
+            "Token": {
+              "Type": "INT",
+              "Literal": "5"
+            },
+            "Value": 5
+          },
+          {
+            "Token": {
+              "Type": "INT",
+              "Literal": "3"
+            },
+            "Value": 3
+          }
+        ]
+      }
+    }
+  ],
+  "Modules": [
+    {
+      "Token": {
+        "Type": "MOD",
+        "Literal": "mod"
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "math"
+        },
+        "Value": "math"
+      },
+      "ImportAll": true,
+      "Imports": null
+    }
+  ]
+}

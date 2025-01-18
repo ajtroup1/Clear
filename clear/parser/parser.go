@@ -162,11 +162,11 @@ func (p *Parser) ParseProgram() *ast.Program {
 	program.Statements = filteredStatements
 
 	if len(program.Statements) == 1 {
-		if stmt, ok := program.Statements[0].(*ast.ExpressionStatement); ok &&  stmt.Expression == nil {
+		if stmt, ok := program.Statements[0].(*ast.ExpressionStatement); ok && stmt.Expression == nil {
 			program.NoStatements = true
 		}
 	}
-	
+
 	if len(program.Statements) == 0 {
 		program.NoStatements = true
 	}

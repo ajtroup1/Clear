@@ -114,7 +114,7 @@ func (p *Parser) parseExpressionOrAssignStatement() ast.Statement {
 
 func (p *Parser) parseAssignStatement(ident *ast.Identifier) *ast.AssignStatement {
 	stmt := &ast.AssignStatement{Token: p.curToken, Name: ident}
-	
+
 	p.nextToken()
 	p.nextToken()
 	// fmt.Printf("current token: %s\n", p.curToken.Literal)

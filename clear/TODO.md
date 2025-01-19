@@ -18,10 +18,15 @@
       - Store line content to be able to point to the correct area
   4. Built-in testing suite:
       - Automated testing framework / prebuilt
+  5. Implement a lexer, parser, and evaluator in Clear
+      - Self host the language
+      - More as an example of Clear's features, not for efficiency 
 
 ### General Additions
   2. For / while Statements
 
 ### Quick Fixes
-  1. Nil pointer dereference upon no return value specified
-    - Default return 0 or something?
+  1. if statement condition booleans
+    - if (myBoolean)
+    - if (!myBoolean)
+  2. Empty var declaration

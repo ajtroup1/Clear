@@ -144,4 +144,26 @@ var ArraysBuiltins = map[string]*object.Builtin{
 			return &object.Array{Elements: newElements}
 		},
 	},
+
+	"contains": &object.Builtin{
+		Fn: func(args ...object.Object) object.Object {
+			if len(args) != 2 {
+				return &object.Error{Message: "wrong number of arguments"}
+			}
+
+			if args[0].Type() != object.ARRAY_OBJ {
+				return &object.Error{Message: "first argument must be ARRAY"}
+			}
+
+			arr := args[0].(*object.Array)
+
+			for _, el := range arr.Elements {
+				if el.Inspect() == args[1].Inspect() {
+					return &object.Boolean{Value: true}
+				}
+			}
+
+			return &object.Boolean{Value: false}
+		},
+	},
 }

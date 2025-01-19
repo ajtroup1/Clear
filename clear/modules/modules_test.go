@@ -46,6 +46,8 @@ func TestArraysBuiltins(t *testing.T) {
 		{"mod arrays: [rest]; let arr = [[1, 2], [3, 4], [5, 6]]; arrays.rest(arr);", [][]int{{3, 4}, {5, 6}}},
 		{"mod arrays: [len]: mod strings: [len]; let arr = [1, 2, 3]; let str = \"Hello\"; arrays.len(arr) + strings.len(str);", 8},
 		{"mod arrays: [reverse]; let arr = [1, 2, 3]; arrays.reverse(arr);", []int{3, 2, 1}},
+		{"mod arrays: [contains]; let arr = [1, 2, 3]; arrays.contains(arr, 2);", true},
+		{"mod arrays: [contains]; let arr = [1, 2, 3]; arrays.contains(arr, 99);", true},
 	}
 
 	for _, tt := range tests {
@@ -114,7 +116,6 @@ func testEval(input string) object.Object {
 	program := p.ParseProgram()
 	env := object.NewEnvironment()
 	Register(env)
-	// fmt.Printf("env: %+v\n", env)
 
 	return evaluator.Eval(program, env)
 }

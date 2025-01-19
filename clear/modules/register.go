@@ -7,7 +7,7 @@ func Register(env *object.Environment) {
 	env.SetModule("strings", StringsBuiltins)
 	env.SetModule("arrays", ArraysBuiltins)
 	// env.SetModule("rand", RandBuiltins)
-	// env.SetModule("io", IOBuiltins)
+	env.SetModule("io", IOBuiltins)
 	// env.SetModule("os", OSBuiltins)
 	// env.SetModule("time", TimeBuiltins)
 

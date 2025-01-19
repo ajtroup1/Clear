@@ -685,7 +685,7 @@ func TestFunctionParameterParsing(t *testing.T) {
 func TestCallExpressionParsing(t *testing.T) {
 	input := "add(1, 2 * 3, 4 + 5);"
 
-	log := logger.NewLogger()	
+	log := logger.NewLogger()
 
 	l := lexer.New(input, log, false)
 	p := New(l, log, false)

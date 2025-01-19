@@ -30,7 +30,7 @@ func (l *Logger) WriteFile(filepath string) {
 }
 
 func (l *Logger) InitText(filepath string) {
-	l.out += "# "+filepath+"\n"
+	l.out += "# " + filepath + "\n"
 	l.out += "Welcome to Clear\n\n*This file is a log of all activity that occured during the interpretation of your source code.*\n"
 }
 
@@ -39,5 +39,5 @@ func (l *Logger) DefineSection(section, description string) {
 	l.out += "## " + section
 	l.out += "\n"
 	l.out += description
-	l.out += "\n"
+	l.out += "\n\n"
 }

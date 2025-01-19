@@ -1,5 +1,7 @@
 package token
 
+import "fmt"
+
 type TokenType string
 
 const (
@@ -55,6 +57,10 @@ type Token struct {
 	Literal string
 	Line    int
 	Col     int
+}
+
+func (t *Token) String() string {
+	return fmt.Sprintf("- Token::%s '%s' at [line: %d, col: %d]", t.Type, t.Literal, t.Line, t.Col)
 }
 
 var keywords = map[string]TokenType{

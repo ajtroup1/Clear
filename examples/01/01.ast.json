@@ -3,25 +3,16 @@
   "Statements": [
     {
       "Token": {
-        "Type": "",
-        "Literal": "",
-        "Line": 0,
-        "Col": 0
-      },
-      "Expression": null
-    },
-    {
-      "Token": {
         "Type": "LET",
         "Literal": "let",
-        "Line": 3,
+        "Line": 2,
         "Col": 1
       },
       "Name": {
         "Token": {
           "Type": "IDENT",
           "Literal": "x",
-          "Line": 3,
+          "Line": 2,
           "Col": 5
         },
         "Value": "x"
@@ -30,7 +21,7 @@
         "Token": {
           "Type": "INT",
           "Literal": "7",
-          "Line": 3,
+          "Line": 2,
           "Col": 9
         },
         "Value": 7
@@ -40,14 +31,14 @@
       "Token": {
         "Type": "IDENT",
         "Literal": "x",
-        "Line": 5,
+        "Line": 4,
         "Col": 1
       },
       "Name": {
         "Token": {
           "Type": "IDENT",
           "Literal": "x",
-          "Line": 5,
+          "Line": 4,
           "Col": 1
         },
         "Value": "x"
@@ -56,27 +47,45 @@
         "Token": {
           "Type": "+",
           "Literal": "+",
-          "Line": 5,
-          "Col": 7
+          "Line": 4,
+          "Col": 12
         },
         "Left": {
           "Token": {
-            "Type": "IDENT",
-            "Literal": "x",
-            "Line": 5,
-            "Col": 5
+            "Type": "+",
+            "Literal": "+",
+            "Line": 4,
+            "Col": 7
           },
-          "Value": "x"
+          "Left": {
+            "Token": {
+              "Type": "IDENT",
+              "Literal": "x",
+              "Line": 4,
+              "Col": 5
+            },
+            "Value": "x"
+          },
+          "Operator": "+",
+          "Right": {
+            "Token": {
+              "Type": "INT",
+              "Literal": "10",
+              "Line": 4,
+              "Col": 9
+            },
+            "Value": 10
+          }
         },
         "Operator": "+",
         "Right": {
           "Token": {
             "Type": "INT",
-            "Literal": "10",
-            "Line": 5,
-            "Col": 9
+            "Literal": "20",
+            "Line": 4,
+            "Col": 14
           },
-          "Value": 10
+          "Value": 20
         }
       }
     },
@@ -84,21 +93,21 @@
       "Token": {
         "Type": "RETURN",
         "Literal": "return",
-        "Line": 7,
+        "Line": 6,
         "Col": 1
       },
       "ReturnValue": {
         "Token": {
           "Type": "+",
           "Literal": "+",
-          "Line": 7,
+          "Line": 6,
           "Col": 10
         },
         "Left": {
           "Token": {
             "Type": "IDENT",
             "Literal": "x",
-            "Line": 7,
+            "Line": 6,
             "Col": 8
           },
           "Value": "x"
@@ -108,7 +117,7 @@
           "Token": {
             "Type": "INT",
             "Literal": "3",
-            "Line": 7,
+            "Line": 6,
             "Col": 12
           },
           "Value": 3

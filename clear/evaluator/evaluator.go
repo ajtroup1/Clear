@@ -11,7 +11,7 @@ import (
 
 var (
 	Logger *logger.Logger
-	Debug bool
+	Debug  bool
 )
 
 func Init(l *logger.Logger, debug bool) {

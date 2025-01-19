@@ -1,6 +1,8 @@
 package lexer
 
 import (
+	"fmt"
+
 	"github.com/ajtroup1/clear/errors"
 	"github.com/ajtroup1/clear/logger"
 	"github.com/ajtroup1/clear/token"
@@ -14,16 +16,24 @@ type Lexer struct {
 	line         int
 	col          int
 
-	log   *logger.Logger
-	debug bool
+	log            *logger.Logger
+	debug          bool
+	Tokens         []token.Token
+	encounterCount int
 
 	Errors []errors.Error
 }
 
 func New(input string, lo *logger.Logger, debug bool) *Lexer {
-	l := &Lexer{input: input, line: 1, col: 0, Errors: []errors.Error{}, log: lo, debug: debug}
+	l := &Lexer{input: input, line: 1, col: 0, Errors: []errors.Error{}, log: lo, debug: debug, encounterCount: 1}
 	if debug {
-		l.log.DefineSection("Lexical Analysis / Lexing / Tokenization", "lexing description here")
+		l.log.DefineSection("Lexical Analysis / Lexing / Tokenization", "Lexing (or tokenization) is the process of converting a sequence of characters into a sequence of tokens.\n\nThese tokens are the simplest level of strutured data pertaining to the source code information.\n\n*Example Token*: `let` (Type: LET, Literal: 'let')\n\n- Optionally, the token can track other information such as line and column information, which is used for error reporting.\n\n\t- Token: `return` (Type: RETURN, Literal:'return', Line: 6, Column: 12)\n\nThe lexer reads the source code character by character and generates tokens based on the characters it reads. The lexer is also the first step in the compilation or interpretation process. The lexer is additionally responsible for removing whitespace and comments from the source code.")
+		l.log.Append("**Source code:** \n```js\n")
+		l.log.Append(input)
+		l.log.Append("\n```\n")
+		l.log.Append("\nInitializing lexer...\n")
+		l.log.Append("\n**Lexing source code...**\n\n")
+		l.log.Append("### Live encounters:\n\n")
 	}
 	l.readChar()
 	return l
@@ -101,6 +111,8 @@ func (l *Lexer) NextToken() token.Token {
 			tok.Type = token.LookupIdent(tok.Literal)
 			tok.Line = l.line
 			tok.Col = l.col - len(tok.Literal)
+			l.Tokens = append(l.Tokens, tok)
+			l.log.Append(fmt.Sprintf("%d. Tokenized Token::%s '%s' at [line: %d, col: %d]\n", l.encounterCount, tok.Type, tok.Literal, tok.Line, tok.Col))
 			return tok
 		} else if isDigit(l.ch) {
 			tok.Type = token.INT
@@ -111,6 +123,8 @@ func (l *Lexer) NextToken() token.Token {
 			tok.Literal = lit
 			tok.Line = l.line
 			tok.Col = l.col - len(tok.Literal)
+			l.Tokens = append(l.Tokens, tok)
+			l.log.Append(fmt.Sprintf("%d. Tokenized Token::%s '%s' at [line: %d, col: %d]\n", l.encounterCount, tok.Type, tok.Literal, tok.Line, tok.Col))
 			return tok
 		} else {
 			err := errors.New("illegal character '"+string(l.ch)+"'", l.line, l.col, "lexer", "not implemented", false)
@@ -120,6 +134,8 @@ func (l *Lexer) NextToken() token.Token {
 	}
 
 	l.readChar()
+	l.Tokens = append(l.Tokens, tok)
+	l.log.Append(fmt.Sprintf("%d. Tokenized Token::%s '%s' at [line: %d, col: %d]\n", l.encounterCount, tok.Type, tok.Literal, tok.Line, tok.Col))
 	return tok
 }
 
@@ -130,6 +146,7 @@ func (l *Lexer) skipWhitespace() {
 }
 
 func (l *Lexer) skipComment() {
+	l.log.Append(fmt.Sprintf("%d. Comment encountered at [line: %d, col: %d]. Skipping over text...\n", l.encounterCount, l.line, l.col))
 	for l.ch != '\n' && l.ch != 0 {
 		l.readChar()
 	}
@@ -143,6 +160,7 @@ func (l *Lexer) readChar() {
 	}
 
 	if l.ch == '\n' {
+		l.log.Append(fmt.Sprintf("%d. Encountered newline at [line: %d, col: %d]\n", l.encounterCount, l.line, l.col))
 		l.line++
 		l.col = 0
 	} else {

@@ -108,6 +108,73 @@ func TestMathBuiltins(t *testing.T) {
 	}
 }
 
+func TestRandBuiltins(t *testing.T) {
+	tests := []struct {
+		input        string
+		expectedMin  int
+		expectedMax  int
+		expectError  bool
+	}{
+		{"mod rand: [rand]; rand.rand(1, 10);", 1, 10, false},   // Valid range
+		{"mod rand: [rand]; rand.rand(10, 1);", 0, 0, true},    // Invalid range
+		{"mod rand: [rand]; rand.rand(5, 5);", 5, 5, false},    // Single value range
+		{"mod rand: [rand]; rand.rand(1);", 0, 0, true},        // Wrong number of arguments
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input)
+		
+		if tt.expectError {
+			if _, ok := evaluated.(*object.Error); !ok {
+				t.Errorf("expected an error for input '%s', got %T", tt.input, evaluated)
+			}
+			continue
+		}
+
+		result, ok := evaluated.(*object.Integer)
+		if !ok {
+			t.Errorf("expected Integer, got %T for input '%s'", evaluated, tt.input)
+			continue
+		}
+
+		if result.Value < int64(tt.expectedMin) || result.Value > int64(tt.expectedMax) {
+			t.Errorf("result out of range for input '%s': got %d, expected range [%d, %d]", 
+				tt.input, result.Value, tt.expectedMin, tt.expectedMax)
+		}
+	}
+}
+
+func TestIOBuiltins(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected interface{}
+	}{
+		{"mod io: [print]; io.print(\"Hello, World!\");", nil},
+		{"mod io: [println]; io.println(\"Hello, World!\");", nil},
+		{"mod io: [input]; io.input();", ""},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input)
+		testExpectedObject(t, evaluated, tt.expected)
+	}
+}
+
+func TestOSBuiltins(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected interface{}
+	}{
+		{"mod os: [exit]; os.exit(0);", 0},
+		{"mod os: [exit]; os.exit(1);", 1},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input)
+		testExpectedObject(t, evaluated, tt.expected)
+	}
+}
+
 func testEval(input string) object.Object {
 	fmt.Print()
 	log := logger.NewLogger()

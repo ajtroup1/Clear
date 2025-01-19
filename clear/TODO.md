@@ -16,14 +16,16 @@
       - Errors AND warnings
       - Colored and well formatted messaged
       - Store line content to be able to point to the correct area
-  4. Built-in testing suite:
+  4. Object oriented to some extent
+  5. Built-in testing suite:
       - Automated testing framework / prebuilt
-  5. Implement a lexer, parser, and evaluator in Clear
+  6. Implement a lexer, parser, and evaluator in Clear
       - Self host the language
       - More as an example of Clear's features, not for efficiency 
 
 ### General Additions
-  2. For / while Statements
+  1. For / while Statements
+  2. Add a DateTime type to aid the time module
 
 ### Quick Fixes
   1. if statement condition booleans

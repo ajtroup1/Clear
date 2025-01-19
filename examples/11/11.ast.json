@@ -1,0 +1,599 @@
+{
+  "NoStatements": false,
+  "Statements": [
+    {
+      "Token": {
+        "Type": "LET",
+        "Literal": "let",
+        "Line": 5,
+        "Col": 1
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "path",
+          "Line": 5,
+          "Col": 5
+        },
+        "Value": "path"
+      },
+      "Value": {
+        "Token": {
+          "Type": "STRING",
+          "Literal": "./test.clr",
+          "Line": 0,
+          "Col": 0
+        },
+        "Value": "./test.clr"
+      }
+    },
+    {
+      "Token": {
+        "Type": "IDENT",
+        "Literal": "create",
+        "Line": 6,
+        "Col": 6
+      },
+      "Expression": {
+        "Token": {
+          "Type": "(",
+          "Literal": "(",
+          "Line": 6,
+          "Col": 12
+        },
+        "Function": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "create",
+            "Line": 6,
+            "Col": 6
+          },
+          "Value": "create"
+        },
+        "Arguments": [
+          {
+            "Token": {
+              "Type": "IDENT",
+              "Literal": "path",
+              "Line": 6,
+              "Col": 13
+            },
+            "Value": "path"
+          }
+        ]
+      }
+    },
+    {
+      "Token": {
+        "Type": "IDENT",
+        "Literal": "write",
+        "Line": 7,
+        "Col": 6
+      },
+      "Expression": {
+        "Token": {
+          "Type": "(",
+          "Literal": "(",
+          "Line": 7,
+          "Col": 11
+        },
+        "Function": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "write",
+            "Line": 7,
+            "Col": 6
+          },
+          "Value": "write"
+        },
+        "Arguments": [
+          {
+            "Token": {
+              "Type": "IDENT",
+              "Literal": "path",
+              "Line": 7,
+              "Col": 12
+            },
+            "Value": "path"
+          },
+          {
+            "Token": {
+              "Type": "STRING",
+              "Literal": "myString",
+              "Line": 0,
+              "Col": 0
+            },
+            "Value": "myString"
+          }
+        ]
+      }
+    },
+    {
+      "Token": {
+        "Type": "LET",
+        "Literal": "let",
+        "Line": 9,
+        "Col": 1
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "renamedPath",
+          "Line": 9,
+          "Col": 5
+        },
+        "Value": "renamedPath"
+      },
+      "Value": {
+        "Token": {
+          "Type": "STRING",
+          "Literal": "./test2.clr",
+          "Line": 0,
+          "Col": 0
+        },
+        "Value": "./test2.clr"
+      }
+    },
+    {
+      "Token": {
+        "Type": "IDENT",
+        "Literal": "rename",
+        "Line": 11,
+        "Col": 6
+      },
+      "Expression": {
+        "Token": {
+          "Type": "(",
+          "Literal": "(",
+          "Line": 11,
+          "Col": 12
+        },
+        "Function": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "rename",
+            "Line": 11,
+            "Col": 6
+          },
+          "Value": "rename"
+        },
+        "Arguments": [
+          {
+            "Token": {
+              "Type": "IDENT",
+              "Literal": "path",
+              "Line": 11,
+              "Col": 13
+            },
+            "Value": "path"
+          },
+          {
+            "Token": {
+              "Type": "IDENT",
+              "Literal": "renamedPath",
+              "Line": 11,
+              "Col": 19
+            },
+            "Value": "renamedPath"
+          }
+        ]
+      }
+    },
+    {
+      "Token": {
+        "Type": "IDENT",
+        "Literal": "write",
+        "Line": 13,
+        "Col": 6
+      },
+      "Expression": {
+        "Token": {
+          "Type": "(",
+          "Literal": "(",
+          "Line": 13,
+          "Col": 11
+        },
+        "Function": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "write",
+            "Line": 13,
+            "Col": 6
+          },
+          "Value": "write"
+        },
+        "Arguments": [
+          {
+            "Token": {
+              "Type": "IDENT",
+              "Literal": "renamedPath",
+              "Line": 13,
+              "Col": 12
+            },
+            "Value": "renamedPath"
+          },
+          {
+            "Token": {
+              "Type": "STRING",
+              "Literal": "\\n\\nThis is a new string",
+              "Line": 0,
+              "Col": 0
+            },
+            "Value": "\\n\\nThis is a new string"
+          }
+        ]
+      }
+    },
+    {
+      "Token": {
+        "Type": "IDENT",
+        "Literal": "println",
+        "Line": 15,
+        "Col": 4
+      },
+      "Expression": {
+        "Token": {
+          "Type": "(",
+          "Literal": "(",
+          "Line": 15,
+          "Col": 11
+        },
+        "Function": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "println",
+            "Line": 15,
+            "Col": 4
+          },
+          "Value": "println"
+        },
+        "Arguments": [
+          {
+            "Token": {
+              "Type": "(",
+              "Literal": "(",
+              "Line": 15,
+              "Col": 22
+            },
+            "Function": {
+              "Token": {
+                "Type": "IDENT",
+                "Literal": "isdir",
+                "Line": 15,
+                "Col": 17
+              },
+              "Value": "file.isdir"
+            },
+            "Arguments": [
+              {
+                "Token": {
+                  "Type": "IDENT",
+                  "Literal": "renamedPath",
+                  "Line": 15,
+                  "Col": 23
+                },
+                "Value": "renamedPath"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "Token": {
+        "Type": "IDENT",
+        "Literal": "println",
+        "Line": 16,
+        "Col": 4
+      },
+      "Expression": {
+        "Token": {
+          "Type": "(",
+          "Literal": "(",
+          "Line": 16,
+          "Col": 11
+        },
+        "Function": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "println",
+            "Line": 16,
+            "Col": 4
+          },
+          "Value": "println"
+        },
+        "Arguments": [
+          {
+            "Token": {
+              "Type": "(",
+              "Literal": "(",
+              "Line": 16,
+              "Col": 23
+            },
+            "Function": {
+              "Token": {
+                "Type": "IDENT",
+                "Literal": "isfile",
+                "Line": 16,
+                "Col": 17
+              },
+              "Value": "file.isfile"
+            },
+            "Arguments": [
+              {
+                "Token": {
+                  "Type": "IDENT",
+                  "Literal": "renamedPath",
+                  "Line": 16,
+                  "Col": 24
+                },
+                "Value": "renamedPath"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "Token": {
+        "Type": "IDENT",
+        "Literal": "println",
+        "Line": 18,
+        "Col": 4
+      },
+      "Expression": {
+        "Token": {
+          "Type": "(",
+          "Literal": "(",
+          "Line": 18,
+          "Col": 11
+        },
+        "Function": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "println",
+            "Line": 18,
+            "Col": 4
+          },
+          "Value": "println"
+        },
+        "Arguments": [
+          {
+            "Token": {
+              "Type": "(",
+              "Literal": "(",
+              "Line": 18,
+              "Col": 23
+            },
+            "Function": {
+              "Token": {
+                "Type": "IDENT",
+                "Literal": "exists",
+                "Line": 18,
+                "Col": 17
+              },
+              "Value": "file.exists"
+            },
+            "Arguments": [
+              {
+                "Token": {
+                  "Type": "IDENT",
+                  "Literal": "renamedPath",
+                  "Line": 18,
+                  "Col": 24
+                },
+                "Value": "renamedPath"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "Token": {
+        "Type": "IDENT",
+        "Literal": "println",
+        "Line": 19,
+        "Col": 4
+      },
+      "Expression": {
+        "Token": {
+          "Type": "(",
+          "Literal": "(",
+          "Line": 19,
+          "Col": 11
+        },
+        "Function": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "println",
+            "Line": 19,
+            "Col": 4
+          },
+          "Value": "println"
+        },
+        "Arguments": [
+          {
+            "Token": {
+              "Type": "(",
+              "Literal": "(",
+              "Line": 19,
+              "Col": 23
+            },
+            "Function": {
+              "Token": {
+                "Type": "IDENT",
+                "Literal": "exists",
+                "Line": 19,
+                "Col": 17
+              },
+              "Value": "file.exists"
+            },
+            "Arguments": [
+              {
+                "Token": {
+                  "Type": "STRING",
+                  "Literal": "../thisdoesnotexits",
+                  "Line": 0,
+                  "Col": 0
+                },
+                "Value": "../thisdoesnotexits"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "Token": {
+        "Type": "RETURN",
+        "Literal": "return",
+        "Line": 21,
+        "Col": 1
+      },
+      "ReturnValue": {
+        "Token": {
+          "Type": "+",
+          "Literal": "+",
+          "Line": 21,
+          "Col": 29
+        },
+        "Left": {
+          "Token": {
+            "Type": "STRING",
+            "Literal": "Project written to ",
+            "Line": 0,
+            "Col": 0
+          },
+          "Value": "Project written to "
+        },
+        "Operator": "+",
+        "Right": {
+          "Token": {
+            "Type": "(",
+            "Literal": "(",
+            "Line": 21,
+            "Col": 44
+          },
+          "Function": {
+            "Token": {
+              "Type": "IDENT",
+              "Literal": "concat",
+              "Line": 21,
+              "Col": 38
+            },
+            "Value": "strings.concat"
+          },
+          "Arguments": [
+            {
+              "Token": {
+                "Type": "STRING",
+                "Literal": "'",
+                "Line": 0,
+                "Col": 0
+              },
+              "Value": "'"
+            },
+            {
+              "Token": {
+                "Type": "IDENT",
+                "Literal": "path",
+                "Line": 21,
+                "Col": 50
+              },
+              "Value": "path"
+            },
+            {
+              "Token": {
+                "Type": "STRING",
+                "Literal": "'",
+                "Line": 0,
+                "Col": 0
+              },
+              "Value": "'"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "Modules": [
+    {
+      "Token": {
+        "Type": "MOD",
+        "Literal": "mod",
+        "Line": 1,
+        "Col": 1
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "file",
+          "Line": 1,
+          "Col": 5
+        },
+        "Value": "file"
+      },
+      "ImportAll": true,
+      "Imports": null
+    },
+    {
+      "Token": {
+        "Type": "MOD",
+        "Literal": "mod",
+        "Line": 2,
+        "Col": 1
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "strings",
+          "Line": 2,
+          "Col": 5
+        },
+        "Value": "strings"
+      },
+      "ImportAll": false,
+      "Imports": [
+        {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "concat",
+            "Line": 2,
+            "Col": 16
+          },
+          "Value": "concat"
+        }
+      ]
+    },
+    {
+      "Token": {
+        "Type": "MOD",
+        "Literal": "mod",
+        "Line": 3,
+        "Col": 1
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "io",
+          "Line": 3,
+          "Col": 5
+        },
+        "Value": "io"
+      },
+      "ImportAll": false,
+      "Imports": [
+        {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "println",
+            "Line": 3,
+            "Col": 11
+          },
+          "Value": "println"
+        }
+      ]
+    }
+  ]
+}

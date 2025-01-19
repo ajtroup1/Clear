@@ -21,6 +21,9 @@ Clear is ran via a Makefile in the `Clear\clear` directory
     - The run command executes a predefined `.clr` file 
     - The command expects:
       - *Optionally* a debug flag `-d` OR `-debug`
+        - The debug flag will enable:
+          - Printing a JSON file containing the source code's Abstract Syntax Tree
+          - A "talking" log file detailing every step the interpreter took to interpret the source code
       - A path pointing to the `.clr` script to be executed (**Required!**)
   - `make test`
     - Runs all Go test files in the src
@@ -30,4 +33,9 @@ Clear is ran via a Makefile in the `Clear\clear` directory
     - All this does is call `go fmt ./...`
 
 
-    TALK ABOUT EXAMPLES FOLDER
+### A Talking Interpreter
+The Clear interpreter is designed to "talk" to you as it
+
+The talking is actually just detailed explainations of every step in each process in the interpeter (lexing, parsing, evaluating)
+
+Make sure to execute a file in [script / "make run"](#usage) mode with the `-d` (or `-debug`) flag to have the interpreter generate a log file with this content

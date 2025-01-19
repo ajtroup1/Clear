@@ -20,7 +20,7 @@
       - Automated testing framework / prebuilt
 
 ### General Additions
-  2. For Statements
+  2. For / while Statements
 
 ### Quick Fixes
   1. Nil pointer dereference upon no return value specified

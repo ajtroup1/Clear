@@ -28,3 +28,6 @@ Clear is ran via a Makefile in the `Clear\clear` directory
   - `make fmt`
     - Formats every file in the src according to the `go fmt` standard
     - All this does is call `go fmt ./...`
+
+
+    TALK ABOUT EXAMPLES FOLDER

@@ -57,16 +57,16 @@ func ReportEvaluationError(err *object.Error) string {
 
 func report(e Error) string {
 	if !e.IsWarning {
-		return fmt.Sprintf(RED+"%s::Error [line: %d, col: %d] ---> %s\n\tcontext: '%s'\n"+CLEAR, capitalize(e.Stage), e.Line, e.Col, e.Message, e.Context)
+		return fmt.Sprintf(RED+"%s::Error [line: %d, col: %d] ---> %s\n\tcontext: '%s'\n"+CLEAR, Capitalize(e.Stage), e.Line, e.Col, e.Message, e.Context)
 	}
 
-	return fmt.Sprintf(YELLOW+"%s::Warning [line: %d, col: %d] ---> %s\n\tcontext: '%s'\n"+CLEAR, capitalize(e.Stage), e.Line, e.Col, e.Message, e.Context)
+	return fmt.Sprintf(YELLOW+"%s::Warning [line: %d, col: %d] ---> %s\n\tcontext: '%s'\n"+CLEAR, Capitalize(e.Stage), e.Line, e.Col, e.Message, e.Context)
 }
 
-func capitalize(s string) string {
+func Capitalize(s string) string {
 	if len(s) == 0 {
 		return s
 	}
 
-	return strings.ToUpper(s[:1]) + s[1:]
+	return strings.ToUpper(s[:1]) + strings.ToLower(s[1:])
 }

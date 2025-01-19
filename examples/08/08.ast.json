@@ -3,32 +3,23 @@
   "Statements": [
     {
       "Token": {
-        "Type": "*",
-        "Literal": "*",
-        "Line": 1,
-        "Col": 11
-      },
-      "Expression": null
-    },
-    {
-      "Token": {
         "Type": "IDENT",
         "Literal": "pow",
-        "Line": 3,
+        "Line": 4,
         "Col": 6
       },
       "Expression": {
         "Token": {
           "Type": "(",
           "Literal": "(",
-          "Line": 3,
+          "Line": 4,
           "Col": 9
         },
         "Function": {
           "Token": {
             "Type": "IDENT",
             "Literal": "pow",
-            "Line": 3,
+            "Line": 4,
             "Col": 6
           },
           "Value": "pow"
@@ -38,7 +29,7 @@
             "Token": {
               "Type": "INT",
               "Literal": "5",
-              "Line": 3,
+              "Line": 4,
               "Col": 10
             },
             "Value": 5
@@ -47,7 +38,7 @@
             "Token": {
               "Type": "INT",
               "Literal": "3",
-              "Line": 3,
+              "Line": 4,
               "Col": 13
             },
             "Value": 3
@@ -75,6 +66,44 @@
       },
       "ImportAll": true,
       "Imports": null
+    },
+    {
+      "Token": {
+        "Type": "MOD",
+        "Literal": "mod",
+        "Line": 2,
+        "Col": 1
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "strings",
+          "Line": 2,
+          "Col": 5
+        },
+        "Value": "strings"
+      },
+      "ImportAll": false,
+      "Imports": [
+        {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "len",
+            "Line": 2,
+            "Col": 16
+          },
+          "Value": "len"
+        },
+        {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "concat",
+            "Line": 2,
+            "Col": 21
+          },
+          "Value": "concat"
+        }
+      ]
     }
   ]
 }

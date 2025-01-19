@@ -4,6 +4,14 @@ import "os"
 
 type Logger struct {
 	out string
+	// Since the lexer and parser run 'concurrently', we need to store the parser output separately
+	// In this code, the parser lexes a token then decides whether to parse it
+	// into a node or lex more tokens to parse a more complex node
+	// It's not like the parser actually recieves a stream of tokens and analyzes them one after the other,
+	// which is how the logs are structured to be easier to understand
+	// So, parserOut will store output from the parser as it runs,
+	// but actually dump it into the log after all lexing info is finished processing
+	parserOut string
 }
 
 func NewLogger() *Logger {
@@ -13,9 +21,15 @@ func NewLogger() *Logger {
 func (l *Logger) Append(s string) {
 	l.out += s
 }
+func (l *Logger) AppendParser(s string) {
+	l.parserOut += s
+}
 
 func (l *Logger) Get() string {
 	return l.out
+}
+func (l *Logger) GetParserLog() string {
+	return l.parserOut
 }
 
 func (l *Logger) WriteFile(filepath string) {

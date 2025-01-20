@@ -45,12 +45,21 @@
       },
       "Value": {
         "Token": {
-          "Type": "INT",
-          "Literal": "0",
+          "Type": "-",
+          "Literal": "-",
           "Line": 2,
           "Col": 9
         },
-        "Value": 0
+        "Operator": "-",
+        "Right": {
+          "Token": {
+            "Type": "INT",
+            "Literal": "10",
+            "Line": 2,
+            "Col": 10
+          },
+          "Value": 10
+        }
       }
     },
     {
@@ -115,10 +124,10 @@
       },
       "Post": {
         "Token": {
-          "Type": "++",
-          "Literal": "++",
-          "Line": 0,
-          "Col": 0
+          "Type": "IDENT",
+          "Literal": "x",
+          "Line": 4,
+          "Col": 25
         },
         "Operator": "++",
         "Left": {

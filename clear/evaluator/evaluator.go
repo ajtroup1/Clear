@@ -68,7 +68,18 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 
 		env.Set(node.Name.Value, val)
 		return val
-		// Eval Expressions
+
+	case *ast.WhileStatement:
+		condition := Eval(node.Condition, env)
+		if isError(condition) {
+			return condition
+		}
+
+		return evalWhileStatement(node, env)
+
+	case *ast.ForStatement:
+		return evalForStatement(node, env)
+	// Eval Expressions
 	case *ast.IntegerLiteral:
 		return &object.Integer{Value: node.Value, Position: object.Position{Line: node.Token.Line, Col: node.Token.Col}}
 
@@ -100,6 +111,14 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		}
 
 		return evalInfixExpression(node.Operator, left, right)
+
+	case *ast.PostfixExpression:
+		left := Eval(node.Left, env)
+		if isError(left) {
+			return left
+		}
+
+		return evalPostfixExpression(node.Operator, left)
 
 	case *ast.IfExpression:
 		return evalIfExpression(node, env)
@@ -148,6 +167,45 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 	}
 
 	return nil
+}
+
+func evalWhileStatement(stmt *ast.WhileStatement, env *object.Environment) object.Object {
+	var result object.Object
+
+	for isTruthy(Eval(stmt.Condition, env)) {
+		result = evalBlockStatement(stmt.Body, env)
+	}
+
+	return result
+}
+
+func evalForStatement(stmt *ast.ForStatement, env *object.Environment) object.Object {
+	var result object.Object
+	
+	if stmt.Init != nil {
+		result = Eval(stmt.Init, env)
+		if isError(result) {
+			return result
+		}
+	}
+	
+	for isTruthy(Eval(stmt.Condition, env)) {
+		result = evalBlockStatement(stmt.Body, env)
+		if isError(result) {
+			return result
+		}
+
+		if stmt.Post != nil {
+			result = Eval(stmt.Post, env)
+			if isError(result) {
+				return result
+			}
+		}
+
+		env.Set(stmt.Post.TokenLiteral(), result)
+	}
+
+	return result
 }
 
 func evalIndexExpression(left, index object.Object) object.Object {
@@ -306,6 +364,41 @@ func evalInfixExpression(
 		return newError("unknown operator: %s %s %s", left.Line(), left.Col(),
 			left.Type(), operator, right.Type())
 	}
+}
+
+func evalPostfixExpression(operator string, left object.Object) object.Object {
+	if left.Type() != object.INTEGER_OBJ && left.Type() != object.FLOAT_OBJ {
+		return newError("unknown operator: %s%s", left.Line(), left.Col(), operator, left.Type())
+	}
+
+	if left.Type() == object.INTEGER_OBJ {
+
+		leftVal := left.(*object.Integer).Value
+
+		switch operator {
+		case "++":
+			return &object.Integer{Value: leftVal + 1}
+		case "--":
+			return &object.Integer{Value: leftVal - 1}
+		default:
+			return newError("unknown operator: %s%s", left.Line(), left.Col(), operator, left.Type())
+		}
+	}
+
+	if left.Type() == object.FLOAT_OBJ {
+		leftVal := left.(*object.Float).Value
+
+		switch operator {
+		case "++":
+			return &object.Float{Value: leftVal + 1}
+		case "--":
+			return &object.Float{Value: leftVal - 1}
+		default:
+			return newError("unknown operator: %s%s", left.Line(), left.Col(), operator, left.Type())
+		}
+	}
+
+	return newError("unknown operator: %s%s", left.Line(), left.Col(), operator, left.Type())
 }
 
 func evalBangOperatorExpression(right object.Object) object.Object {

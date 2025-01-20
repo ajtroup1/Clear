@@ -245,31 +245,30 @@ func (p *Parser) parseWhileStatement() *ast.WhileStatement {
 
 func (p *Parser) parseForStatement() *ast.ForStatement {
 	stmt := &ast.ForStatement{Token: p.curToken}
-	
+
 	if !p.expectPeek(token.LPAREN) {
 		return nil
 	}
-	
+
 	if !p.expectPeek(token.LET) {
 		return nil
 	}
-	
+
 	stmt.Init = p.parseLetStatement()
-	
+
 	if !p.curTokenIs(token.SEMICOLON) {
 		return nil
 	}
 	p.nextToken()
-	
+
 	stmt.Condition = p.parseExpression(LOWEST)
-	
+
 	if !p.expectPeek(token.SEMICOLON) {
 		return nil
 	}
 	p.nextToken()
-	
+
 	stmt.Post = p.parseExpression(LOWEST)
-	fmt.Printf("post: %v\n", stmt.Post)
 
 	if !p.expectPeek(token.RPAREN) {
 		return nil
@@ -284,8 +283,6 @@ func (p *Parser) parseForStatement() *ast.ForStatement {
 	if !p.curTokenIs(token.RBRACE) {
 		return nil
 	}
-
-	fmt.Printf("stmt: %+v\n", stmt)
 
 	return stmt
 }

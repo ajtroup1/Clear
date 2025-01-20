@@ -148,8 +148,20 @@ func (p *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
 }
 
 func (p *Parser) parsePostfixExpression(left ast.Expression) ast.Expression {
+	ident, ok := left.(*ast.Identifier); if !ok {
+		msg := fmt.Sprintf("expected left expression to be IDENT, got %v instead", left)
+		err := errors.Error{
+			Message: msg,
+			Line:    p.curToken.Line,
+			Col:     p.curToken.Col,
+			Stage:   "Parsing",
+			Context: left.String(),
+		}
+		p.Errors = append(p.Errors, &err)
+		return nil
+	}
 	expression := &ast.PostfixExpression{
-		Token:    p.curToken,
+		Token:    ident.Token,
 		Operator: p.curToken.Literal,
 		Left:     left,
 	}

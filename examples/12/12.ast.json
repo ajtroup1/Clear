@@ -11,17 +11,43 @@
       "Name": {
         "Token": {
           "Type": "IDENT",
-          "Literal": "x",
+          "Literal": "y",
           "Line": 1,
           "Col": 5
         },
-        "Value": "x"
+        "Value": "y"
+      },
+      "Value": {
+        "Token": {
+          "Type": "INT",
+          "Literal": "5",
+          "Line": 1,
+          "Col": 9
+        },
+        "Value": 5
+      }
+    },
+    {
+      "Token": {
+        "Type": "LET",
+        "Literal": "let",
+        "Line": 2,
+        "Col": 1
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "z",
+          "Line": 2,
+          "Col": 5
+        },
+        "Value": "z"
       },
       "Value": {
         "Token": {
           "Type": "INT",
           "Literal": "0",
-          "Line": 1,
+          "Line": 2,
           "Col": 9
         },
         "Value": 0
@@ -29,63 +55,285 @@
     },
     {
       "Token": {
-        "Type": "=",
-        "Literal": "=",
-        "Line": 3,
-        "Col": 3
+        "Type": "FOR",
+        "Literal": "for",
+        "Line": 4,
+        "Col": 1
       },
-      "Name": {
+      "Init": {
         "Token": {
-          "Type": "IDENT",
-          "Literal": "x",
-          "Line": 3,
-          "Col": 1
+          "Type": "LET",
+          "Literal": "let",
+          "Line": 4,
+          "Col": 6
         },
-        "Value": "x"
+        "Name": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "x",
+            "Line": 4,
+            "Col": 10
+          },
+          "Value": "x"
+        },
+        "Value": {
+          "Token": {
+            "Type": "INT",
+            "Literal": "0",
+            "Line": 4,
+            "Col": 14
+          },
+          "Value": 0
+        }
       },
-      "Value": {
+      "Condition": {
         "Token": {
-          "Type": "+",
-          "Literal": "+",
-          "Line": 3,
-          "Col": 7
+          "Type": "\u003c",
+          "Literal": "\u003c",
+          "Line": 4,
+          "Col": 19
         },
         "Left": {
           "Token": {
             "Type": "IDENT",
             "Literal": "x",
-            "Line": 3,
-            "Col": 5
+            "Line": 4,
+            "Col": 17
           },
           "Value": "x"
         },
-        "Operator": "+",
+        "Operator": "\u003c",
         "Right": {
           "Token": {
             "Type": "INT",
-            "Literal": "5",
-            "Line": 3,
-            "Col": 9
+            "Literal": "10",
+            "Line": 4,
+            "Col": 21
           },
-          "Value": 5
+          "Value": 10
         }
+      },
+      "Post": {
+        "Token": {
+          "Type": "++",
+          "Literal": "++",
+          "Line": 0,
+          "Col": 0
+        },
+        "Operator": "++",
+        "Left": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "x",
+            "Line": 4,
+            "Col": 25
+          },
+          "Value": "x"
+        }
+      },
+      "Body": {
+        "Token": {
+          "Type": "{",
+          "Literal": "{",
+          "Line": 4,
+          "Col": 30
+        },
+        "Statements": [
+          {
+            "Token": {
+              "Type": "=",
+              "Literal": "=",
+              "Line": 5,
+              "Col": 5
+            },
+            "Name": {
+              "Token": {
+                "Type": "IDENT",
+                "Literal": "y",
+                "Line": 5,
+                "Col": 3
+              },
+              "Value": "y"
+            },
+            "Value": {
+              "Token": {
+                "Type": "+",
+                "Literal": "+",
+                "Line": 5,
+                "Col": 9
+              },
+              "Left": {
+                "Token": {
+                  "Type": "IDENT",
+                  "Literal": "y",
+                  "Line": 5,
+                  "Col": 7
+                },
+                "Value": "y"
+              },
+              "Operator": "+",
+              "Right": {
+                "Token": {
+                  "Type": "INT",
+                  "Literal": "1",
+                  "Line": 5,
+                  "Col": 11
+                },
+                "Value": 1
+              }
+            }
+          }
+        ]
       }
     },
     {
       "Token": {
-        "Type": "RETURN",
-        "Literal": "return",
-        "Line": 5,
+        "Type": "WHILE",
+        "Literal": "while",
+        "Line": 8,
         "Col": 1
       },
-      "ReturnValue": {
+      "Condition": {
+        "Token": {
+          "Type": "\u003e",
+          "Literal": "\u003e",
+          "Line": 8,
+          "Col": 10
+        },
+        "Left": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "y",
+            "Line": 8,
+            "Col": 8
+          },
+          "Value": "y"
+        },
+        "Operator": "\u003e",
+        "Right": {
+          "Token": {
+            "Type": "INT",
+            "Literal": "0",
+            "Line": 8,
+            "Col": 12
+          },
+          "Value": 0
+        }
+      },
+      "Body": {
+        "Token": {
+          "Type": "{",
+          "Literal": "{",
+          "Line": 8,
+          "Col": 15
+        },
+        "Statements": [
+          {
+            "Token": {
+              "Type": "=",
+              "Literal": "=",
+              "Line": 9,
+              "Col": 5
+            },
+            "Name": {
+              "Token": {
+                "Type": "IDENT",
+                "Literal": "z",
+                "Line": 9,
+                "Col": 3
+              },
+              "Value": "z"
+            },
+            "Value": {
+              "Token": {
+                "Type": "+",
+                "Literal": "+",
+                "Line": 9,
+                "Col": 9
+              },
+              "Left": {
+                "Token": {
+                  "Type": "IDENT",
+                  "Literal": "z",
+                  "Line": 9,
+                  "Col": 7
+                },
+                "Value": "z"
+              },
+              "Operator": "+",
+              "Right": {
+                "Token": {
+                  "Type": "INT",
+                  "Literal": "1",
+                  "Line": 9,
+                  "Col": 11
+                },
+                "Value": 1
+              }
+            }
+          },
+          {
+            "Token": {
+              "Type": "=",
+              "Literal": "=",
+              "Line": 10,
+              "Col": 5
+            },
+            "Name": {
+              "Token": {
+                "Type": "IDENT",
+                "Literal": "y",
+                "Line": 10,
+                "Col": 3
+              },
+              "Value": "y"
+            },
+            "Value": {
+              "Token": {
+                "Type": "-",
+                "Literal": "-",
+                "Line": 10,
+                "Col": 9
+              },
+              "Left": {
+                "Token": {
+                  "Type": "IDENT",
+                  "Literal": "y",
+                  "Line": 10,
+                  "Col": 7
+                },
+                "Value": "y"
+              },
+              "Operator": "-",
+              "Right": {
+                "Token": {
+                  "Type": "INT",
+                  "Literal": "1",
+                  "Line": 10,
+                  "Col": 11
+                },
+                "Value": 1
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "Token": {
+        "Type": "IDENT",
+        "Literal": "z",
+        "Line": 13,
+        "Col": 8
+      },
+      "Expression": {
         "Token": {
           "Type": "IDENT",
-          "Literal": "x",
-          "Line": 5,
+          "Literal": "z",
+          "Line": 13,
           "Col": 8
         },
-        "Value": "x"
+        "Value": "z"
       }
     }
   ],

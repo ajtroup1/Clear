@@ -21,6 +21,8 @@ func (p *Parser) parseStatement() ast.Statement {
 		return p.parseReturnStatement()
 	case token.WHILE:
 		return p.parseWhileStatement()
+	case token.FOR:
+		return p.parseForStatement()
 	default:
 		if p.debug {
 			p.log.AppendParser(fmt.Sprintf("%d. Encountered token (`%s`, type '%s') that doesn't have a predefined statement parse function, so it's either an expression or an assignment statement\n", p.encounterCount, p.curToken.Literal, p.curToken.Type))
@@ -216,28 +218,75 @@ func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
 
 func (p *Parser) parseWhileStatement() *ast.WhileStatement {
 	stmt := &ast.WhileStatement{Token: p.curToken}
-	
+
 	if !p.expectPeek(token.LPAREN) {
 		// TODO: Error handling
 		return nil
 	}
-	
+
 	stmt.Condition = p.parseExpression(LOWEST)
-	
+
 	if !p.expectPeek(token.LBRACE) {
 		// TODO: Error handling
 		return nil
 	}
-	
+
 	stmt.Body = p.parseBlockStatement()
-	
+
 	if !p.curTokenIs(token.RBRACE) {
 		// TODO: Error handling
 		return nil
 	}
+
+	p.nextToken()
+
+	return stmt
+}
+
+func (p *Parser) parseForStatement() *ast.ForStatement {
+	stmt := &ast.ForStatement{Token: p.curToken}
 	
+	if !p.expectPeek(token.LPAREN) {
+		return nil
+	}
+	
+	if !p.expectPeek(token.LET) {
+		return nil
+	}
+	
+	stmt.Init = p.parseLetStatement()
+	
+	if !p.curTokenIs(token.SEMICOLON) {
+		return nil
+	}
 	p.nextToken()
 	
+	stmt.Condition = p.parseExpression(LOWEST)
+	
+	if !p.expectPeek(token.SEMICOLON) {
+		return nil
+	}
+	p.nextToken()
+	
+	stmt.Post = p.parseExpression(LOWEST)
+	fmt.Printf("post: %v\n", stmt.Post)
+
+	if !p.expectPeek(token.RPAREN) {
+		return nil
+	}
+
+	if !p.expectPeek(token.LBRACE) {
+		return nil
+	}
+
+	stmt.Body = p.parseBlockStatement()
+
+	if !p.curTokenIs(token.RBRACE) {
+		return nil
+	}
+
+	fmt.Printf("stmt: %+v\n", stmt)
+
 	return stmt
 }
 
@@ -258,7 +307,7 @@ func (p *Parser) parseExpressionOrAssignStatement() ast.Statement {
 	if p.debug {
 		p.log.AppendParser(fmt.Sprintf("%d. Did not encounter an assign (`=`) token, so this is an expression statement\n", p.encounterCount))
 	}
-	
+
 	return p.parseExpressionStatement()
 }
 

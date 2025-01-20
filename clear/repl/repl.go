@@ -61,7 +61,7 @@ const MONKEY_FACE = `            __,__
            '-----'
 `
 
-func printParserErrors(out io.Writer, errors []errors.Error, line string) {
+func printParserErrors(out io.Writer, errors []*errors.Error, line string) {
 	io.WriteString(out, MONKEY_FACE)
 	io.WriteString(out, "Woops! We ran into some monkey business here!\n")
 	io.WriteString(out, " line: "+line+"\n")

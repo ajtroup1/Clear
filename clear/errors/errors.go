@@ -26,7 +26,7 @@ func New(message string, line, col int, stage, context string, isWarning bool) *
 	return &Error{Message: message, Line: line, Col: col, Stage: stage, Context: context, IsWarning: isWarning}
 }
 
-func HasErrors(lexErrors, parseErrors []Error) bool {
+func HasErrors(lexErrors, parseErrors []*Error) bool {
 	if len(lexErrors) > 0 || len(parseErrors) > 0 {
 		return true
 	}
@@ -34,7 +34,7 @@ func HasErrors(lexErrors, parseErrors []Error) bool {
 	return false
 }
 
-func ReportErrors(lexErrors, parseErrors []Error) string {
+func ReportErrors(lexErrors, parseErrors []*Error) string {
 	var errors string
 
 	for _, e := range lexErrors {
@@ -55,7 +55,7 @@ func ReportEvaluationError(err *object.Error) string {
 	return out
 }
 
-func report(e Error) string {
+func report(e *Error) string {
 	if !e.IsWarning {
 		return fmt.Sprintf(RED+"%s::Error [line: %d, col: %d] ---> %s\n\tcontext: '%s'\n"+CLEAR, Capitalize(e.Stage), e.Line, e.Col, e.Message, e.Context)
 	}

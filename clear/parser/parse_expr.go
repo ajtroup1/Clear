@@ -32,10 +32,12 @@ func (p *Parser) parseExpression(precedence int) ast.Expression {
 }
 
 func (p *Parser) parseIdentifier() ast.Expression {
+	ident := &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 	if p.peekTokenIs(token.DOT) {
 		return p.parseModuleAccess()
 	}
-	return &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+
+	return ident
 }
 
 func (p *Parser) parseModuleAccess() ast.Expression {
@@ -51,7 +53,7 @@ func (p *Parser) parseModuleAccess() ast.Expression {
 			Stage:   "Parsing",
 			Context: p.peekToken.Literal,
 		}
-		p.Errors = append(p.Errors, err)
+		p.Errors = append(p.Errors, &err)
 		return nil
 	}
 	p.nextToken()
@@ -72,7 +74,7 @@ func (p *Parser) parseIntegerLiteral() ast.Expression {
 			Stage:   "Parsing",
 			Context: p.curToken.Literal,
 		}
-		p.Errors = append(p.Errors, err)
+		p.Errors = append(p.Errors, &err)
 		return nil
 	}
 
@@ -95,7 +97,7 @@ func (p *Parser) parseFloatLiteral() ast.Expression {
 			Context: p.curToken.Literal,
 		}
 
-		p.Errors = append(p.Errors, err)
+		p.Errors = append(p.Errors, &err)
 		return nil
 	}
 

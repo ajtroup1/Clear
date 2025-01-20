@@ -45,7 +45,7 @@ type (
 
 type Parser struct {
 	l      *lexer.Lexer
-	Errors []errors.Error
+	Errors []*errors.Error
 
 	log            *logger.Logger
 	debug          bool
@@ -61,7 +61,7 @@ type Parser struct {
 func New(l *lexer.Lexer, log *logger.Logger, debug bool) *Parser {
 	p := &Parser{
 		l:      l,
-		Errors: []errors.Error{},
+		Errors: []*errors.Error{},
 		log:    log,
 		debug:  debug,
 		encounterCount: 1,
@@ -93,7 +93,7 @@ func New(l *lexer.Lexer, log *logger.Logger, debug bool) *Parser {
 	p.registerInfix(token.GT, p.parseInfixExpression)
 	p.registerInfix(token.LBRACKET, p.parseIndexExpression)
 	p.registerInfix(token.LPAREN, p.parseCallExpression)
-
+	
 	// Read two tokens, so curToken and peekToken are both set
 	p.nextToken()
 	p.nextToken()
@@ -134,7 +134,7 @@ func (p *Parser) peekError(t token.TokenType) {
 		Stage:   "Parsing",
 		Context: p.peekToken.Literal,
 	}
-	p.Errors = append(p.Errors, err)
+	p.Errors = append(p.Errors, &err)
 }
 
 func (p *Parser) noPrefixParseFnError(t token.TokenType) {
@@ -151,7 +151,7 @@ func (p *Parser) noPrefixParseFnError(t token.TokenType) {
 			Stage:   "Parsing",
 			Context: p.curToken.Literal,
 		}
-		p.Errors = append(p.Errors, err)
+		p.Errors = append(p.Errors, &err)
 		return
 	}
 
@@ -163,7 +163,7 @@ func (p *Parser) noPrefixParseFnError(t token.TokenType) {
 		Stage:   "Parsing",
 		Context: p.curToken.Literal,
 	}
-	p.Errors = append(p.Errors, err)
+	p.Errors = append(p.Errors, &err)
 }
 
 func isStatement(t token.TokenType) bool {
@@ -187,36 +187,31 @@ func (p *Parser) ParseProgram() *ast.Program {
 		p.log.AppendParser("\t- This requires invoking a loop until end of file is reached, and parsing statements one-by-one until that point. As statements are parsed, they are appended to the `Program`'s `Statements` slice\n\n")
 	}
 
-	// First, parse all statements
 	for !p.curTokenIs(token.EOF) {
 		stmt := p.parseStatement()
 
-		// Only add valid statements to the list
-		if stmt != nil {
+		if stmt == nil {
+			continue
+		} else {
 			if p.debug {
 				p.log.AppendParser(fmt.Sprintf("%d. Parsed a statement to append to program's `Statements` slice: `%s`\n", p.encounterCount, stmt.String()))
 			}
 			program.Statements = append(program.Statements, stmt)
 		}
 
-		// Move to next token
 		p.nextToken()
 	}
 
-	// Separate out module statements (import statements)
 	var filteredStatements []ast.Statement
 
 	for _, stmt := range program.Statements {
 		if module, ok := stmt.(*ast.ModuleStatement); ok {
-			// Append the module to the Modules slice
 			program.Modules = append(program.Modules, module)
 		} else {
-			// Add non-module statements to filteredStatements
 			filteredStatements = append(filteredStatements, stmt)
 		}
 	}
 
-	// Update Statements with only non-module statements
 	program.Statements = filteredStatements
 
 	if len(program.Statements) == 1 {
@@ -230,7 +225,6 @@ func (p *Parser) ParseProgram() *ast.Program {
 	}
 
 	if p.debug {
-		// Lexing header is already defined
 		toks := p.l.Tokens
 
 		sort.Slice(toks, func(i, j int) bool {
@@ -252,7 +246,6 @@ func (p *Parser) ParseProgram() *ast.Program {
 		p.log.Append(fmt.Sprintf("\n\n**Successfully parsed the program!**\n\nHere is your program node in tree format:\n```json\n%s\n```\n", litter.Sdump(program)))
 	}
 
-	// Return the parsed program
 	return program
 }
 

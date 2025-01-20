@@ -26,6 +26,7 @@
 ### General Additions
   1. For / while Statements
   2. Add a DateTime type to aid the time module
+  3. Implement compound operators like `+=` `-=` `*=` ...
 
 ### Quick Fixes
   1. if statement condition booleans

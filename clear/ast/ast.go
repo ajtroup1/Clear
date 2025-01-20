@@ -174,6 +174,47 @@ func (rs *ReturnStatement) String() string {
 	return out.String()
 }
 
+type WhileStatement struct {
+	Token     token.Token
+	Condition Expression
+	Body      *BlockStatement
+}
+
+func (ws *WhileStatement) statementNode()       {}
+func (ws *WhileStatement) TokenLiteral() string { return ws.Token.Literal }
+func (ws *WhileStatement) String() string {
+	var out bytes.Buffer
+
+	out.WriteString(ws.TokenLiteral() + " ")
+	out.WriteString(ws.Condition.String())
+	out.WriteString(" ")
+	out.WriteString(ws.Body.String())
+
+	return out.String()
+}
+
+type ForStatement struct {
+	Token     token.Token
+	Init 		Statement
+	Condition 	Expression
+	Post 		Statement
+	Body      	*BlockStatement
+}
+
+func (fs *ForStatement) statementNode()       {}
+func (fs *ForStatement) TokenLiteral() string { return fs.Token.Literal }
+func (fs *ForStatement) String() string {
+	var out bytes.Buffer
+
+	out.WriteString(fs.TokenLiteral() + " ")
+	out.WriteString(fs.Init.String())
+	out.WriteString(fs.Condition.String())
+	out.WriteString(fs.Post.String())
+	out.WriteString(fs.Body.String())
+
+	return out.String()
+}
+
 // Since lone expressions cannot be enveloped in the Program's
 // Statements slice, we must wrap them in an ExpressionStatement
 type ExpressionStatement struct {
@@ -228,6 +269,24 @@ type Identifier struct {
 func (i *Identifier) expressionNode()      {}
 func (i *Identifier) TokenLiteral() string { return i.Token.Literal }
 func (i *Identifier) String() string       { return i.Value }
+
+type AssignmentExpr struct {
+	Token token.Token
+	Name  *Identifier
+	Value Expression
+}
+
+func (ae *AssignmentExpr) expressionNode()      {}
+func (ae *AssignmentExpr) TokenLiteral() string { return ae.Token.Literal }
+func (ae *AssignmentExpr) String() string {
+	var out bytes.Buffer
+
+	out.WriteString(ae.Name.String())
+	out.WriteString(" = ")
+	out.WriteString(ae.Value.String())
+
+	return out.String()
+}
 
 type Boolean struct {
 	Token token.Token

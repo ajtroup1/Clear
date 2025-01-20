@@ -19,6 +19,8 @@ func (p *Parser) parseStatement() ast.Statement {
 		return p.parseLetStatement()
 	case token.RETURN:
 		return p.parseReturnStatement()
+	case token.WHILE:
+		return p.parseWhileStatement()
 	default:
 		if p.debug {
 			p.log.AppendParser(fmt.Sprintf("%d. Encountered token (`%s`, type '%s') that doesn't have a predefined statement parse function, so it's either an expression or an assignment statement\n", p.encounterCount, p.curToken.Literal, p.curToken.Type))
@@ -35,7 +37,9 @@ func (p *Parser) parseModuleStatement() *ast.ModuleStatement {
 	stmt := &ast.ModuleStatement{Token: p.curToken}
 
 	if !p.expectPeek(token.IDENT) {
-		// TODO: Error handling
+		msg := fmt.Sprintf("Expected next token to be IDENT, got %s instead", p.peekToken.Type)
+		err := errors.New(msg, p.peekToken.Line, p.peekToken.Col, "Parser", p.peekToken.Literal, false)
+		p.Errors = append(p.Errors, err)
 		return nil
 	}
 
@@ -93,8 +97,11 @@ func (p *Parser) parseModuleStatement() *ast.ModuleStatement {
 		if p.debug {
 			p.log.AppendParser(fmt.Sprintf("\n\td.%d. Parsing import identifier `%d`\n", p.encounterCount, importCount))
 		}
+
 		if !p.expectPeek(token.IDENT) {
-			// TODO: Error handling
+			msg := fmt.Sprintf("Expected next token to be IDENT, got %s instead", p.peekToken.Type)
+			err := errors.New(msg, p.peekToken.Line, p.peekToken.Col, "Parser", p.peekToken.Literal, false)
+			p.Errors = append(p.Errors, err)
 			return nil
 		}
 
@@ -207,6 +214,33 @@ func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
 	return stmt
 }
 
+func (p *Parser) parseWhileStatement() *ast.WhileStatement {
+	stmt := &ast.WhileStatement{Token: p.curToken}
+	
+	if !p.expectPeek(token.LPAREN) {
+		// TODO: Error handling
+		return nil
+	}
+	
+	stmt.Condition = p.parseExpression(LOWEST)
+	
+	if !p.expectPeek(token.LBRACE) {
+		// TODO: Error handling
+		return nil
+	}
+	
+	stmt.Body = p.parseBlockStatement()
+	
+	if !p.curTokenIs(token.RBRACE) {
+		// TODO: Error handling
+		return nil
+	}
+	
+	p.nextToken()
+	
+	return stmt
+}
+
 func (p *Parser) parseExpressionOrAssignStatement() ast.Statement {
 	ident := p.parseIdentifier()
 	if p.peekTokenIs(token.ASSIGN) {
@@ -224,7 +258,7 @@ func (p *Parser) parseExpressionOrAssignStatement() ast.Statement {
 	if p.debug {
 		p.log.AppendParser(fmt.Sprintf("%d. Did not encounter an assign (`=`) token, so this is an expression statement\n", p.encounterCount))
 	}
-
+	
 	return p.parseExpressionStatement()
 }
 
@@ -233,7 +267,7 @@ func (p *Parser) parseAssignStatement(ident *ast.Identifier) *ast.AssignStatemen
 		p.log.AppendParser(fmt.Sprintf("%d. Steps in parsing assign statement:\n", p.encounterCount))
 		p.log.AppendParser(fmt.Sprintf("\n\ta. Assigning token to the statement to track positioning [line: %d, col: %d]\n", p.curToken.Line, p.curToken.Col))
 	}
-	stmt := &ast.AssignStatement{Token: p.curToken, Name: ident}
+	stmt := &ast.AssignStatement{Token: p.peekToken, Name: ident}
 
 	p.nextToken()
 	p.nextToken()

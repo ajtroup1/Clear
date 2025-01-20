@@ -21,11 +21,11 @@ type Lexer struct {
 	Tokens         []token.Token
 	encounterCount int
 
-	Errors []errors.Error
+	Errors []*errors.Error
 }
 
 func New(input string, lo *logger.Logger, debug bool) *Lexer {
-	l := &Lexer{input: input, line: 1, col: 0, Errors: []errors.Error{}, log: lo, debug: debug, encounterCount: 1}
+	l := &Lexer{input: input, line: 1, col: 0, Errors: []*errors.Error{}, log: lo, debug: debug, encounterCount: 1}
 	if debug {
 		l.log.DefineSection("Lexical Analysis / Lexing / Tokenization", "Lexing (or tokenization) is the process of converting a sequence of characters into a sequence of tokens.\n\nThese tokens are the simplest level of strutured data pertaining to the source code information.\n\n*Example Token*: `let` (Type: LET, Literal: 'let')\n\n- Optionally, the token can track other information such as line and column information, which is used for error reporting.\n\n\t- Token: `return` (Type: RETURN, Literal:'return', Line: 6, Column: 12)\n\nThe lexer reads the source code character by character and generates tokens based on the characters it reads. The lexer is also the first step in the compilation or interpretation process. The lexer is additionally responsible for removing whitespace and comments from the source code.")
 		l.log.Append("**Source code:** \n```js\n")
@@ -128,7 +128,7 @@ func (l *Lexer) NextToken() token.Token {
 			return tok
 		} else {
 			err := errors.New("illegal character '"+string(l.ch)+"'", l.line, l.col, "lexer", "not implemented", false)
-			l.Errors = append(l.Errors, *err)
+			l.Errors = append(l.Errors, err)
 			tok = l.newToken(token.ILLEGAL, l.ch)
 		}
 	}

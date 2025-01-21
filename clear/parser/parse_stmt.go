@@ -39,9 +39,6 @@ func (p *Parser) parseModuleStatement() *ast.ModuleStatement {
 	stmt := &ast.ModuleStatement{Token: p.curToken}
 
 	if !p.expectPeek(token.IDENT) {
-		msg := fmt.Sprintf("Expected next token to be IDENT, got %s instead", p.peekToken.Type)
-		err := errors.New(msg, p.peekToken.Line, p.peekToken.Col, "Parser", p.peekToken.Literal, false)
-		p.Errors = append(p.Errors, err)
 		return nil
 	}
 
@@ -51,7 +48,6 @@ func (p *Parser) parseModuleStatement() *ast.ModuleStatement {
 	stmt.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 
 	if !p.expectPeek(token.COLON) {
-		// TODO: Error handling
 		return nil
 	}
 
@@ -78,14 +74,20 @@ func (p *Parser) parseModuleStatement() *ast.ModuleStatement {
 	}
 
 	if !p.expectPeek(token.LBRACKET) {
-		// TODO: Error handling
 		return nil
 	}
 
 	if p.peekTokenIs(token.RBRACKET) {
-		// TODO: Warning for empty import list
+		msg := fmt.Sprintf("empty import list found for module '%s'", stmt.Name.Value)
+		err := errors.New(msg, p.peekToken.Line, p.peekToken.Col, "Parser", p.l.Lines, true)
+		p.Errors = append(p.Errors, err)
 		if p.debug {
 			p.log.AppendParser("\n\tc.1. *Encountered an empty import list, why did you do that?*\n")
+		}
+		p.nextToken()
+
+		if p.peekTokenIs(token.SEMICOLON) {
+			p.nextToken()
 		}
 		return stmt
 	}
@@ -102,7 +104,7 @@ func (p *Parser) parseModuleStatement() *ast.ModuleStatement {
 
 		if !p.expectPeek(token.IDENT) {
 			msg := fmt.Sprintf("Expected next token to be IDENT, got %s instead", p.peekToken.Type)
-			err := errors.New(msg, p.peekToken.Line, p.peekToken.Col, "Parser", p.peekToken.Literal, false)
+			err := errors.New(msg, p.peekToken.Line, p.peekToken.Col, "Parser", p.l.Lines, false)
 			p.Errors = append(p.Errors, err)
 			return nil
 		}
@@ -149,7 +151,6 @@ func (p *Parser) parseLetStatement() *ast.LetStatement {
 	stmt := &ast.LetStatement{Token: p.curToken}
 
 	if !p.expectPeek(token.IDENT) {
-		// TODO: Error handling
 		return nil
 	}
 

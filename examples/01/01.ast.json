@@ -29,10 +29,10 @@
     },
     {
       "Token": {
-        "Type": "IDENT",
-        "Literal": "x",
+        "Type": "=",
+        "Literal": "=",
         "Line": 4,
-        "Col": 1
+        "Col": 3
       },
       "Name": {
         "Token": {
@@ -160,5 +160,25 @@
       }
     }
   ],
-  "Modules": null
+  "Modules": [
+    {
+      "Token": {
+        "Type": "MOD",
+        "Literal": "mod",
+        "Line": 1,
+        "Col": 1
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "arrays",
+          "Line": 1,
+          "Col": 5
+        },
+        "Value": "arrays"
+      },
+      "ImportAll": false,
+      "Imports": null
+    }
+  ]
 }

@@ -1,6 +1,10 @@
 package token
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/ajtroup1/clear/logger"
+)
 
 type TokenType string
 
@@ -81,8 +85,9 @@ var keywords = map[string]TokenType{
 	"for":    FOR,
 }
 
-func LookupIdent(ident string) TokenType {
+func LookupIdent(ident string, logger *logger.Logger, enc int) TokenType {
 	if tok, ok := keywords[ident]; ok {
+		logger.Append(fmt.Sprintf("%d. Discerned that '%s' is a keyword '%s'\n", enc, ident, tok))
 		return tok
 	}
 	return IDENT

@@ -2,6 +2,7 @@ package lexer
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/ajtroup1/clear/errors"
 	"github.com/ajtroup1/clear/logger"
@@ -10,6 +11,8 @@ import (
 
 type Lexer struct {
 	input        string
+	Lines        []string
+	linePos      int
 	position     int  // current position in input (points to current char)
 	readPosition int  // current reading position in input (after current char)
 	ch           byte // current char under examination
@@ -36,6 +39,7 @@ func New(input string, lo *logger.Logger, debug bool) *Lexer {
 		l.log.Append("### Live encounters:\n\n")
 	}
 	l.readChar()
+	l.Lines = strings.Split(input, "\n")
 	return l
 }
 
@@ -122,7 +126,7 @@ func (l *Lexer) NextToken() token.Token {
 	default:
 		if isLetter(l.ch) {
 			tok.Literal = l.readIdentifier()
-			tok.Type = token.LookupIdent(tok.Literal)
+			tok.Type = token.LookupIdent(tok.Literal, l.log, l.encounterCount)
 			tok.Line = l.line
 			tok.Col = l.col - len(tok.Literal)
 			l.Tokens = append(l.Tokens, tok)
@@ -141,7 +145,7 @@ func (l *Lexer) NextToken() token.Token {
 			l.log.Append(fmt.Sprintf("%d. Tokenized Token::%s '%s' at [line: %d, col: %d]\n", l.encounterCount, tok.Type, tok.Literal, tok.Line, tok.Col))
 			return tok
 		} else {
-			err := errors.New("illegal character '"+string(l.ch)+"'", l.line, l.col, "lexer", "not implemented", false)
+			err := errors.New("illegal character '"+string(l.ch)+"'", l.line, l.col, "lexer", l.Lines, false)
 			l.Errors = append(l.Errors, err)
 			tok = l.newToken(token.ILLEGAL, l.ch)
 		}

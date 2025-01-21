@@ -110,9 +110,13 @@ func runScript(filePath string, debug bool) {
 	evaluator.Init(log, debug)
 	evaluated := evaluator.Eval(program, env)
 
-	if errors.HasErrors(lexer.Errors, parser.Errors) {
+	errs, warn := errors.HasErrors(lexer.Errors, parser.Errors)
+	if errs {
 		fmt.Print(errors.ReportErrors(lexer.Errors, parser.Errors))
 		os.Exit(1)
+	}
+	if warn {
+		fmt.Print(errors.ReportErrors(lexer.Errors, parser.Errors))
 	}
 
 	if evaluated != nil && evaluated.Type() == object.ERROR_OBJ {

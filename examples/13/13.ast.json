@@ -53,12 +53,12 @@
         "Operator": "+=",
         "Right": {
           "Token": {
-            "Type": "INT",
-            "Literal": "1",
+            "Type": "FLOAT",
+            "Literal": "1.2",
             "Line": 3,
             "Col": 6
           },
-          "Value": 1
+          "Value": 1.2
         }
       }
     },
@@ -171,14 +171,14 @@
       "Token": {
         "Type": "RETURN",
         "Literal": "return",
-        "Line": 9,
+        "Line": 8,
         "Col": 1
       },
       "ReturnValue": {
         "Token": {
           "Type": "IDENT",
           "Literal": "x",
-          "Line": 9,
+          "Line": 8,
           "Col": 8
         },
         "Value": "x"

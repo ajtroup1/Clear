@@ -12,11 +12,13 @@ import (
 var (
 	Logger *logger.Logger
 	Debug  bool
+	Lines []string
 )
 
-func Init(l *logger.Logger, debug bool) {
+func Init(l *logger.Logger, debug bool, lines []string) {
 	Logger = l
 	Debug = debug
+	Lines = lines
 
 	if Debug {
 		Logger.DefineSection("Evaluation", "evaluation description here")
@@ -356,6 +358,16 @@ func evalInfixExpression(
 			return evalCompoundAssignment(operator, left, right, env, literal)
 		}
 		return evalIntegerInfixExpression(operator, left, right)
+	case (left.Type() == object.FLOAT_OBJ && right.Type() == object.INTEGER_OBJ) || (left.Type() == object.INTEGER_OBJ && right.Type() == object.FLOAT_OBJ):
+		if isCompoundOperator(operator) {
+			return evalCompoundAssignment(operator, left, right, env, literal)
+		}
+		return evalFloatInfixExpression(operator, left, right)
+	case left.Type() == object.FLOAT_OBJ && right.Type() == object.FLOAT_OBJ:
+		if isCompoundOperator(operator) {
+			return evalCompoundAssignment(operator, left, right, env, literal)
+		}
+		return evalFloatInfixExpression(operator, left, right)
 	case operator == "==":
 		return nativeBoolToBooleanObject(left == right)
 	case operator == "!=":
@@ -395,6 +407,10 @@ func evalCompoundAssignment(
 	switch {
 	case left.Type() == object.INTEGER_OBJ && right.Type() == object.INTEGER_OBJ:
 		result := evalIntegerInfixExpression(operator, left, right)
+		env.Set(literal, result)
+		return result
+	case (left.Type() == object.FLOAT_OBJ && right.Type() == object.INTEGER_OBJ) || (left.Type() == object.INTEGER_OBJ && right.Type() == object.FLOAT_OBJ):
+		result := evalFloatInfixExpression(operator, left, right)
 		env.Set(literal, result)
 		return result
 	// case left.Type() == object.FLOAT_OBJ && right.Type() == object.FLOAT_OBJ:
@@ -510,6 +526,61 @@ func evalIntegerInfixExpression(
 	}
 }
 
+func evalFloatInfixExpression(
+	operator string,
+	left, right object.Object,
+) object.Object {
+	var leftVal, rightVal float64
+
+	switch l := left.(type) {
+	case *object.Float:
+		leftVal = l.Value
+	case *object.Integer:
+		leftVal = float64(l.Value)
+	default:
+		return newError("type mismatch: %s %s %s", left.Line(), left.Col(), left.Type(), operator, right.Type())
+	}
+
+	switch r := right.(type) {
+	case *object.Float:
+		rightVal = r.Value
+	case *object.Integer:
+		rightVal = float64(r.Value)
+	default:
+		return newError("type mismatch: %s %s %s", left.Line(), left.Col(), left.Type(), operator, right.Type())
+	}
+
+	switch operator {
+	case "+":
+		return &object.Float{Value: leftVal + rightVal}
+	case "-":
+		return &object.Float{Value: leftVal - rightVal}
+	case "*":
+		return &object.Float{Value: leftVal * rightVal}
+	case "/":
+		return &object.Float{Value: leftVal / rightVal}
+	case "<":
+		return nativeBoolToBooleanObject(leftVal < rightVal)
+	case ">":
+		return nativeBoolToBooleanObject(leftVal > rightVal)
+	case "==":
+		return nativeBoolToBooleanObject(leftVal == rightVal)
+	case "!=":
+		return nativeBoolToBooleanObject(leftVal != rightVal)
+	case "+=":
+		return &object.Float{Value: leftVal + rightVal}
+	case "-=":
+		return &object.Float{Value: leftVal - rightVal}
+	case "*=":
+		return &object.Float{Value: leftVal * rightVal}
+	case "/=":
+		return &object.Float{Value: leftVal / rightVal}
+	default:
+		return newError("unknown operator: %s %s %s", left.Line(), left.Col(),
+			left.Type(), operator, right.Type())
+	}
+}
+
 func evalIfExpression(
 	ie *ast.IfExpression,
 	env *object.Environment,
@@ -565,7 +636,10 @@ func isTruthy(obj object.Object) bool {
 }
 
 func newError(format string, line, col int, a ...interface{}) *object.Error {
-	return &object.Error{Message: fmt.Sprintf(format, a...), Position: object.Position{Line: line, Col: col}}
+	// for _, line := range Lines {
+	// 	fmt.Printf("// %s //\n", line)
+	// }
+	return &object.Error{Message: fmt.Sprintf(format, a...), Position: object.Position{Line: line, Col: col}, Context: Lines[line-1]}
 }
 
 func isError(obj object.Object) bool {

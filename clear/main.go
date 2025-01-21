@@ -107,7 +107,7 @@ func runScript(filePath string, debug bool) {
 
 	env := object.NewEnvironment()
 	modules.Register(env)
-	evaluator.Init(log, debug)
+	evaluator.Init(log, debug, lexer.Lines)
 	evaluated := evaluator.Eval(program, env)
 
 	errs, warn := errors.HasErrors(lexer.Errors, parser.Errors)

@@ -100,6 +100,7 @@ func (rv *ReturnValue) Col() int         { return rv.Position.Col }
 type Error struct {
 	Position
 	Message string
+	Context string
 }
 
 func (e *Error) Type() ObjectType { return ERROR_OBJ }

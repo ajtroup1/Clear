@@ -8,6 +8,7 @@ import (
 	"github.com/ajtroup1/clear/token"
 )
 
+// Switches the current token's statement keyword to the appropriate statement parsing function
 func (p *Parser) parseStatement() ast.Statement {
 	if p.debug && isStatement(p.curToken.Type) {
 		p.log.AppendParser(fmt.Sprintf("%d. Encountered a `%s` token, calling `parse%sStatement()`...\n", p.encounterCount, p.curToken.Type, errors.Capitalize(string(p.curToken.Type))))
@@ -24,6 +25,7 @@ func (p *Parser) parseStatement() ast.Statement {
 	case token.FOR:
 		return p.parseForStatement()
 	default:
+		// If no explicit statement keyword is defined, it's either an expression or an assignment statement
 		if p.debug {
 			p.log.AppendParser(fmt.Sprintf("%d. Encountered token (`%s`, type '%s') that doesn't have a predefined statement parse function, so it's either an expression or an assignment statement\n", p.encounterCount, p.curToken.Literal, p.curToken.Type))
 		}
@@ -123,7 +125,6 @@ func (p *Parser) parseModuleStatement() *ast.ModuleStatement {
 	}
 
 	if !p.expectPeek(token.RBRACKET) {
-		// TODO: Error handling
 		return nil
 	}
 
@@ -160,7 +161,6 @@ func (p *Parser) parseLetStatement() *ast.LetStatement {
 	stmt.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 
 	if !p.expectPeek(token.ASSIGN) {
-		// TODO: Error handling
 		return nil
 	}
 

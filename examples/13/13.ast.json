@@ -1,0 +1,84 @@
+{
+  "NoStatements": false,
+  "Statements": [
+    {
+      "Token": {
+        "Type": "LET",
+        "Literal": "let",
+        "Line": 1,
+        "Col": 1
+      },
+      "Name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "x",
+          "Line": 1,
+          "Col": 5
+        },
+        "Value": "x"
+      },
+      "Value": {
+        "Token": {
+          "Type": "INT",
+          "Literal": "0",
+          "Line": 1,
+          "Col": 9
+        },
+        "Value": 0
+      }
+    },
+    {
+      "Token": {
+        "Type": "IDENT",
+        "Literal": "x",
+        "Line": 3,
+        "Col": 1
+      },
+      "Expression": {
+        "Token": {
+          "Type": "+=",
+          "Literal": "+=",
+          "Line": 0,
+          "Col": 0
+        },
+        "Left": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "x",
+            "Line": 3,
+            "Col": 1
+          },
+          "Value": "x"
+        },
+        "Operator": "+=",
+        "Right": {
+          "Token": {
+            "Type": "INT",
+            "Literal": "1",
+            "Line": 3,
+            "Col": 6
+          },
+          "Value": 1
+        }
+      }
+    },
+    {
+      "Token": {
+        "Type": "RETURN",
+        "Literal": "return",
+        "Line": 5,
+        "Col": 1
+      },
+      "ReturnValue": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "x",
+          "Line": 5,
+          "Col": 8
+        },
+        "Value": "x"
+      }
+    }
+  ],
+  "Modules": null
+}

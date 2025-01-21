@@ -27,8 +27,16 @@
   1. For / while Statements
   2. Add a DateTime type to aid the time module
   3. Implement compound operators like `+=` `-=` `*=` ...
+      - In the evaluator, the operator's literal should be 2 chars long, the `+`, `-`, ... and then the `=`
+      - Maybe I should split that and rearrange that into an infix expression, then evaluate it
+  4. Warnings:
+      - Variable `x` is unused
+      - ...
+  5. Add logical operators `&&` `||`
 
 ### Quick Fixes
+  0. **Handle eval context lines**:
+    - Just pass lexer.Lines to eval global vars and access it in newError or Error object creation  
   1. if statement condition booleans
     - if (myBoolean)
     - if (!myBoolean)

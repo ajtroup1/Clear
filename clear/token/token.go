@@ -28,6 +28,11 @@ const (
 	INC      = "++"
 	DEC      = "--"
 
+	PLUS_EQ  = "+="
+	MINUS_EQ = "-="
+	MULT_EQ  = "*="
+	DIV_EQ   = "/="
+
 	LT = "<"
 	GT = ">"
 

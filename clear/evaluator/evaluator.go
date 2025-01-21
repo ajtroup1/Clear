@@ -110,7 +110,7 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 			return right
 		}
 
-		return evalInfixExpression(node.Operator, left, right)
+		return evalInfixExpression(node.Operator, left, right, node.TokenLiteral())
 
 	case *ast.PostfixExpression:
 		left := Eval(node.Left, env)
@@ -181,14 +181,14 @@ func evalWhileStatement(stmt *ast.WhileStatement, env *object.Environment) objec
 
 func evalForStatement(stmt *ast.ForStatement, env *object.Environment) object.Object {
 	var result object.Object
-	
+
 	if stmt.Init != nil {
 		result = Eval(stmt.Init, env)
 		if isError(result) {
 			return result
 		}
 	}
-	
+
 	for isTruthy(Eval(stmt.Condition, env)) {
 		result = evalBlockStatement(stmt.Body, env)
 		if isError(result) {
@@ -347,7 +347,11 @@ func evalPrefixExpression(operator string, right object.Object) object.Object {
 func evalInfixExpression(
 	operator string,
 	left, right object.Object,
+	literal string,
 ) object.Object {
+	fmt.Printf("left: %v\n", left.Type())
+	fmt.Printf("right: %v\n", right.Type())
+	fmt.Printf("operator: %v\n", operator)
 	switch {
 	case left.Type() == object.INTEGER_OBJ && right.Type() == object.INTEGER_OBJ:
 		return evalIntegerInfixExpression(operator, left, right)
@@ -355,6 +359,12 @@ func evalInfixExpression(
 		return nativeBoolToBooleanObject(left == right)
 	case operator == "!=":
 		return nativeBoolToBooleanObject(left != right)
+	case operator == "-=":
+		return evalInfixExpression("-", left, right, literal)
+	case operator == "*=":
+		return evalInfixExpression("*", left, right, literal)
+	case operator == "/=":
+		return evalInfixExpression("/", left, right, literal)
 	case left.Type() != right.Type():
 		return newError("type mismatch: %s %s %s", left.Line(), left.Col(),
 			left.Type(), operator, right.Type())
@@ -363,6 +373,15 @@ func evalInfixExpression(
 	default:
 		return newError("unknown operator: %s %s %s", left.Line(), left.Col(),
 			left.Type(), operator, right.Type())
+	}
+}
+
+func isCompound(operator string) bool {
+	switch operator {
+	case "+=", "-=", "*=", "/=":
+		return true
+	default:
+		return false
 	}
 }
 
@@ -455,6 +474,8 @@ func evalIntegerInfixExpression(
 		return nativeBoolToBooleanObject(leftVal == rightVal)
 	case "!=":
 		return nativeBoolToBooleanObject(leftVal != rightVal)
+	case "+=":
+		return &object.Integer{Value: leftVal + rightVal}
 	default:
 		return newError("unknown operator: %s %s %s", left.Line(), left.Col(),
 			left.Type(), operator, right.Type())

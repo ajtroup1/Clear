@@ -19,12 +19,21 @@
       },
       "Value": {
         "Token": {
-          "Type": "INT",
-          "Literal": "5",
+          "Type": "-",
+          "Literal": "-",
           "Line": 1,
           "Col": 9
         },
-        "Value": 5
+        "Operator": "-",
+        "Right": {
+          "Token": {
+            "Type": "INT",
+            "Literal": "10",
+            "Line": 1,
+            "Col": 10
+          },
+          "Value": 10
+        }
       }
     },
     {

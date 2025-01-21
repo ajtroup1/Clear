@@ -21,7 +21,7 @@ func Init(l *logger.Logger, debug bool, lines []string) {
 	Lines = lines
 
 	if Debug {
-		Logger.DefineSection("Evaluation", "Evaluation is simply the traversing of the AST and executing its nodes accordingly.\n\nThe core of the evaluator is the Eval(node) function, which is called recursivly on the AST. Since the AST is a nicely formatted tree structure, it is pretty simple to traverse it recusively.\n\nI would suggest inspecting the [evaluator](../clear/evaluator/) and [object](../clear/object/) package to get a better understanding of how the evaluator works. It's very simple to understand due to its recursive nature.\n\n")
+		Logger.DefineSection("Evaluation", "Evaluation is simply the traversing of the AST and executing its nodes accordingly.\n\nThe core of the evaluator is the Eval(node) function, which is called recursivly on the AST. Since the AST is a nicely formatted tree structure, it is pretty simple to traverse it recusively.\n\nI would suggest inspecting the [evaluator](../clear/evaluator/evaluator.go) and [object](../clear/object/object.go) package to get a better understanding of how the evaluator works. It's very simple to understand due to its recursive nature.\n\n")
 	}
 }
 

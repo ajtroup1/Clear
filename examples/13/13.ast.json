@@ -64,16 +64,121 @@
     },
     {
       "Token": {
+        "Type": "IDENT",
+        "Literal": "x",
+        "Line": 4,
+        "Col": 1
+      },
+      "Expression": {
+        "Token": {
+          "Type": "-=",
+          "Literal": "-=",
+          "Line": 0,
+          "Col": 0
+        },
+        "Left": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "x",
+            "Line": 4,
+            "Col": 1
+          },
+          "Value": "x"
+        },
+        "Operator": "-=",
+        "Right": {
+          "Token": {
+            "Type": "INT",
+            "Literal": "2",
+            "Line": 4,
+            "Col": 6
+          },
+          "Value": 2
+        }
+      }
+    },
+    {
+      "Token": {
+        "Type": "IDENT",
+        "Literal": "x",
+        "Line": 5,
+        "Col": 1
+      },
+      "Expression": {
+        "Token": {
+          "Type": "*=",
+          "Literal": "*=",
+          "Line": 0,
+          "Col": 0
+        },
+        "Left": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "x",
+            "Line": 5,
+            "Col": 1
+          },
+          "Value": "x"
+        },
+        "Operator": "*=",
+        "Right": {
+          "Token": {
+            "Type": "INT",
+            "Literal": "10",
+            "Line": 5,
+            "Col": 6
+          },
+          "Value": 10
+        }
+      }
+    },
+    {
+      "Token": {
+        "Type": "IDENT",
+        "Literal": "x",
+        "Line": 6,
+        "Col": 1
+      },
+      "Expression": {
+        "Token": {
+          "Type": "/=",
+          "Literal": "/=",
+          "Line": 0,
+          "Col": 0
+        },
+        "Left": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "x",
+            "Line": 6,
+            "Col": 1
+          },
+          "Value": "x"
+        },
+        "Operator": "/=",
+        "Right": {
+          "Token": {
+            "Type": "INT",
+            "Literal": "2",
+            "Line": 6,
+            "Col": 6
+          },
+          "Value": 2
+        }
+      }
+    },
+    {
+      "Token": {
         "Type": "RETURN",
         "Literal": "return",
-        "Line": 5,
+        "Line": 9,
         "Col": 1
       },
       "ReturnValue": {
         "Token": {
           "Type": "IDENT",
           "Literal": "x",
-          "Line": 5,
+          "Line": 9,
           "Col": 8
         },
         "Value": "x"

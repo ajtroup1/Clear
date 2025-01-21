@@ -110,7 +110,7 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 			return right
 		}
 
-		return evalInfixExpression(node.Operator, left, right, node.TokenLiteral())
+		return evalInfixExpression(node.Operator, left, right, node.Left.TokenLiteral(), env)
 
 	case *ast.PostfixExpression:
 		left := Eval(node.Left, env)
@@ -348,23 +348,24 @@ func evalInfixExpression(
 	operator string,
 	left, right object.Object,
 	literal string,
+	env *object.Environment,
 ) object.Object {
-	fmt.Printf("left: %v\n", left.Type())
-	fmt.Printf("right: %v\n", right.Type())
-	fmt.Printf("operator: %v\n", operator)
 	switch {
 	case left.Type() == object.INTEGER_OBJ && right.Type() == object.INTEGER_OBJ:
+		if isCompoundOperator(operator) {
+			return evalCompoundAssignment(operator, left, right, env, literal)
+		}
 		return evalIntegerInfixExpression(operator, left, right)
 	case operator == "==":
 		return nativeBoolToBooleanObject(left == right)
 	case operator == "!=":
 		return nativeBoolToBooleanObject(left != right)
 	case operator == "-=":
-		return evalInfixExpression("-", left, right, literal)
+		return evalInfixExpression("-", left, right, literal, env)
 	case operator == "*=":
-		return evalInfixExpression("*", left, right, literal)
+		return evalInfixExpression("*", left, right, literal, env)
 	case operator == "/=":
-		return evalInfixExpression("/", left, right, literal)
+		return evalInfixExpression("/", left, right, literal, env)
 	case left.Type() != right.Type():
 		return newError("type mismatch: %s %s %s", left.Line(), left.Col(),
 			left.Type(), operator, right.Type())
@@ -376,7 +377,7 @@ func evalInfixExpression(
 	}
 }
 
-func isCompound(operator string) bool {
+func isCompoundOperator(operator string) bool {
 	switch operator {
 	case "+=", "-=", "*=", "/=":
 		return true
@@ -384,6 +385,27 @@ func isCompound(operator string) bool {
 		return false
 	}
 }
+
+func evalCompoundAssignment(
+	operator string,
+	left, right object.Object,
+	env *object.Environment,
+	literal string,
+) object.Object {
+	switch {
+	case left.Type() == object.INTEGER_OBJ && right.Type() == object.INTEGER_OBJ:
+		result := evalIntegerInfixExpression(operator, left, right)
+		env.Set(literal, result)
+		return result
+	// case left.Type() == object.FLOAT_OBJ && right.Type() == object.FLOAT_OBJ:
+	// 	return evalFloatInfixExpression(operator, left, right)
+	default:
+		return newError("unknown operator: %s %s %s", left.Line(), left.Col(),
+			left.Type(), operator, right.Type())
+	}
+}
+
+
 
 func evalPostfixExpression(operator string, left object.Object) object.Object {
 	if left.Type() != object.INTEGER_OBJ && left.Type() != object.FLOAT_OBJ {
@@ -476,6 +498,12 @@ func evalIntegerInfixExpression(
 		return nativeBoolToBooleanObject(leftVal != rightVal)
 	case "+=":
 		return &object.Integer{Value: leftVal + rightVal}
+	case "-=":
+		return &object.Integer{Value: leftVal - rightVal}
+	case "*=":
+		return &object.Integer{Value: leftVal * rightVal}
+	case "/=":
+		return &object.Integer{Value: leftVal / rightVal}
 	default:
 		return newError("unknown operator: %s %s %s", left.Line(), left.Col(),
 			left.Type(), operator, right.Type())

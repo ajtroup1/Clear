@@ -41,3 +41,4 @@
     - if (myBoolean)
     - if (!myBoolean)
   2. Empty var declaration
+  3. Returns nil dereference: "x * = 2;" because of the space

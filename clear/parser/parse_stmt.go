@@ -160,6 +160,11 @@ func (p *Parser) parseLetStatement() *ast.LetStatement {
 	}
 	stmt.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 
+	if p.peekTokenIs(token.SEMICOLON) {
+		p.nextToken()
+		return stmt
+	}
+
 	if !p.expectPeek(token.ASSIGN) {
 		return nil
 	}

@@ -18,7 +18,7 @@ func (p *Parser) parseExpression(precedence int) ast.Expression {
 	leftExp := prefix()
 
 	for p.peekTokenIs(token.INC) || p.peekTokenIs(token.DEC) {
-		p.nextToken() 
+		p.nextToken()
 		leftExp = p.parsePostfixExpression(leftExp)
 	}
 
@@ -112,7 +112,35 @@ func (p *Parser) parseFloatLiteral() ast.Expression {
 }
 
 func (p *Parser) parseStringLiteral() ast.Expression {
-	return &ast.StringLiteral{Token: p.curToken, Value: p.curToken.Literal}
+	lit := formatStringLiteral(p.curToken.Literal)
+	return &ast.StringLiteral{Token: p.curToken, Value: lit}
+}
+
+func formatStringLiteral(input string) string {
+	var result []rune
+	for i := 0; i < len(input); i++ {
+		if input[i] == '\\' {
+			if i+1 < len(input) {
+				switch input[i+1] {
+				case 'n':
+					result = append(result, '\n')
+				case 't':
+					result = append(result, '\t')
+				case '\\':
+					result = append(result, '\\')
+				case '"':
+					result = append(result, '"')
+				default:
+					// Handle unknown escape sequences
+					result = append(result, '\\', rune(input[i+1]))
+				}
+				i++ // Skip the next character
+			}
+		} else {
+			result = append(result, rune(input[i]))
+		}
+	}
+	return string(result)
 }
 
 func (p *Parser) parseBoolean() ast.Expression {
@@ -148,7 +176,8 @@ func (p *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
 }
 
 func (p *Parser) parsePostfixExpression(left ast.Expression) ast.Expression {
-	ident, ok := left.(*ast.Identifier); if !ok {
+	ident, ok := left.(*ast.Identifier)
+	if !ok {
 		msg := fmt.Sprintf("expected left expression to be IDENT, got %v instead", left)
 		err := errors.Error{
 			Message: msg,

@@ -1,4 +1,10 @@
-println("Hello World");
-println("test");
+mod io: [ print, println, printf ];
 
-return 0;
+io.println("Hello World");
+
+io.print("Hello\t");
+io.print("Again\n");
+
+let x = 0;
+
+io.printf("x is %d\n", x);

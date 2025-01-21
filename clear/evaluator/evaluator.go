@@ -21,7 +21,7 @@ func Init(l *logger.Logger, debug bool, lines []string) {
 	Lines = lines
 
 	if Debug {
-		Logger.DefineSection("Evaluation", "evaluation description here")
+		Logger.DefineSection("Evaluation", "Evaluation is simply the traversing of the AST and executing its nodes accordingly.\n\nThe core of the evaluator is the Eval(node) function, which is called recursivly on the AST. Since the AST is a nicely formatted tree structure, it is pretty simple to traverse it recusively.\n\nI would suggest inspecting the [evaluator](./) and [object](../object/) package to get a better understanding of how the evaluator works. It's very simple to understand due to its recursive nature.\n\n")
 	}
 }
 
@@ -52,6 +52,9 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		val := Eval(node.ReturnValue, env)
 		if isError(val) {
 			return val
+		}
+		if val == nil {
+			return newError("return value is nil: %s", node.Token.Line, node.Token.Col, node.ReturnValue.TokenLiteral())
 		}
 		return &object.ReturnValue{Value: val, Position: object.Position{Line: node.Token.Line, Col: node.Token.Col}}
 

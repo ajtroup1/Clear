@@ -124,6 +124,11 @@ func runScript(filePath string, debug bool) {
 		os.Exit(1)
 	}
 
+	if evaluated == nil {
+		fmt.Println("\nProgram returned 0 (default)\n")
+		os.Exit(0)
+	}
+
 	fmt.Printf("\nProgram returned: %s\n\n", evaluated.Inspect())
 
 	if debug {

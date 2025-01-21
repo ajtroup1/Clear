@@ -1,6 +1,6 @@
 {
   "NoStatements": false,
-  "Statements": [
+  "statements": [
     {
       "Token": {
         "Type": "IDENT",
@@ -8,23 +8,23 @@
         "Line": 3,
         "Col": 4
       },
-      "Expression": {
+      "expression": {
         "Token": {
           "Type": "(",
           "Literal": "(",
           "Line": 3,
           "Col": 11
         },
-        "Function": {
+        "function": {
           "Token": {
             "Type": "IDENT",
             "Literal": "println",
             "Line": 3,
             "Col": 4
           },
-          "Value": "println"
+          "value": "println"
         },
-        "Arguments": [
+        "arguments": [
           {
             "Token": {
               "Type": "STRING",
@@ -32,7 +32,7 @@
               "Line": 0,
               "Col": 0
             },
-            "Value": "Hello World"
+            "value": "Hello World"
           }
         ]
       }
@@ -44,23 +44,23 @@
         "Line": 5,
         "Col": 4
       },
-      "Expression": {
+      "expression": {
         "Token": {
           "Type": "(",
           "Literal": "(",
           "Line": 5,
           "Col": 9
         },
-        "Function": {
+        "function": {
           "Token": {
             "Type": "IDENT",
             "Literal": "print",
             "Line": 5,
             "Col": 4
           },
-          "Value": "print"
+          "value": "print"
         },
-        "Arguments": [
+        "arguments": [
           {
             "Token": {
               "Type": "STRING",
@@ -68,7 +68,7 @@
               "Line": 0,
               "Col": 0
             },
-            "Value": "Hello\t"
+            "value": "Hello\t"
           }
         ]
       }
@@ -80,23 +80,23 @@
         "Line": 6,
         "Col": 4
       },
-      "Expression": {
+      "expression": {
         "Token": {
           "Type": "(",
           "Literal": "(",
           "Line": 6,
           "Col": 9
         },
-        "Function": {
+        "function": {
           "Token": {
             "Type": "IDENT",
             "Literal": "print",
             "Line": 6,
             "Col": 4
           },
-          "Value": "print"
+          "value": "print"
         },
-        "Arguments": [
+        "arguments": [
           {
             "Token": {
               "Type": "STRING",
@@ -104,7 +104,7 @@
               "Line": 0,
               "Col": 0
             },
-            "Value": "Again\n"
+            "value": "Again\n"
           }
         ]
       }
@@ -116,23 +116,23 @@
         "Line": 8,
         "Col": 1
       },
-      "Name": {
+      "name": {
         "Token": {
           "Type": "IDENT",
           "Literal": "x",
           "Line": 8,
           "Col": 5
         },
-        "Value": "x"
+        "value": "x"
       },
-      "Value": {
+      "value": {
         "Token": {
           "Type": "INT",
           "Literal": "0",
           "Line": 8,
           "Col": 9
         },
-        "Value": 0
+        "value": 0
       }
     },
     {
@@ -142,23 +142,23 @@
         "Line": 10,
         "Col": 4
       },
-      "Expression": {
+      "expression": {
         "Token": {
           "Type": "(",
           "Literal": "(",
           "Line": 10,
           "Col": 10
         },
-        "Function": {
+        "function": {
           "Token": {
             "Type": "IDENT",
             "Literal": "printf",
             "Line": 10,
             "Col": 4
           },
-          "Value": "printf"
+          "value": "printf"
         },
-        "Arguments": [
+        "arguments": [
           {
             "Token": {
               "Type": "STRING",
@@ -166,7 +166,7 @@
               "Line": 0,
               "Col": 0
             },
-            "Value": "x is %d\n"
+            "value": "x is %d\n"
           },
           {
             "Token": {
@@ -175,13 +175,13 @@
               "Line": 10,
               "Col": 24
             },
-            "Value": "x"
+            "value": "x"
           }
         ]
       }
     }
   ],
-  "Modules": [
+  "modules": [
     {
       "Token": {
         "Type": "MOD",
@@ -189,17 +189,17 @@
         "Line": 1,
         "Col": 1
       },
-      "Name": {
+      "name": {
         "Token": {
           "Type": "IDENT",
           "Literal": "io",
           "Line": 1,
           "Col": 5
         },
-        "Value": "io"
+        "value": "io"
       },
-      "ImportAll": false,
-      "Imports": [
+      "import_all": false,
+      "imports": [
         {
           "Token": {
             "Type": "IDENT",
@@ -207,7 +207,7 @@
             "Line": 1,
             "Col": 11
           },
-          "Value": "print"
+          "value": "print"
         },
         {
           "Token": {
@@ -216,7 +216,7 @@
             "Line": 1,
             "Col": 18
           },
-          "Value": "println"
+          "value": "println"
         },
         {
           "Token": {
@@ -225,7 +225,7 @@
             "Line": 1,
             "Col": 27
           },
-          "Value": "printf"
+          "value": "printf"
         }
       ]
     }

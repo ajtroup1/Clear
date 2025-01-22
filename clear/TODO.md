@@ -15,11 +15,11 @@
       - More as an example of Clear's features, not for efficiency 
 
 ### General Additions
-  2. Add a DateTime type to aid the time module
-  4. Warnings:
+  1. Add a DateTime type to aid the time module
+  2. Warnings:
       - Variable `x` is unused
       - ...
-  5. Add logical operators `&&` `||`
+  3. Add logical operators `&&` `||`
 
 ### Quick Fixes
   1. if statement condition booleans

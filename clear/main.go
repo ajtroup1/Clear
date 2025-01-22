@@ -125,7 +125,8 @@ func runScript(filePath string, debug bool) {
 	}
 
 	if evaluated == nil {
-		fmt.Println("\nProgram returned 0 (default)\n")
+		fmt.Println("\nProgram returned 0 (default)")
+		fmt.Println()
 		os.Exit(0)
 	}
 

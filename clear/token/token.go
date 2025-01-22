@@ -63,6 +63,8 @@ const (
 	MOD      = "MOD"
 	WHILE    = "WHILE"
 	FOR      = "FOR"
+	CONTINUE = "CONTINUE"
+	BREAK    = "BREAK"
 )
 
 type Token struct {
@@ -77,17 +79,19 @@ func (t *Token) String() string {
 }
 
 var keywords = map[string]TokenType{
-	"fn":     FUNCTION,
-	"let":    LET,
-	"true":   TRUE,
-	"false":  FALSE,
-	"if":     IF,
-	"else":   ELSE,
-	"return": RETURN,
-	"mod":    MOD,
-	"module": MOD,
-	"while":  WHILE,
-	"for":    FOR,
+	"fn":       FUNCTION,
+	"let":      LET,
+	"true":     TRUE,
+	"false":    FALSE,
+	"if":       IF,
+	"else":     ELSE,
+	"return":   RETURN,
+	"mod":      MOD,
+	"module":   MOD,
+	"while":    WHILE,
+	"for":      FOR,
+	"continue": CONTINUE,
+	"break":    BREAK,
 }
 
 func LookupIdent(ident string, logger *logger.Logger, enc int) TokenType {

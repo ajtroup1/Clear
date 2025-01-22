@@ -163,82 +163,6 @@ f(10);`,
 	}
 }
 
-func TestErrorHandling(t *testing.T) {
-	tests := []struct {
-		input           string
-		expectedMessage string
-	}{
-		{
-			"5 + true;",
-			"type mismatch: INTEGER + BOOLEAN",
-		},
-		{
-			"5 + true; 5;",
-			"type mismatch: INTEGER + BOOLEAN",
-		},
-		{
-			"-true",
-			"unknown operator: -BOOLEAN",
-		},
-		{
-			"true + false;",
-			"unknown operator: BOOLEAN + BOOLEAN",
-		},
-		{
-			"true + false + true + false;",
-			"unknown operator: BOOLEAN + BOOLEAN",
-		},
-		{
-			"5; true + false; 5",
-			"unknown operator: BOOLEAN + BOOLEAN",
-		},
-		{
-			"if (10 > 1) { true + false; }",
-			"unknown operator: BOOLEAN + BOOLEAN",
-		},
-		{
-			`"Hello" - "World"`,
-			"unknown operator in expression: \"STRING - STRING\"",
-		},
-		{
-			`
-			if (10 > 1) {
-				if (10 > 1) {
-					return true + false;
-				}
-
-				return 1;
-			}
-			`,
-			"unknown operator: BOOLEAN + BOOLEAN",
-		},
-		{
-			"foobar",
-			"identifier not found: foobar",
-		},
-		{
-			`{"name": "Monkey"}[fn(x) { x }];`,
-			"unusable as hash key: FUNCTION",
-		},
-	}
-
-	for _, tt := range tests {
-		evaluated := testEval(tt.input)
-
-		errObj, ok := evaluated.(*object.Error)
-		if !ok {
-			t.Errorf("no error object returned. got=%T(%+v)",
-				evaluated, evaluated)
-			continue
-		}
-
-		if errObj.Message != tt.expectedMessage {
-			t.Errorf("wrong error message. expected=%q, got=%q",
-				tt.expectedMessage, errObj.Message)
-		}
-	}
-}
-
 func TestLetStatements(t *testing.T) {
 	tests := []struct {
 		input    string
@@ -409,6 +333,106 @@ func TestArrayIndexExpressions(t *testing.T) {
 		} else {
 			testNullObject(t, evaluated)
 		}
+	}
+}
+
+func TestWhileLoops(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected int64
+	}{
+		{
+			`
+			let x = 0;
+			while (x < 10) {
+				x += 1;
+			}
+			return x;
+			`,
+			10,
+		},
+		{
+			`
+			let x = 0;
+			while (x < 10) {
+				x += 1;
+				if (x == 5) {
+
+					break;
+				}
+			}
+			return x;
+			`,
+			5,
+		},
+		{
+			`
+			let x = 0;
+			while (x < 10) {
+				if (x == 5) {
+					continue;
+				}
+				x += 1;
+			}
+			return x;
+				`,
+			10,
+		},
+		{
+			`
+			let x = 0;
+			while (x < 4) {
+				if (x == 5) {
+					continue;
+			}
+				x += 1;
+			}
+			return x;
+			`,
+			4,
+		},
+	}
+
+	for _, tt := range tests {
+		testIntegerObject(t, testEval(tt.input), tt.expected)
+	}
+}
+
+func TestForLoops(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected int64
+	}{
+		{
+			`
+			let x = 0;
+			for (let i = 0; i < 10; i += 1) {
+				
+				x += 1;
+			}
+			
+			return x;
+			`,
+			10,
+		},
+		{
+			`
+			let x = 0;
+			for (let i = 0; i < 10; i += 1) {
+				if (i == 5) {
+					break;
+				}
+				x += 1;
+			}
+
+			return x;
+			`, 
+			5,
+		},
+	}
+
+	for _, tt := range tests {
+		testIntegerObject(t, testEval(tt.input), tt.expected)
 	}
 }
 

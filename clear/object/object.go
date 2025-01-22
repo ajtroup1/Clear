@@ -22,6 +22,9 @@ const (
 	ARRAY_OBJ   = "ARRAY"
 	HASH_OBJ    = "HASH"
 
+	BREAK_OBJ    = "BREAK"
+	CONTINUE_OBJ = "CONTINUE"
+
 	RETURN_VALUE_OBJ = "RETURN_VALUE"
 
 	FUNCTION_OBJ = "FUNCTION"
@@ -222,3 +225,21 @@ func (h *Hash) Col() int  { return h.Position.Col }
 type Hashable interface {
 	HashKey() HashKey
 }
+
+type Continue struct {
+	Position
+}
+
+func (c *Continue) Type() ObjectType { return CONTINUE_OBJ }
+func (c *Continue) Inspect() string  { return "continue" }
+func (c *Continue) Line() int        { return c.Position.Line }
+func (c *Continue) Col() int         { return c.Position.Col }
+
+type Break struct {
+	Position
+}
+
+func (b *Break) Type() ObjectType { return BREAK_OBJ }
+func (b *Break) Inspect() string  { return "break" }
+func (b *Break) Line() int        { return b.Position.Line }
+func (b *Break) Col() int         { return b.Position.Col }

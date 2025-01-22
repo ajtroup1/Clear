@@ -24,6 +24,10 @@ func (p *Parser) parseStatement() ast.Statement {
 		return p.parseWhileStatement()
 	case token.FOR:
 		return p.parseForStatement()
+	case token.CONTINUE:
+		return p.parseContinueStatement()
+	case token.BREAK:
+		return p.parseBreakStatement()
 	default:
 		// If no explicit statement keyword is defined, it's either an expression or an assignment statement
 		if p.debug {
@@ -288,6 +292,26 @@ func (p *Parser) parseForStatement() *ast.ForStatement {
 
 	if !p.curTokenIs(token.RBRACE) {
 		return nil
+	}
+
+	return stmt
+}
+
+func (p *Parser) parseContinueStatement() *ast.ContinueStatement {
+	stmt :=  &ast.ContinueStatement{Token: p.curToken}
+	
+	if p.peekTokenIs(token.SEMICOLON) {
+		p.nextToken()
+	}
+
+	return stmt
+}
+
+func (p *Parser) parseBreakStatement() *ast.BreakStatement {
+	stmt := &ast.BreakStatement{Token: p.curToken}
+
+	if p.peekTokenIs(token.SEMICOLON) {
+		p.nextToken()
 	}
 
 	return stmt

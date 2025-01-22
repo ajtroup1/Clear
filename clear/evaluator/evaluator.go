@@ -12,7 +12,7 @@ import (
 var (
 	Logger *logger.Logger
 	Debug  bool
-	Lines []string
+	Lines  []string
 )
 
 func Init(l *logger.Logger, debug bool, lines []string) {
@@ -84,6 +84,13 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 
 	case *ast.ForStatement:
 		return evalForStatement(node, env)
+
+	case *ast.ContinueStatement:
+		return &object.Continue{Position: object.Position{Line: node.Token.Line, Col: node.Token.Col}}
+
+	case *ast.BreakStatement:
+		return &object.Break{Position: object.Position{Line: node.Token.Line, Col: node.Token.Col}}
+
 	// Eval Expressions
 	case *ast.IntegerLiteral:
 		return &object.Integer{Value: node.Value, Position: object.Position{Line: node.Token.Line, Col: node.Token.Col}}
@@ -179,6 +186,9 @@ func evalWhileStatement(stmt *ast.WhileStatement, env *object.Environment) objec
 
 	for isTruthy(Eval(stmt.Condition, env)) {
 		result = evalBlockStatement(stmt.Body, env)
+		if result.Type() == object.BREAK_OBJ {
+			break
+		}
 	}
 
 	return result
@@ -198,6 +208,13 @@ func evalForStatement(stmt *ast.ForStatement, env *object.Environment) object.Ob
 		result = evalBlockStatement(stmt.Body, env)
 		if isError(result) {
 			return result
+		}
+
+		if result.Type() == object.BREAK_OBJ {
+			break
+		}
+		if result.Type() == object.CONTINUE_OBJ {
+			continue
 		}
 
 		if stmt.Post != nil {
@@ -312,6 +329,12 @@ func evalBlockStatement(
 			if rt == object.RETURN_VALUE_OBJ || rt == object.ERROR_OBJ {
 				return result
 			}
+			if rt == object.BREAK_OBJ {
+				break
+			}
+			if rt == object.CONTINUE_OBJ {
+				continue
+			}
 		}
 	}
 
@@ -423,8 +446,6 @@ func evalCompoundAssignment(
 			left.Type(), operator, right.Type())
 	}
 }
-
-
 
 func evalPostfixExpression(operator string, left object.Object) object.Object {
 	if left.Type() != object.INTEGER_OBJ && left.Type() != object.FLOAT_OBJ {

@@ -1,4 +1,0 @@
-mod strings: [ concat ];
-
-let myString = "String";
-strings.len(myString);

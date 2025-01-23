@@ -18,6 +18,7 @@ import (
 	"strings"
 
 	"github.com/ajtroup1/clear/token"
+	"github.com/sanity-io/litter"
 )
 
 // The base Node interface
@@ -247,6 +248,58 @@ func (es *ExpressionStatement) String() string {
 		return es.Expression.String()
 	}
 	return ""
+}
+
+type ClassStatement struct {
+	Token      token.Token
+	Name       *Identifier          `json:"name"`
+	Properties []*PropertyStatement `json:"properties"`
+	Methods    []*MethodStatement   `json:"methods"`
+}
+
+func (cds *ClassStatement) statementNode()       {}
+func (cds *ClassStatement) TokenLiteral() string { return cds.Token.Literal }
+func (cds *ClassStatement) String() string       { return litter.Sdump(cds) }
+
+type PropertyStatement struct {
+	Token  token.Token
+	Name   *Identifier `json:"name"`
+	Public bool        `json:"public"`
+}
+
+func (ps *PropertyStatement) statementNode()       {}
+func (ps *PropertyStatement) TokenLiteral() string { return ps.Token.Literal }
+func (ps *PropertyStatement) String() string {
+	var out bytes.Buffer
+
+	out.WriteString(ps.Name.String())
+	out.WriteString(";")
+
+	return out.String()
+}
+
+type MethodStatement struct {
+	Token      token.Token
+	Name       *Identifier     `json:"name"`
+	Parameters []*Identifier   `json:"parameters"`
+	Body       *BlockStatement `json:"body"`
+	Public     bool            `json:"public"`
+}
+
+func (ms *MethodStatement) statementNode()       {}
+func (ms *MethodStatement) TokenLiteral() string { return ms.Token.Literal }
+func (ms *MethodStatement) String() string {
+	var out bytes.Buffer
+
+	out.WriteString(ms.Name.String())
+	out.WriteString("(")
+	for _, p := range ms.Parameters {
+		out.WriteString(p.String())
+	}
+	out.WriteString(") ")
+	out.WriteString(ms.Body.String())
+
+	return out.String()
 }
 
 // Simply wrap a slice of statements in a block
@@ -512,7 +565,7 @@ func (ie *IndexExpression) String() string {
 }
 
 type HashLiteral struct {
-	Token token.Token // The '{' token
+	Token token.Token               // The '{' token
 	Pairs map[Expression]Expression `json:"pairs"`
 }
 
@@ -532,5 +585,15 @@ func (hl *HashLiteral) String() string {
 
 	return out.String()
 }
+
+type NewInstanceExpression struct {
+	Token     token.Token
+	Class     *Identifier
+	Arguments []Expression
+}
+
+func (nie *NewInstanceExpression) expressionNode()      {}
+func (nie *NewInstanceExpression) TokenLiteral() string { return nie.Token.Literal }
+func (nie *NewInstanceExpression) String() string       { return litter.Sdump(nie) }
 
 // -------------------------

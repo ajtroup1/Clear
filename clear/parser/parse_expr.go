@@ -350,3 +350,22 @@ func (p *Parser) parseHashLiteral() ast.Expression {
 	}
 	return hash
 }
+
+func (p *Parser) parseNewInstanceExpression() ast.Expression {
+	exp := &ast.NewInstanceExpression{Token: p.curToken}
+	
+	if !p.expectPeek(token.IDENT) {
+		return nil
+	}
+	
+	exp.Class = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+	
+	if !p.expectPeek(token.LPAREN) {
+		return nil
+	}
+	
+	exp.Arguments = p.parseExpressionList(token.RPAREN)
+	fmt.Printf("current token: %v\n", p.curToken)
+	
+	return exp
+}

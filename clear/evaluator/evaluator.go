@@ -267,7 +267,7 @@ func evalHashIndexExpression(hash, index object.Object) object.Object {
 func evalModuleStatement(stmt *ast.ModuleStatement, env *object.Environment) object.Object {
 	module, exists := env.GetModule(stmt.Name.Value)
 	if !exists {
-		return newError("module not found: %s", stmt.Token.Line, stmt.Token.Col, stmt.Name.Value)
+		return newError("nd: %s", stmt.Token.Line, stmt.Token.Col, stmt.Name.Value)
 	}
 
 	// fmt.Printf("//env module: %v\n", env.Modules)
@@ -635,11 +635,12 @@ func evalIdentifier(
 	if len(parts) == 2 {
 		moduleName, functionName := parts[0], parts[1]
 		if module, exists := env.Modules[moduleName]; exists {
-			if builtin, found := module[functionName]; found {
-				return builtin
+			if fn, found := module[functionName]; found {
+				return fn
 			}
 			return newError("function not found in module '%s': %s", node.Token.Line, node.Token.Col, moduleName, functionName)
 		}
+
 		return newError("module not found: %s", node.Token.Line, node.Token.Col, moduleName)
 	}
 

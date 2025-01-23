@@ -28,6 +28,8 @@ func (p *Parser) parseStatement() ast.Statement {
 		return p.parseContinueStatement()
 	case token.BREAK:
 		return p.parseBreakStatement()
+	case token.CLASS:
+		return p.parseClassStatement()
 	default:
 		// If no explicit statement keyword is defined, it's either an expression or an assignment statement
 		if p.debug {
@@ -312,6 +314,93 @@ func (p *Parser) parseBreakStatement() *ast.BreakStatement {
 
 	if p.peekTokenIs(token.SEMICOLON) {
 		p.nextToken()
+	}
+
+	return stmt
+}
+
+func (p *Parser) parseClassStatement() *ast.ClassStatement {
+	stmt := &ast.ClassStatement{Token: p.curToken}
+
+	if !p.expectPeek(token.IDENT) {
+		return nil
+	}
+
+	ident := &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+	stmt.Name = ident
+
+	// Handle interface inheritance here
+
+	if !p.expectPeek(token.LBRACE) {
+		return nil
+	}
+
+	stmt.Properties = []*ast.PropertyStatement{}
+	stmt.Methods = []*ast.MethodStatement{}
+
+	p.nextToken()
+	for !p.curTokenIs(token.RBRACE) && !p.curTokenIs(token.EOF) {
+		propStmt := &ast.PropertyStatement{Token: p.curToken}
+		
+		if p.curTokenIs(token.PUBLIC) {
+			propStmt.Public = true
+		}
+		
+		if !p.expectPeek(token.IDENT) {
+			return nil
+		}
+		
+		ident := &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+		propStmt.Name = ident
+		
+		if p.peekTokenIs(token.FUNCTION) {
+			stmt.Properties = append(stmt.Properties, propStmt)
+			break
+		}
+		
+		stmt.Properties = append(stmt.Properties, propStmt)
+	}
+	
+	for !p.peekTokenIs(token.RBRACE) && !p.peekTokenIs(token.EOF) {
+		methStmt := &ast.MethodStatement{Token: p.peekToken}
+
+		if p.peekTokenIs(token.PUBLIC) {
+			methStmt.Public = true
+			p.nextToken()
+		}
+
+		if !p.expectPeek(token.FUNCTION) {
+			return nil
+		}
+
+		if !p.expectPeek(token.IDENT) {
+			return nil
+		}
+
+		ident := &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+		methStmt.Name = ident
+
+		if stmt.Name.Value == ident.Value {
+			methStmt.Public = true
+		}
+
+		if !p.expectPeek(token.LPAREN) {
+			return nil
+		}
+
+		methStmt.Parameters = p.parseFunctionParameters()
+
+		if !p.expectPeek(token.LBRACE) {
+			return nil
+		}
+
+		methStmt.Body = p.parseBlockStatement()
+
+		stmt.Methods = append(stmt.Methods, methStmt)
+	}
+
+	if !p.expectPeek(token.RBRACE) {
+		return nil
 	}
 
 	return stmt

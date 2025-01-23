@@ -1,8 +1,0 @@
-mod arrays: [];
-let x = 7;
-
-x = x + 10 * 20;
-
-x + 2;
-
-return x + 3;

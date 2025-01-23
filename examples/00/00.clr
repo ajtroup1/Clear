@@ -1,17 +1,20 @@
-mod strings: [ len ]
-mod arrays: [ first, rest, push ] 
+class MyClass {
+  pub property1
+  property2
 
-let map = fn(arr, f) {
-  let iter = fn(arr, accumulated) {
-    if (len(arr) == 0) {
-      accumulated
-    } else {
-      iter(rest(arr), push(accumulated, f(first(arr))));
-    }
-  };
-  iter(arr, []);
-};
+  fn MyClass(x, y) {
+    property1 = x;
+    property2 = y;
+  }
 
-let a = [1, 2, 3, 4];
-let double = fn(x) { x * 2 };
-map(a, double);
+  pub fn add() {
+    let result = property1 + property2;
+
+    return result;
+  }
+}
+
+let instance = new MyClass(1, 2);
+let result = instance.add();
+
+return result;

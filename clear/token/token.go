@@ -65,6 +65,12 @@ const (
 	FOR      = "FOR"
 	CONTINUE = "CONTINUE"
 	BREAK    = "BREAK"
+	CLASS    = "CLASS"
+	NEW      = "NEW"
+	THIS     = "THIS"
+	STATIC   = "STATIC"
+	EXTENDS  = "EXTENDS"
+	PUBLIC	 = "PUBLIC"
 )
 
 type Token struct {
@@ -92,6 +98,13 @@ var keywords = map[string]TokenType{
 	"for":      FOR,
 	"continue": CONTINUE,
 	"break":    BREAK,
+	"class":    CLASS,
+	"new":      NEW,
+	"this":     THIS,
+	"static":   STATIC,
+	"extends":  EXTENDS,
+	"pub":      PUBLIC,
+	"public":   PUBLIC,
 }
 
 func LookupIdent(ident string, logger *logger.Logger, enc int) TokenType {

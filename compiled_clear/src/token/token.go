@@ -1,5 +1,9 @@
 package token
 
+import (
+	"fmt"
+)
+
 type TokenType string
 
 const (
@@ -7,9 +11,10 @@ const (
 	EOF     = "EOF"
 
 	// Identifiers + literals
-	IDENT  = "IDENT"  // add, foobar, x, y, ...
-	INT    = "INT"    // 1343456
-	STRING = "STRING" // "foobar"
+	IDENT  = "IDENT" // add, foobar, x, y, ...
+	INT    = "INT"   // 1343456
+	FLOAT  = "FLOAT"
+	STRING = "STRING"
 
 	// Operators
 	ASSIGN   = "="
@@ -18,6 +23,13 @@ const (
 	BANG     = "!"
 	ASTERISK = "*"
 	SLASH    = "/"
+	INC      = "++"
+	DEC      = "--"
+
+	PLUS_EQ  = "+="
+	MINUS_EQ = "-="
+	MULT_EQ  = "*="
+	DIV_EQ   = "/="
 
 	LT = "<"
 	GT = ">"
@@ -25,8 +37,12 @@ const (
 	EQ     = "=="
 	NOT_EQ = "!="
 
+	AND = "&&"
+	OR  = "||"
+
 	// Delimiters
 	COMMA     = ","
+	DOT       = "."
 	SEMICOLON = ";"
 	COLON     = ":"
 
@@ -45,21 +61,40 @@ const (
 	IF       = "IF"
 	ELSE     = "ELSE"
 	RETURN   = "RETURN"
+	MOD      = "MOD"
+	WHILE    = "WHILE"
+	FOR      = "FOR"
+	CONTINUE = "CONTINUE"
+	BREAK    = "BREAK"
+	TYPE     = "TYPE"
 )
 
 type Token struct {
 	Type    TokenType
 	Literal string
+	Line    int
+	Col     int
+}
+
+func (t *Token) String() string {
+	return fmt.Sprintf("- Token::%s '%s' at [line: %d, col: %d]", t.Type, t.Literal, t.Line, t.Col)
 }
 
 var keywords = map[string]TokenType{
-	"fn":     FUNCTION,
-	"let":    LET,
-	"true":   TRUE,
-	"false":  FALSE,
-	"if":     IF,
-	"else":   ELSE,
-	"return": RETURN,
+	"fn":       FUNCTION,
+	"let":      LET,
+	"true":     TRUE,
+	"false":    FALSE,
+	"if":       IF,
+	"else":     ELSE,
+	"return":   RETURN,
+	"mod":      MOD,
+	"module":   MOD,
+	"while":    WHILE,
+	"for":      FOR,
+	"continue": CONTINUE,
+	"break":    BREAK,
+	"type":     TYPE,
 }
 
 func LookupIdent(ident string) TokenType {

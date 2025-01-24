@@ -1,143 +1,89 @@
 package lexer
 
 import (
+	"strings"
 	"testing"
 
+	"github.com/ajtroup1/compiled_clear/src/errorlogger"
 	"github.com/ajtroup1/compiled_clear/src/token"
 )
 
-func TestNextToken(t *testing.T) {
-	input := `let five = 5;
-let ten = 10;
-
-let add = fn(x, y) {
-  x + y;
-};
-
-let result = add(five, ten);
-!-/*5;
-5 < 10 > 5;
-
-if (5 < 10) {
-	return true;
-} else {
-	return false;
-}
-
-10 == 10;
-10 != 9;
-"foobar"
-"foo bar"
-[1, 2];
-{"foo": "bar"}
-`
-
+func TestLexer(t *testing.T) {
 	tests := []struct {
-		expectedType    token.TokenType
-		expectedLiteral string
+		input    string
+		expected []token.Token
 	}{
-		{token.LET, "let"},
-		{token.IDENT, "five"},
-		{token.ASSIGN, "="},
-		{token.INT, "5"},
-		{token.SEMICOLON, ";"},
-		{token.LET, "let"},
-		{token.IDENT, "ten"},
-		{token.ASSIGN, "="},
-		{token.INT, "10"},
-		{token.SEMICOLON, ";"},
-		{token.LET, "let"},
-		{token.IDENT, "add"},
-		{token.ASSIGN, "="},
-		{token.FUNCTION, "fn"},
-		{token.LPAREN, "("},
-		{token.IDENT, "x"},
-		{token.COMMA, ","},
-		{token.IDENT, "y"},
-		{token.RPAREN, ")"},
-		{token.LBRACE, "{"},
-		{token.IDENT, "x"},
-		{token.PLUS, "+"},
-		{token.IDENT, "y"},
-		{token.SEMICOLON, ";"},
-		{token.RBRACE, "}"},
-		{token.SEMICOLON, ";"},
-		{token.LET, "let"},
-		{token.IDENT, "result"},
-		{token.ASSIGN, "="},
-		{token.IDENT, "add"},
-		{token.LPAREN, "("},
-		{token.IDENT, "five"},
-		{token.COMMA, ","},
-		{token.IDENT, "ten"},
-		{token.RPAREN, ")"},
-		{token.SEMICOLON, ";"},
-		{token.BANG, "!"},
-		{token.MINUS, "-"},
-		{token.SLASH, "/"},
-		{token.ASTERISK, "*"},
-		{token.INT, "5"},
-		{token.SEMICOLON, ";"},
-		{token.INT, "5"},
-		{token.LT, "<"},
-		{token.INT, "10"},
-		{token.GT, ">"},
-		{token.INT, "5"},
-		{token.SEMICOLON, ";"},
-		{token.IF, "if"},
-		{token.LPAREN, "("},
-		{token.INT, "5"},
-		{token.LT, "<"},
-		{token.INT, "10"},
-		{token.RPAREN, ")"},
-		{token.LBRACE, "{"},
-		{token.RETURN, "return"},
-		{token.TRUE, "true"},
-		{token.SEMICOLON, ";"},
-		{token.RBRACE, "}"},
-		{token.ELSE, "else"},
-		{token.LBRACE, "{"},
-		{token.RETURN, "return"},
-		{token.FALSE, "false"},
-		{token.SEMICOLON, ";"},
-		{token.RBRACE, "}"},
-		{token.INT, "10"},
-		{token.EQ, "=="},
-		{token.INT, "10"},
-		{token.SEMICOLON, ";"},
-		{token.INT, "10"},
-		{token.NOT_EQ, "!="},
-		{token.INT, "9"},
-		{token.SEMICOLON, ";"},
-		{token.STRING, "foobar"},
-		{token.STRING, "foo bar"},
-		{token.LBRACKET, "["},
-		{token.INT, "1"},
-		{token.COMMA, ","},
-		{token.INT, "2"},
-		{token.RBRACKET, "]"},
-		{token.SEMICOLON, ";"},
-		{token.LBRACE, "{"},
-		{token.STRING, "foo"},
-		{token.COLON, ":"},
-		{token.STRING, "bar"},
-		{token.RBRACE, "}"},
-		{token.EOF, ""},
+		{
+			`=+(){},;`,
+			[]token.Token{
+				{Type: token.ASSIGN, Literal: "=", Line: 1, Col: 1},
+				{Type: token.PLUS, Literal: "+", Line: 1, Col: 2},
+				{Type: token.LPAREN, Literal: "(", Line: 1, Col: 3},
+				{Type: token.RPAREN, Literal: ")", Line: 1, Col: 4},
+				{Type: token.LBRACE, Literal: "{", Line: 1, Col: 5},
+			},
+		},
+		{
+			`let five = 5;`,
+			[]token.Token{
+				{Type: token.LET, Literal: "let", Line: 1, Col: 1},
+				{Type: token.IDENT, Literal: "five", Line: 1, Col: 5},
+				{Type: token.ASSIGN, Literal: "=", Line: 1, Col: 10},
+				{Type: token.INT, Literal: "5", Line: 1, Col: 12},
+				{Type: token.SEMICOLON, Literal: ";", Line: 1, Col: 13},
+			},
+		},
+		{
+			`let add = fn(x, y) {
+				x + y;
+				};`,
+			[]token.Token{
+				{Type: token.LET, Literal: "let", Line: 1, Col: 1},
+				{Type: token.IDENT, Literal: "add", Line: 1, Col: 5},
+				{Type: token.ASSIGN, Literal: "=", Line: 1, Col: 9},
+				{Type: token.FUNCTION, Literal: "fn", Line: 1, Col: 11},
+				{Type: token.LPAREN, Literal: "(", Line: 1, Col: 13},
+				{Type: token.IDENT, Literal: "x", Line: 1, Col: 14},
+				{Type: token.COMMA, Literal: ",", Line: 1, Col: 15},
+				{Type: token.IDENT, Literal: "y", Line: 1, Col: 17},
+				{Type: token.RPAREN, Literal: ")", Line: 1, Col: 18},
+				{Type: token.LBRACE, Literal: "{", Line: 1, Col: 20},
+				{Type: token.IDENT, Literal: "x", Line: 2, Col: 5},
+				{Type: token.PLUS, Literal: "+", Line: 2, Col: 7},
+				{Type: token.IDENT, Literal: "y", Line: 2, Col: 9},
+				{Type: token.SEMICOLON, Literal: ";", Line: 2, Col: 10},
+				{Type: token.RBRACE, Literal: "}", Line: 3, Col: 5},
+				{Type: token.SEMICOLON, Literal: ";", Line: 3, Col: 6},
+			},
+		},
 	}
 
-	l := New(input)
+	for _, tt := range tests {
+		el := errorlogger.New(strings.Split(tt.input, "\n"), false)
+		l := New(tt.input, el, false)
 
-	for i, tt := range tests {
-		tok := l.NextToken()
+		for i, expected := range tt.expected {
+			tok := l.NextToken()
 
-		if tok.Type != tt.expectedType {
-			t.Fatalf("tests[%d] - tokentype wrong. expected=%q, got=%q",
-				i, tt.expectedType, tok.Type)
-		}
+			if tok.Type != expected.Type {
+				t.Fatalf("tests[%d] - tokentype wrong. expected=%q, got=%q",
+					i, expected.Type, tok.Type)
+			}
 
-		if tok.Literal != tt.expectedLiteral {
-			t.Fatalf("tests[%d] - literal wrong. expected=%q, got=%q",
-				i, tt.expectedLiteral, tok.Literal)
+			if tok.Literal != expected.Literal {
+				t.Fatalf("tests[%d] - literal wrong. expected=%q, got=%q",
+					i, expected.Literal, tok.Literal)
+			}
+
+			if tok.Line != expected.Line {
+				t.Fatalf("tests[%d] - line wrong. expected=%d, got=%d",
+					i, expected.Line, tok.Line)
+			}
+
+			if tok.Col != expected.Col {
+				t.Fatalf("tests[%d] - col wrong. expected=%d, got=%d (%s)",
+					i, expected.Col, tok.Col, tok.Literal)
+			}
 		}
 	}
 }

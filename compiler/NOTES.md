@@ -3,6 +3,7 @@
 ## Contents
 1. [What is bytecode?](#what-is-bytecode)
 2. [Compilation process / flow](#compilation-process--flow)
+3. [Random Notes](#random-notes)
 
 ## What is bytecode?
 Bytecode is sort of an intermediate representation, lying between source and machine code (or binaries). Bytecode acts as a middle-man between interpreting source code and generating asm based on source code. Since machine code depends so heavily on system architecture and must be designed dynamically to run on all devices, bytecode gives us an "easy" way to make a compiler without worrying about: Linux vs Windows assembly, differences in CPUs or GPUs, or what 'x86' even means.
@@ -43,3 +44,8 @@ CALL PRINT      ; Call the print function
     - 1a. Tokenize / lex the source code into a stream of tokens
     - 1b. Parse individual tokens into a structured parse tree
 2. ...
+
+## Random Notes
+- There are `single-pass` and `double-pass` compilers, which either go through the IR once or twice depending on how advanced you want the compiler to be.
+    - Example:
+      - When compiling conditionals (if stmts), you use jump instructions to "skip" the generated consequence or alternative. Figuring out where to jump to is the difficult part. You can `back-patch` the location to jump to after compiling the consquence and alternative. Or you can leave them blank and pass through the IR a second time to fill those in.

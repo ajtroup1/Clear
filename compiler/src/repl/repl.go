@@ -5,17 +5,16 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/ajtroup1/clear-compiler/src/evaluator"
+	"github.com/ajtroup1/clear-compiler/src/compiler"
 	"github.com/ajtroup1/clear-compiler/src/lexer"
-	"github.com/ajtroup1/clear-compiler/src/object"
 	"github.com/ajtroup1/clear-compiler/src/parser"
+	"github.com/ajtroup1/clear-compiler/src/vm"
 )
 
 const PROMPT = ">> "
 
 func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
-	env := object.NewEnvironment()
 
 	for {
 		fmt.Printf(PROMPT)
@@ -34,11 +33,22 @@ func Start(in io.Reader, out io.Writer) {
 			continue
 		}
 
-		evaluated := evaluator.Eval(program, env)
-		if evaluated != nil {
-			io.WriteString(out, evaluated.Inspect())
-			io.WriteString(out, "\n")
+		comp := compiler.New()
+		err := comp.Compile(program)
+		if err != nil {
+			fmt.Fprintf(out, "Woops! Compilation failed:\n %s\n", err)
+			continue
 		}
+		machine := vm.New(comp.Bytecode())
+		err = machine.Run()
+		if err != nil {
+			fmt.Fprintf(out, "Woops! Executing bytecode failed:\n %s\n", err)
+			continue
+		}
+		lastPopped := machine.LastPoppedStackElem()
+		io.WriteString(out, lastPopped.Inspect())
+		io.WriteString(out, "\n")
+
 	}
 }
 

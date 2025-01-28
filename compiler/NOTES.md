@@ -2,6 +2,7 @@
 
 ## Contents
 1. [What is bytecode?](#what-is-bytecode)
+2. [Compilation process / flow](#compilation-process--flow)
 
 ## What is bytecode?
 Bytecode is sort of an intermediate representation, lying between source and machine code (or binaries). Bytecode acts as a middle-man between interpreting source code and generating asm based on source code. Since machine code depends so heavily on system architecture and must be designed dynamically to run on all devices, bytecode gives us an "easy" way to make a compiler without worrying about: Linux vs Windows assembly, differences in CPUs or GPUs, or what 'x86' even means.
@@ -35,3 +36,10 @@ STORE R1, y     ; Store the result in variable y
 LOAD R0, y      ; Load the value of y into register R0
 CALL PRINT      ; Call the print function
 ```
+
+# Compilation process / flow
+
+1. Generate the AST
+    - 1a. Tokenize / lex the source code into a stream of tokens
+    - 1b. Parse individual tokens into a structured parse tree
+2. ...

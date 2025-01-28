@@ -75,6 +75,19 @@ func (vm *VM) Run() error {
 				return err
 			}
 
+		// Prefix operations
+		case code.OpBang:
+			err := vm.executeBangOperator()
+			if err != nil {
+				return err
+			}
+
+		case code.OpMinus:
+			err := vm.executeMinusOperator()
+			if err != nil {
+				return err
+			}
+
 		// Pop the top of the stack
 		// Used after every expression statement
 		case code.OpPop:
@@ -147,6 +160,27 @@ func (vm *VM) executeComparison(op code.Opcode) error {
 		return fmt.Errorf("unknown operator: %d (%s %s)",
 			op, left.Type(), right.Type())
 	}
+}
+
+func (vm *VM) executeBangOperator() error {
+	operand := vm.pop()
+	switch operand {
+	case True:
+		return vm.push(False)
+	case False:
+		return vm.push(True)
+	default:
+		return vm.push(False)
+	}
+}
+
+func (vm *VM) executeMinusOperator() error {
+	operand := vm.pop()
+	if operand.Type() != object.INTEGER_OBJ {
+		return fmt.Errorf("unsupported type for negation: %s", operand.Type())
+	}
+	value := operand.(*object.Integer).Value
+	return vm.push(&object.Integer{Value: -value})
 }
 
 func (vm *VM) executeIntegerComparison(

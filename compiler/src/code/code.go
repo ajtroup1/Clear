@@ -73,6 +73,8 @@ const (
 	OpEqual
 	OpNotEqual
 	OpGreaterThan
+	OpMinus
+	OpBang
 )
 
 // Define a human-readable representation of the opcode
@@ -101,6 +103,8 @@ var definitions = map[Opcode]*Definition{
 	OpEqual:    {"OpEqual", []int{}},
 	OpNotEqual: {"OpNotEqual", []int{}},
 	OpGreaterThan: {"OpGreaterThan", []int{}},
+	OpMinus:    {"OpMinus", []int{}},
+	OpBang:     {"OpBang", []int{}},
 }
 
 // Retrieve a Definition object based on a raw opcode

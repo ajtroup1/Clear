@@ -8,8 +8,9 @@ import (
 	"github.com/ajtroup1/clear-compiler/src/object"
 )
 
-// Set the maximum stack size
-const StackSize = 2048
+// Set the global variables
+const StackSize = 2048    // Maximum stack size
+const GlobalsSize = 65536 // Maximum number of global variables
 
 // Define global boolean objects
 // This is because we only need one instance of each
@@ -22,6 +23,7 @@ var Null = &object.Null{}
 type VM struct {
 	constants    []object.Object
 	instructions code.Instructions
+	globals      []object.Object
 
 	stack []object.Object
 	sp    int // Stack Pointer
@@ -32,10 +34,17 @@ func New(bytecode *compiler.Bytecode) *VM {
 	return &VM{
 		instructions: bytecode.Instructions,
 		constants:    bytecode.Constants,
+		globals:      make([]object.Object, GlobalsSize),
 
 		stack: make([]object.Object, StackSize),
 		sp:    0,
 	}
+}
+
+func NewWithGlobalsStore(bytecode *compiler.Bytecode, s []object.Object) *VM {
+	vm := New(bytecode)
+	vm.globals = s
+	return vm
 }
 
 // Run the VM
@@ -52,6 +61,19 @@ func (vm *VM) Run() error {
 			if err != nil {
 				return err
 			}
+
+		case code.OpSetGlobal:
+			globalIndex := code.ReadUint16(vm.instructions[ip+1:])
+			ip += 2
+			vm.globals[globalIndex] = vm.pop()
+		case code.OpGetGlobal:
+			globalIndex := code.ReadUint16(vm.instructions[ip+1:])
+			ip += 2
+			err := vm.push(vm.globals[globalIndex])
+			if err != nil {
+				return err
+			}
+
 		// Primitive infix operations
 		case code.OpAdd, code.OpSub, code.OpMul, code.OpDiv:
 			err := vm.executeBinaryOperation(op)

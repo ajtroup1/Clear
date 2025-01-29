@@ -78,6 +78,8 @@ const (
 	OpJumpNotTruthy
 	OpJump
 	OpNull
+	OpSetGlobal
+	OpGetGlobal
 )
 
 // Define a human-readable representation of the opcode
@@ -96,20 +98,38 @@ var definitions = map[Opcode]*Definition{
 	// - So here it has one operand that is 2 bytes long
 	// - This is signified by only have one list item in the OperandWidths slice and that value being 2
 	OpConstant:      {"OpConstant", []int{2}},
+
+	// Stack instructions
 	OpPop:           {"OpPop", []int{}},
+
+	// Arithmetic instructions
 	OpAdd:           {"OpAdd", []int{}},
 	OpSub:           {"OpSub", []int{}},
 	OpMul:           {"OpMul", []int{}},
 	OpDiv:           {"OpDiv", []int{}},
+
+	// Boolean instructions
 	OpTrue:          {"OpTrue", []int{}},
 	OpFalse:         {"OpFalse", []int{}},
 	OpEqual:         {"OpEqual", []int{}},
 	OpNotEqual:      {"OpNotEqual", []int{}},
 	OpGreaterThan:   {"OpGreaterThan", []int{}},
+
+	// Prefix instructions
 	OpMinus:         {"OpMinus", []int{}},
 	OpBang:          {"OpBang", []int{}},
+
+	// Jump instructions
+	// For conditional branching
 	OpJumpNotTruthy: {"OpJumpNotTruthy", []int{2}},
 	OpJump:          {"OpJump", []int{2}},
+	
+	// Global bindings
+	// Takes one 2 byte operand which is the index of the global binding
+	OpSetGlobal:     {"OpSetGlobal", []int{2}},
+	OpGetGlobal:     {"OpGetGlobal", []int{2}},
+
+	// Special instructions
 	OpNull:          {"OpNull", []int{}},
 }
 

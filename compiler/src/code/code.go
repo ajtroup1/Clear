@@ -63,23 +63,37 @@ const (
 	// A constant value is a value that will never change at runtime
 	// This means the value is solely determined at compile time
 	OpConstant Opcode = iota
+
+	// Stack instructions
 	OpPop
+
+	// Arithmetic instructions
 	OpAdd
 	OpSub
 	OpMul
 	OpDiv
+
+	// Boolean instructions
 	OpTrue
 	OpFalse
 	OpEqual
 	OpNotEqual
 	OpGreaterThan
+
+	// Prefix instructions
 	OpMinus
 	OpBang
+
+	// Jump instructions
 	OpJumpNotTruthy
 	OpJump
-	OpNull
+
+	// Global bindings
 	OpSetGlobal
 	OpGetGlobal
+
+	// Special instructions
+	OpNull
 )
 
 // Define a human-readable representation of the opcode
@@ -174,15 +188,22 @@ func Make(op Opcode, operands ...int) []byte {
 	return instruction
 }
 
+// ReadOperands is the counterpart to Make
+// It reads the operands from the instruction byte slice
 func ReadOperands(def *Definition, ins Instructions) ([]int, int) {
+	// Initialize a slice to store the operands
 	operands := make([]int, len(def.OperandWidths))
-	offset := 0
+	offset := 0 // Tracks where the next operand should be read from in the byte slice
+
+	// Loop through all the operand widths in the definition
 	for i, width := range def.OperandWidths {
+		// Read the operand based on the width
 		switch width {
 		case 2:
+			// Assume the operand is a 16-bit unsigned integer
 			operands[i] = int(ReadUint16(ins[offset:]))
 		}
-		offset += width
+		offset += width // Make sure to increment the offset by the width of the operand
 	}
 	return operands, offset
 }

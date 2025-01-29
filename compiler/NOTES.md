@@ -1,5 +1,7 @@
 # Compiler Notes
 
+p. 128
+
 ## Contents
 1. [What is bytecode?](#what-is-bytecode)
 2. [Compilation process / flow](#compilation-process--flow)
@@ -43,7 +45,15 @@ CALL PRINT      ; Call the print function
 1. Generate the AST
     - 1a. Tokenize / lex the source code into a stream of tokens
     - 1b. Parse individual tokens into a structured parse tree
-2. ...
+    - Same process as before
+2. Traverse the AST
+    - 2a. Walk the AST, generating instructions respectively for each node
+        - Similarly to Eval()
+    - 2b. Store constant values in an array as you progress
+    - 2c. Define variables in the symbol table and manage their scope
+    - 2d. Constantly emit bytecode instructions for the VM to execute after compilation
+    - 2e. Return the compiled instructions and constants in Bytecode format
+        - This is extremely simple in the code [link](./src/compiler/compiler.go#L250)
 
 ## Random Notes
 - There are `single-pass` and `double-pass` compilers, which either go through the IR once or twice depending on how advanced you want the compiler to be.

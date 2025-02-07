@@ -1,0 +1,364 @@
+{
+  "NoStatements": false,
+  "statements": [
+    {
+      "Token": {
+        "Type": "LET",
+        "Literal": "let",
+        "Line": 3,
+        "Col": 1
+      },
+      "name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "flag",
+          "Line": 3,
+          "Col": 5
+        },
+        "value": "flag"
+      },
+      "value": {
+        "Token": {
+          "Type": "FALSE",
+          "Literal": "false",
+          "Line": 3,
+          "Col": 12
+        },
+        "value": false
+      }
+    },
+    {
+      "Token": {
+        "Type": "LET",
+        "Literal": "let",
+        "Line": 5,
+        "Col": 1
+      },
+      "name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "arr",
+          "Line": 5,
+          "Col": 5
+        },
+        "value": "arr"
+      },
+      "value": {
+        "Token": {
+          "Type": "[",
+          "Literal": "[",
+          "Line": 5,
+          "Col": 11
+        },
+        "elements": [
+          {
+            "Token": {
+              "Type": "INT",
+              "Literal": "1",
+              "Line": 5,
+              "Col": 12
+            },
+            "value": 1
+          },
+          {
+            "Token": {
+              "Type": "INT",
+              "Literal": "2",
+              "Line": 5,
+              "Col": 15
+            },
+            "value": 2
+          },
+          {
+            "Token": {
+              "Type": "INT",
+              "Literal": "3",
+              "Line": 5,
+              "Col": 18
+            },
+            "value": 3
+          }
+        ]
+      }
+    },
+    {
+      "Token": {
+        "Type": "LET",
+        "Literal": "let",
+        "Line": 7,
+        "Col": 1
+      },
+      "name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "x",
+          "Line": 7,
+          "Col": 5
+        },
+        "value": "x"
+      },
+      "value": {
+        "Token": {
+          "Type": "INT",
+          "Literal": "0",
+          "Line": 7,
+          "Col": 9
+        },
+        "value": 0
+      }
+    },
+    {
+      "Token": {
+        "Type": "IF",
+        "Literal": "if",
+        "Line": 9,
+        "Col": 1
+      },
+      "expression": {
+        "Token": {
+          "Type": "IF",
+          "Literal": "if",
+          "Line": 9,
+          "Col": 1
+        },
+        "condition": {
+          "Token": {
+            "Type": "==",
+            "Literal": "==",
+            "Line": 0,
+            "Col": 0
+          },
+          "left": {
+            "Token": {
+              "Type": "IDENT",
+              "Literal": "flag",
+              "Line": 9,
+              "Col": 5
+            },
+            "value": "flag"
+          },
+          "operator": "==",
+          "right": {
+            "Token": {
+              "Type": "TRUE",
+              "Literal": "true",
+              "Line": 9,
+              "Col": 13
+            },
+            "value": true
+          }
+        },
+        "consequence": {
+          "Token": {
+            "Type": "{",
+            "Literal": "{",
+            "Line": 9,
+            "Col": 19
+          },
+          "statements": [
+            {
+              "Token": {
+                "Type": "=",
+                "Literal": "=",
+                "Line": 10,
+                "Col": 5
+              },
+              "name": {
+                "Token": {
+                  "Type": "IDENT",
+                  "Literal": "x",
+                  "Line": 10,
+                  "Col": 3
+                },
+                "value": "x"
+              },
+              "value": {
+                "Token": {
+                  "Type": "INT",
+                  "Literal": "7",
+                  "Line": 10,
+                  "Col": 7
+                },
+                "value": 7
+              }
+            }
+          ]
+        },
+        "alternative": {
+          "Token": {
+            "Type": "{",
+            "Literal": "{",
+            "Line": 11,
+            "Col": 8
+          },
+          "statements": [
+            {
+              "Token": {
+                "Type": "=",
+                "Literal": "=",
+                "Line": 12,
+                "Col": 5
+              },
+              "name": {
+                "Token": {
+                  "Type": "IDENT",
+                  "Literal": "x",
+                  "Line": 12,
+                  "Col": 3
+                },
+                "value": "x"
+              },
+              "value": {
+                "Token": {
+                  "Type": "INT",
+                  "Literal": "1",
+                  "Line": 12,
+                  "Col": 7
+                },
+                "value": 1
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "Token": {
+        "Type": "LET",
+        "Literal": "let",
+        "Line": 15,
+        "Col": 1
+      },
+      "name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "returnOne",
+          "Line": 15,
+          "Col": 5
+        },
+        "value": "returnOne"
+      },
+      "value": {
+        "Token": {
+          "Type": "FUNCTION",
+          "Literal": "fn",
+          "Line": 15,
+          "Col": 17
+        },
+        "parameters": [],
+        "body": {
+          "Token": {
+            "Type": "{",
+            "Literal": "{",
+            "Line": 15,
+            "Col": 22
+          },
+          "statements": [
+            {
+              "Token": {
+                "Type": "IDENT",
+                "Literal": "x",
+                "Line": 15,
+                "Col": 24
+              },
+              "expression": {
+                "Token": {
+                  "Type": "IDENT",
+                  "Literal": "x",
+                  "Line": 15,
+                  "Col": 24
+                },
+                "value": "x"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "Token": {
+        "Type": "IDENT",
+        "Literal": "contains",
+        "Line": 17,
+        "Col": 8
+      },
+      "expression": {
+        "Token": {
+          "Type": "(",
+          "Literal": "(",
+          "Line": 17,
+          "Col": 16
+        },
+        "function": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "contains",
+            "Line": 17,
+            "Col": 8
+          },
+          "value": "contains"
+        },
+        "arguments": [
+          {
+            "Token": {
+              "Type": "IDENT",
+              "Literal": "arr",
+              "Line": 17,
+              "Col": 17
+            },
+            "value": "arr"
+          },
+          {
+            "Token": {
+              "Type": "(",
+              "Literal": "(",
+              "Line": 17,
+              "Col": 31
+            },
+            "function": {
+              "Token": {
+                "Type": "IDENT",
+                "Literal": "returnOne",
+                "Line": 17,
+                "Col": 22
+              },
+              "value": "returnOne"
+            },
+            "arguments": []
+          }
+        ]
+      }
+    }
+  ],
+  "modules": [
+    {
+      "Token": {
+        "Type": "MOD",
+        "Literal": "mod",
+        "Line": 1,
+        "Col": 1
+      },
+      "name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "arrays",
+          "Line": 1,
+          "Col": 5
+        },
+        "value": "arrays"
+      },
+      "import_all": false,
+      "imports": [
+        {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "contains",
+            "Line": 1,
+            "Col": 15
+          },
+          "value": "contains"
+        }
+      ]
+    }
+  ]
+}

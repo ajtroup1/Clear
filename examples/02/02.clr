@@ -1,0 +1,9 @@
+mod io: *;
+
+io.print("input >> ");
+
+let x = io.input();
+
+io.println(x + " is what you entered");
+
+x + " is what's being returned";

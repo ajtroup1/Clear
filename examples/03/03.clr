@@ -1,0 +1,17 @@
+mod arrays: [ contains ];
+
+let flag = false;
+
+let arr = [1, 2, 3]
+
+let x = 0;
+
+if (flag == true) {
+  x = 7;
+} else {
+  x = 1;
+}
+
+let returnOne = fn() { x };
+
+arrays.contains(arr, returnOne())

@@ -1,0 +1,359 @@
+{
+  "NoStatements": false,
+  "statements": [
+    {
+      "Token": {
+        "Type": "CLASS",
+        "Literal": "class",
+        "Line": 1,
+        "Col": 1
+      },
+      "name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "MyClass",
+          "Line": 1,
+          "Col": 7
+        },
+        "value": "MyClass"
+      },
+      "properties": [
+        {
+          "Token": {
+            "Type": "PUBLIC",
+            "Literal": "pub",
+            "Line": 2,
+            "Col": 3
+          },
+          "name": {
+            "Token": {
+              "Type": "IDENT",
+              "Literal": "property1",
+              "Line": 2,
+              "Col": 7
+            },
+            "value": "property1"
+          },
+          "public": true
+        },
+        {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "property1",
+            "Line": 2,
+            "Col": 7
+          },
+          "name": {
+            "Token": {
+              "Type": "IDENT",
+              "Literal": "property2",
+              "Line": 3,
+              "Col": 3
+            },
+            "value": "property2"
+          },
+          "public": false
+        }
+      ],
+      "methods": [
+        {
+          "Token": {
+            "Type": "FUNCTION",
+            "Literal": "fn",
+            "Line": 5,
+            "Col": 3
+          },
+          "name": {
+            "Token": {
+              "Type": "IDENT",
+              "Literal": "MyClass",
+              "Line": 5,
+              "Col": 6
+            },
+            "value": "MyClass"
+          },
+          "parameters": [
+            {
+              "Token": {
+                "Type": "IDENT",
+                "Literal": "x",
+                "Line": 5,
+                "Col": 14
+              },
+              "value": "x"
+            },
+            {
+              "Token": {
+                "Type": "IDENT",
+                "Literal": "y",
+                "Line": 5,
+                "Col": 17
+              },
+              "value": "y"
+            }
+          ],
+          "body": {
+            "Token": {
+              "Type": "{",
+              "Literal": "{",
+              "Line": 5,
+              "Col": 20
+            },
+            "statements": [
+              {
+                "Token": {
+                  "Type": "=",
+                  "Literal": "=",
+                  "Line": 6,
+                  "Col": 15
+                },
+                "name": {
+                  "Token": {
+                    "Type": "IDENT",
+                    "Literal": "property1",
+                    "Line": 6,
+                    "Col": 5
+                  },
+                  "value": "property1"
+                },
+                "value": {
+                  "Token": {
+                    "Type": "IDENT",
+                    "Literal": "x",
+                    "Line": 6,
+                    "Col": 17
+                  },
+                  "value": "x"
+                }
+              },
+              {
+                "Token": {
+                  "Type": "=",
+                  "Literal": "=",
+                  "Line": 7,
+                  "Col": 15
+                },
+                "name": {
+                  "Token": {
+                    "Type": "IDENT",
+                    "Literal": "property2",
+                    "Line": 7,
+                    "Col": 5
+                  },
+                  "value": "property2"
+                },
+                "value": {
+                  "Token": {
+                    "Type": "IDENT",
+                    "Literal": "y",
+                    "Line": 7,
+                    "Col": 17
+                  },
+                  "value": "y"
+                }
+              }
+            ]
+          },
+          "public": true
+        },
+        {
+          "Token": {
+            "Type": "PUBLIC",
+            "Literal": "pub",
+            "Line": 10,
+            "Col": 3
+          },
+          "name": {
+            "Token": {
+              "Type": "IDENT",
+              "Literal": "add",
+              "Line": 10,
+              "Col": 10
+            },
+            "value": "add"
+          },
+          "parameters": [],
+          "body": {
+            "Token": {
+              "Type": "{",
+              "Literal": "{",
+              "Line": 10,
+              "Col": 16
+            },
+            "statements": [
+              {
+                "Token": {
+                  "Type": "LET",
+                  "Literal": "let",
+                  "Line": 11,
+                  "Col": 5
+                },
+                "name": {
+                  "Token": {
+                    "Type": "IDENT",
+                    "Literal": "result",
+                    "Line": 11,
+                    "Col": 9
+                  },
+                  "value": "result"
+                },
+                "value": {
+                  "Token": {
+                    "Type": "+",
+                    "Literal": "+",
+                    "Line": 11,
+                    "Col": 28
+                  },
+                  "left": {
+                    "Token": {
+                      "Type": "IDENT",
+                      "Literal": "property1",
+                      "Line": 11,
+                      "Col": 18
+                    },
+                    "value": "property1"
+                  },
+                  "operator": "+",
+                  "right": {
+                    "Token": {
+                      "Type": "IDENT",
+                      "Literal": "property2",
+                      "Line": 11,
+                      "Col": 30
+                    },
+                    "value": "property2"
+                  }
+                }
+              },
+              {
+                "Token": {
+                  "Type": "RETURN",
+                  "Literal": "return",
+                  "Line": 13,
+                  "Col": 5
+                },
+                "returnValue": {
+                  "Token": {
+                    "Type": "IDENT",
+                    "Literal": "result",
+                    "Line": 13,
+                    "Col": 12
+                  },
+                  "value": "result"
+                }
+              }
+            ]
+          },
+          "public": true
+        }
+      ]
+    },
+    {
+      "Token": {
+        "Type": "LET",
+        "Literal": "let",
+        "Line": 17,
+        "Col": 1
+      },
+      "name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "instance",
+          "Line": 17,
+          "Col": 5
+        },
+        "value": "instance"
+      },
+      "value": {
+        "Token": {
+          "Type": "NEW",
+          "Literal": "new",
+          "Line": 17,
+          "Col": 16
+        },
+        "Class": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "MyClass",
+            "Line": 17,
+            "Col": 20
+          },
+          "value": "MyClass"
+        },
+        "Arguments": [
+          {
+            "Token": {
+              "Type": "INT",
+              "Literal": "1",
+              "Line": 17,
+              "Col": 28
+            },
+            "value": 1
+          },
+          {
+            "Token": {
+              "Type": "INT",
+              "Literal": "2",
+              "Line": 17,
+              "Col": 31
+            },
+            "value": 2
+          }
+        ]
+      }
+    },
+    {
+      "Token": {
+        "Type": "LET",
+        "Literal": "let",
+        "Line": 18,
+        "Col": 1
+      },
+      "name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "result",
+          "Line": 18,
+          "Col": 5
+        },
+        "value": "result"
+      },
+      "value": {
+        "Token": {
+          "Type": "(",
+          "Literal": "(",
+          "Line": 18,
+          "Col": 26
+        },
+        "function": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "add",
+            "Line": 18,
+            "Col": 23
+          },
+          "value": "instance.add"
+        },
+        "arguments": []
+      }
+    },
+    {
+      "Token": {
+        "Type": "RETURN",
+        "Literal": "return",
+        "Line": 20,
+        "Col": 1
+      },
+      "returnValue": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "result",
+          "Line": 20,
+          "Col": 8
+        },
+        "value": "result"
+      }
+    }
+  ],
+  "modules": null
+}

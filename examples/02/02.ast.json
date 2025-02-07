@@ -1,0 +1,186 @@
+{
+  "NoStatements": false,
+  "statements": [
+    {
+      "Token": {
+        "Type": "IDENT",
+        "Literal": "print",
+        "Line": 3,
+        "Col": 4
+      },
+      "expression": {
+        "Token": {
+          "Type": "(",
+          "Literal": "(",
+          "Line": 3,
+          "Col": 9
+        },
+        "function": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "print",
+            "Line": 3,
+            "Col": 4
+          },
+          "value": "print"
+        },
+        "arguments": [
+          {
+            "Token": {
+              "Type": "STRING",
+              "Literal": "input \u003e\u003e ",
+              "Line": 0,
+              "Col": 0
+            },
+            "value": "input \u003e\u003e "
+          }
+        ]
+      }
+    },
+    {
+      "Token": {
+        "Type": "LET",
+        "Literal": "let",
+        "Line": 5,
+        "Col": 1
+      },
+      "name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "x",
+          "Line": 5,
+          "Col": 5
+        },
+        "value": "x"
+      },
+      "value": {
+        "Token": {
+          "Type": "(",
+          "Literal": "(",
+          "Line": 5,
+          "Col": 17
+        },
+        "function": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "input",
+            "Line": 5,
+            "Col": 12
+          },
+          "value": "io.input"
+        },
+        "arguments": []
+      }
+    },
+    {
+      "Token": {
+        "Type": "IDENT",
+        "Literal": "println",
+        "Line": 7,
+        "Col": 4
+      },
+      "expression": {
+        "Token": {
+          "Type": "(",
+          "Literal": "(",
+          "Line": 7,
+          "Col": 11
+        },
+        "function": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "println",
+            "Line": 7,
+            "Col": 4
+          },
+          "value": "println"
+        },
+        "arguments": [
+          {
+            "Token": {
+              "Type": "+",
+              "Literal": "+",
+              "Line": 7,
+              "Col": 14
+            },
+            "left": {
+              "Token": {
+                "Type": "IDENT",
+                "Literal": "x",
+                "Line": 7,
+                "Col": 12
+              },
+              "value": "x"
+            },
+            "operator": "+",
+            "right": {
+              "Token": {
+                "Type": "STRING",
+                "Literal": " is what you entered",
+                "Line": 0,
+                "Col": 0
+              },
+              "value": " is what you entered"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "Token": {
+        "Type": "IDENT",
+        "Literal": "x",
+        "Line": 9,
+        "Col": 1
+      },
+      "expression": {
+        "Token": {
+          "Type": "+",
+          "Literal": "+",
+          "Line": 9,
+          "Col": 3
+        },
+        "left": {
+          "Token": {
+            "Type": "IDENT",
+            "Literal": "x",
+            "Line": 9,
+            "Col": 1
+          },
+          "value": "x"
+        },
+        "operator": "+",
+        "right": {
+          "Token": {
+            "Type": "STRING",
+            "Literal": " is what's being returned",
+            "Line": 0,
+            "Col": 0
+          },
+          "value": " is what's being returned"
+        }
+      }
+    }
+  ],
+  "modules": [
+    {
+      "Token": {
+        "Type": "MOD",
+        "Literal": "mod",
+        "Line": 1,
+        "Col": 1
+      },
+      "name": {
+        "Token": {
+          "Type": "IDENT",
+          "Literal": "io",
+          "Line": 1,
+          "Col": 5
+        },
+        "value": "io"
+      },
+      "import_all": true,
+      "imports": null
+    }
+  ]
+}

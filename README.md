@@ -1,10 +1,8 @@
 # Clear
 
-**You can view the [Clear (Interpreted)](/clear/README.md) Folder to see teh current stable implementation of Clear**
+**You can view the [Clear (Interpreted)](/clear/README.md) Folder to see the current stable implementation of Clear**
 
 **You can also see examples of the language "talking" in the `/examples/` folder ([link1](./examples/00/00.log.md), [link2](./examples/01/01.log.md)). Addtionally, you can see the AST the program generated in the same folder (in JSON format)**
-
-TODO: add links to resources
 
 This repo contains tinkering on interpreters and compilers in Go
 
